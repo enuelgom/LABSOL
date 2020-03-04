@@ -4,7 +4,7 @@
             <h1 class="title">LABORATORIOS</h1>
         </v-row>
         <v-card elevation="0" class="mt-1">
-            <v-tabs v-model="lab" background-color="blue-grey lighten-1" centered dark>
+            <v-tabs v-model="lab" background-color="orange lighthen-2" centered dark>
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#labsol">LABSOL</v-tab>
             <v-tab href="#intel">INTEL</v-tab>
