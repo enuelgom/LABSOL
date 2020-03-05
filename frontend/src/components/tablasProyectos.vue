@@ -99,7 +99,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="green" v-on="on" @click="solicitarProyecto(item)">
+                                    <v-btn text icon color="green" :disabled="comprobarSolicitud(item.proyecto)" v-on="on" @click="solicitarProyecto(item)">
                                     <v-icon>fa fa-paper-plane</v-icon>
                                     </v-btn>
                                 </template>
@@ -250,10 +250,22 @@ export default {
                         nombre: this.$route.params.nameLab,
                         estatus: estatus
                     }
-                }) 
-                this.obtenerProyectos();
+                })
+                
             } catch (error) {
                 
+            }
+        },
+
+        comprobarSolicitud(proyecto){
+            for(let val of this.proyectos){
+                if(val.proyecto===proyecto){
+                    for(let val2 of val.alumnos){
+                        if(val2._id===this.usuarioLogeado._id){
+                            return true;    
+                        }
+                    }
+                }
             }
         },
 
@@ -268,6 +280,9 @@ export default {
                                     status
                                     objetivo
                                     numAlu
+                                    alumnos{
+                                        _id
+                                    }
                             }
                         }
                     `,
@@ -276,6 +291,7 @@ export default {
                         proyectoCategoria: this.selected
                     }
                 }) 
+                
                 if(data.oneLab!=null) {
                     this.labExistente=1;
                 }else{
@@ -290,7 +306,7 @@ export default {
                 }
                 this.proyectos = data.oneLab;
                 this.loading = false;
-
+                
             } catch (error) {
                
             }
@@ -345,6 +361,8 @@ export default {
                             proyecto: proyecto.proyecto
                         }
                     })
+                
+                this.obtenerProyectos();
                 }
             catch(error){
                 console.log(error)

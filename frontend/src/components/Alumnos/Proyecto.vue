@@ -60,9 +60,9 @@ export default {
   methods: {
     // Color del status
     obtenerColor(status){
-      if (status === "espera") {
+      if (status === "En espera") {
         return "orange"
-      }else if(status === "aceptado"){
+      }else if(status === "Aceptado"){
         return "green"
       }else{
         return "red"
