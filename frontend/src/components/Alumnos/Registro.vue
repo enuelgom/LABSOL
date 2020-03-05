@@ -70,7 +70,7 @@
                                 <v-btn :disabled="!esValido" block color="success" @click="agregarAlumno(datosAlumno)" rounded>Guardar registro</v-btn>
                             </v-row>
                              <div class="text-center my-2">
-                                <span>¿Ya tienes una cuenta?</span><a @click="abrirLogin"> Inicia ahora</a>
+                                <span>¿Ya tienes una cuenta?</span><a style="color: #0277BD" @click="abrirLogin"> Inicia ahora</a>
                             </div>
                         </v-container>
                     </v-card-text>

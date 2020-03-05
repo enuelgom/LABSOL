@@ -12,7 +12,7 @@
                         <v-container fluid>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field :rules="rulesUser" prepend-icon="fas fa-user-circle" label="Usuario" v-model="user.usuario" clearable />
+                                    <v-text-field autofocus :rules="rulesUser" prepend-icon="fas fa-user-circle" label="Usuario" v-model="user.usuario" clearable />
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -28,7 +28,7 @@
                             </v-row>
                         </v-container>
                         <div class="text-center my-2">
-                            <span>¿No tienes cuenta?</span><a @click="openModalStudent"> Regístrate ahora</a>
+                            <span>¿No tienes cuenta?</span><a style="color: #0277BD" @click="openModalStudent"> Regístrate ahora</a>
                         </div>
                     </v-card-text>
                 </v-card>

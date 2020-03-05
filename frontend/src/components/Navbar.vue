@@ -4,18 +4,18 @@
         <!-- Navbar para logeo -->
       <v-toolbar color="amber lighten-1" dark> 
           <v-toolbar-items>
-            <v-img class="my-4" src="@/assets/cozyt.png"  style="height: 35px; width: 180px;" />
-            <v-img class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="@/assets/labsol.png" />
-            <v-img src="@/assets/ILN.png" />
+            <v-img aspect-ratio="2" contain class="my-3" src="@/assets/cozyt.png"  style="height: 35px; width: 180px;" />
+            <v-img aspect-ratio="2" contain class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="@/assets/labsol.png" />
+            <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
           </v-toolbar-items>
           <v-spacer />
-          <v-btn text @click="open"><v-icon>mdi-user</v-icon> Iniciar sesion</v-btn>
+          <v-btn text @click="open"><span class="pa-1"><v-icon dense>fa fa-user</v-icon></span> Iniciar sesion</v-btn>
         </v-toolbar> 
         <Login :openModel="abrirLogin" />  
         <Registro :openModelStudent="openFormStudent"/>
     </div>
 </template>
-
+ 
 <script>
 import Login from '@/components/Login.vue'
 import { EventBus } from '../EventBus'
