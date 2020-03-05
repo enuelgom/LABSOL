@@ -41,6 +41,7 @@ const resolvers = {
         },
 
         async oneLab(root,args, context){
+            
             const {nombre, proyectoCategoria} = args;
             const _oneLab = await labs.where({nombre}).findOne();
             let cat = "" 
@@ -53,6 +54,7 @@ const resolvers = {
             }
             let categoria = [];
             for(let val of _oneLab.proyectos){
+                console.log(categoria);
                 if(val.status===cat){
                     categoria.push(val);
                 }
@@ -172,7 +174,8 @@ const resolvers = {
                     if (await bcrypt.compare(clave, alumno.clave)) {
                         const typeUser = "2";
                         const nombre = alumno.alumno+" "+alumno.ape_p+" "+alumno.ape_m;
-                        return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+                        const _id = alumno._id;
+                        return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2h' })
                     }else{
                         return "Contraseña incorrecta"
                     }
@@ -327,10 +330,10 @@ const resolvers = {
 
             for (let val of laboratorio.proyectos) {
                 if (val["proyecto"] == proyecto){
-                    val.alumnos.push({_id: alum._id, status: "Nuevo"});
+                    val.alumnos.push({_id: alum._id, status: "En espera"});
                 }
             }
-            const _status = "Nuevo";
+            const _status = "En espera";
             alum.solicitudes.push({nombre,proyecto,_status});
             
              await laboratorio.save();
