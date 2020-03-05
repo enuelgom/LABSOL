@@ -13,10 +13,10 @@
         no-results-text="Proyecto no encontrado"
         :footer-props="{itemsPerPageText:'Paginación'}"
         :items="misSolicitudes"> 
-            <template v-slot:item.acciones="">
+            <template v-slot:item.acciones="{item}">
                 <v-tooltip bottom>
                   <template v-slot:activator="{on}">
-                      <v-btn text icon color="red" v-on="on">
+                      <v-btn text icon color="red" v-on="on" :disabled="item.status === 'cancelado'" @click="cancelarSolicitud(item)">
                           <v-icon>fa fa-ban</v-icon>
                       </v-btn>
                   </template>
@@ -36,6 +36,7 @@ import { apolloClient } from '../../graphql/apollo'
 import gql from 'graphql-tag'
 import { mapState } from "vuex"
 
+
 export default {
   name: "Proyectos",
 
@@ -45,9 +46,9 @@ export default {
     headers: [
       {text: "Numero", value: "numero", filerable: false},
       {text: "Nombre", value: "proyecto"},
-      {text: "Laboratorio", value: "nombre", filerable: false},
-      {text: "Estatus", value: "status", filerable: false},
-      {text: "Acciones", value: "acciones", filerable: false},
+      {text: "Laboratorio", value: "nombre", filerable: false, align: 'center', sortable: false, value: 'nombre'},
+      {text: "Estatus", value: "status", filerable: false, align: 'center', sortable: false, value: 'status'},
+      {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
     ],
     misSolicitudes: []
   }),
@@ -92,7 +93,27 @@ export default {
           }
         this.misSolicitudes=data.misSolicitudes;
       } catch (error) {
-        console.log(error)
+
+      }
+    },
+    async cancelarSolicitud(datos){
+      try {
+        const {data} = await apolloClient.mutate({
+          mutation: gql`
+            mutation($nombre: String!, $proyecto: String!)
+            {
+              cancelarSolicitudAlumno(nombre: $nombre, proyecto: $proyecto)
+            }
+          `,
+          variables: {
+            nombre: datos.nombre,
+            proyecto: datos.proyecto
+          }
+        })
+        this.solicitudesProyectos();
+      } catch (error) {
+        console.log(error);
+        
       }
     }
   },

@@ -2,8 +2,9 @@
     <div>
         <v-toolbar color="primary" dark>
             <v-toolbar-items>
+               <v-img class="my-4" src="@/assets/cozyt.png"  style="height: 35px; width: 180px;" />
+                <v-img class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="@/assets/labsol.png" />
                 <v-img src="@/assets/ILN.png" />
-                <v-img class="mt-4" style="height: 30px; width: 80px" src="@/assets/labsol.png" />
             </v-toolbar-items>
             <v-spacer />
             <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
