@@ -102,7 +102,7 @@ export default {
             this.datosProyecto.nombre =data.proyecto.proyecto;
                
             } catch (error) {
-                console.log(error)
+                
             } 
         },
 
@@ -127,7 +127,7 @@ export default {
             this.obtenerAlumnos();  
             
             } catch (error) {
-                console.log(error)
+                
             }
         },
 
@@ -155,7 +155,7 @@ export default {
                     } 
 
                 })
-                console.log(data);
+                
                 
                 var i = 0;
                 for(let val of data.alumnos){
@@ -166,7 +166,7 @@ export default {
                 }
                 this.alumnos = data.alumnos;
             } catch (error) {
-                console.log(error)
+                
             }
         },
 

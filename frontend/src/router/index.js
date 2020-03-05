@@ -5,24 +5,9 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/proyectos',
     name: 'ListaLaboratorios',
     component: () => import('../views/ListaLaboratorios.vue')
-  },
-  {
-    path: '/admins',
-    name: 'Admins',
-    component: () => import('../views/Admins/Admins.vue')
-  },
-  {
-   path: '/proyectolabs',
-   name: 'ProyectosLabs',
-   component: () => import('../views/Admins/ProyectosLabs.vue')
-  },
-  {
-    path: '/Proyectos',
-    name: 'Proyectos',
-    component: () => import('../views/Laboratorio/Proyectos')
   },
   {
     path: '/Perfil',
@@ -36,7 +21,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: '/'
+    redirect: '/proyectos'
   },
 ]
 
