@@ -73,6 +73,7 @@ export const custom = `
     }
 
     type allLabsCount{
+        siglas: String,
         nombre: String,
         count: String,
         notificaciones: String,
@@ -107,5 +108,12 @@ export const custom = `
         nombre: String,
         proyecto: String,
         status: String
+    }
+
+    type InfoLab{
+        nombre: String,
+        siglas: String,
+        usuario: String,    
+        tipoLaboratorio: String,
     }
 `

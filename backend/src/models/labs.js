@@ -9,6 +9,7 @@ const  labsSchema = new Schema({
         required: true,
         unique: true,
     },
+    siglas: String,
     logo: {
         type: String
     },

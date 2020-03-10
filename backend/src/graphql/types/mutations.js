@@ -2,6 +2,7 @@ export const mutations = `
 type Mutation{
     nuevoLab(
         nombre: String,
+        siglas: String,
         logo: String,
         proyectos: String,
         usuario: String,
@@ -101,6 +102,20 @@ type Mutation{
     cancelarSolicitudAlumno(
         nombre: String,
         proyecto: String
+    ): String
+
+    updateAdmin(
+        nombre: String,
+        usuario: String,
+        clave: String
+    ): String
+
+    updateLab(
+        nombre: String,
+        siglas: String,
+        usuario: String,
+        clave: String,
+        tipoLaboratorio: String,
     ): String
     
 }

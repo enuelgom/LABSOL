@@ -9,6 +9,7 @@ import blackList from "../models/blackList";
 import { verifyExp } from "../auth/index";
 import { loadavg } from "os";
 import { valueFromAST } from "graphql";
+import { addMockFunctionsToSchema } from "graphql-tools";
 
 const  SECRET = fs.readFileSync("src/private.key");
 const pubsub = new PubSub();
@@ -21,10 +22,15 @@ const resolvers = {
         }
     },
     Query: {
+        async getLabName(root, args, context){
+            const {siglas}=args;
+            const nameLab = await labs.where({siglas}).findOne();
+            let nombre = nameLab.nombre;
+            return nombre;
+        },
+
         async allLabs(root, args, context){
             const _allLabs = await labs.find();
-            // return _allLabs;
-
             let _count=[];
             for(let val of _allLabs){
                 let i=0;
@@ -34,7 +40,7 @@ const resolvers = {
                     }
                 }
                 if(i===0){i="";}
-                _count.push({nombre:val.nombre, count: ""+val.proyectos.length, notificaciones: i, tipoLaboratorio: val.tipoLaboratorio});
+                _count.push({nombre:val.nombre, count: ""+val.proyectos.length, notificaciones: i, tipoLaboratorio: val.tipoLaboratorio,siglas:val.siglas});
             }
             return _count;
 
@@ -43,7 +49,7 @@ const resolvers = {
         async oneLab(root,args, context){
             
             const {nombre, proyectoCategoria} = args;
-            const _oneLab = await labs.where({nombre}).findOne();
+            const _oneLab = await labs.where({siglas:nombre}).findOne();
             let cat = "" 
             switch (proyectoCategoria) {
                 case "Nuevos proyectos": cat ="Nuevo"; break;
@@ -54,7 +60,6 @@ const resolvers = {
             }
             let categoria = [];
             for(let val of _oneLab.proyectos){
-                console.log(categoria);
                 if(val.status===cat){
                     categoria.push(val);
                 }
@@ -75,9 +80,7 @@ const resolvers = {
         },
 
         async alumnos(root, args, context){
-
             try {
-                
                 const{nombre, proyecto, status}= args;
                 const laboratorio = await labs.findOne({nombre});
                 let _proyecto = [];
@@ -134,6 +137,13 @@ const resolvers = {
                 
             }
             return misSolicitudes;
+        },
+
+        async infoLab(root, args, context){
+            const  token  = context.token;
+            const decoded = jwt.decode(token, SECRET);
+            const _lab = await labs.findOne({usuario:decoded["usuario"]})
+            return _lab;
         }
     },
 
@@ -198,7 +208,7 @@ const resolvers = {
             const  token  = context.token;
             const _blacklist = await blackList.find({token}).findOne();
             if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
-            const {nombre, usuario, tipoLaboratorio } = args;
+            const {nombre, siglas, usuario, tipoLaboratorio } = args;
             let {clave} = args;
             const passHashed = await bcrypt.hash(clave, 10);
             clave = passHashed;
@@ -207,10 +217,47 @@ const resolvers = {
                 return "Laboratorio existente"
             }
             try {
-                await new labs({ nombre, usuario, clave, tipoLaboratorio }).save();
+                await new labs({ nombre,siglas, usuario, clave, tipoLaboratorio }).save();
                 return "Laboratorio registrado";
             } catch (error) {
                 return "El usuario ya existe";
+            }
+        },
+        async updateLab(root, args, context){
+            try {
+                const  token  = context.token;
+                const _blacklist = await blackList.find({token}).findOne();
+                if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+                const {clave} = args;
+                const Clave = await bcrypt.hash(clave,10);
+                const decoded = jwt.decode(token, SECRET);
+                const user = decoded["usuario"]
+                const _usuario = args["usuario"];
+                const updateLab = await labs.where({usuario:user}).findOneAndUpdate();
+                const chAdmins = await admin.where({usuario:_usuario}).findOne();
+                const chAlumnos = await alumnos.where({usuario:_usuario}).findOne();
+                if(!chAlumnos==""||!chAdmins==""){
+                    return "Usuario existente"
+                }
+                const Datos= ["nombre", "siglas", "usuario", "tipoLaboratorio"];
+                for(let val of Datos){
+                    if (args[val]!=""||args[val]!=null) {
+                        updateLab[val]=args[val];                  
+                    }
+                }
+                if (clave!="") {
+                    updateLab["clave"]=Clave;
+                }
+                const typeUser = "1";
+                const nombre = updateLab.nombre;
+                const usuario= updateLab.usuario;
+                await updateLab.save();
+                return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+            } catch (error) {
+                const msjerror = error.message;
+                if(msjerror.includes('E11000')){
+                    return "Usuario existente";
+                }
             }
         },
 
@@ -279,6 +326,12 @@ const resolvers = {
             try {
                 let _alumno=["alumno", "ape_p", "ape_m", "correo", "telefono", "institucion", "carrera", "semestre_cursado", "domicilio", "usuario"];
                 const Alumno = await alumnos.where({_id}).findOneAndUpdate();
+                const chAdmins = await admin.where({usuario:args["usuario"]}).findOne();
+                const chLabs = await labs.where({usuario:args["usuario"]}).findOne();
+                if(!chLabs==""||!chAdmins==""){
+                    return "Usuario existente"
+                }
+                
                 for (let val of _alumno){
                     if(args[val]!=""){
                         Alumno[val]=args[val]
@@ -292,10 +345,44 @@ const resolvers = {
                 const nombre = Alumno.alumno+" "+Alumno.ape_p+" "+Alumno.ape_m;
                 const usuario= Alumno.usuario;
                 await Alumno.save();
-                return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+                return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2h' })
 
             } catch (error) {
-                return error;
+                const msjerror = error.message;
+                if(msjerror.includes('usuario')){
+                    return "Usuario existente";
+                }else if(msjerror.includes('correo')){
+                    return "Correo existente";
+                }
+            }
+        },
+        async updateAdmin(root, args, context){
+            try{
+                const token = context.token;
+                const decoded = jwt.decode(token, SECRET);
+                const user = decoded.usuario;
+                const _blacklist = await blackList.find({token}).findOne();
+                if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+                let {clave} = args
+                const Clave = await bcrypt.hash(clave, 10);
+                const _admin = await admin.where({usuario:user}).findOneAndUpdate();
+                let newData = ["nombre", "usuario"];
+
+                for(let val of newData){
+                    if (args[val]!="" || args[val]!=null) {
+                        _admin[val]=args[val];
+                    }
+                }
+                if (clave!="") {
+                    _admin["clave"] = Clave;
+                }
+                await _admin.save();
+                const typeUser = "0"
+                const usuario = _admin["usuario"];
+                const nombre = _admin["nombre"];
+                return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+            }catch(e){
+                return e
             }
         },
 
@@ -303,7 +390,7 @@ const resolvers = {
             try {
                 const  token  = context.token;
                 const _blacklist = await blackList.find({token}).findOne();
-                if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+                //if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
                 const { nombre, usuario}=args;
                 let {clave} = args;
                 const passHashed= await bcrypt.hash(clave,10);
