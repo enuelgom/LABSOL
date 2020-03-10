@@ -13,8 +13,13 @@ Vue.use(VueApollo)
 
 Vue.config.productionTip = false
 
+<<<<<<< HEAD
 axios.defaults.baseURL = "http://192.168.43.60:3000"
 
+=======
+// axios.defaults.baseURL = "http://192.168.1.36:3000"
+axios.defaults.baseURL = "http://192.168.2.196:3000/proyectos"
+>>>>>>> 8622a4ea04adfa88e65ba9e3c9b325280afb1ceb
 axios.defaults.headers.common[
   "Authorization"
 ] = `Bearer ${localStorage.getItem('token')}` 
