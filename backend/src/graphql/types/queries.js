@@ -29,5 +29,11 @@ export const queries = `
         ): infoAlumno
 
         misSolicitudes: [MisSolicitudes]
+
+        infoLab: InfoLab
+
+        getLabName(
+            siglas: String
+        ): String
     }
 `
