@@ -50,11 +50,11 @@ export default {
         isValid: true,
         rulesUser: [
             value => !!value || "Usuario requerido",
-            value => (value || '').length >= 2 || "El usuario debe de tener 8 caracteres" 
+            value => (value || '').length >= 8 || "El usuario debe de tener 8 caracteres" 
         ],
         rulesPsw: [
             value => !!value || "Contraseña requerida",
-            value => (value || '').length >= 2 || "La contraseña debe de tener minimo 8 carateres"
+            value => (value || '').length >= 8 || "La contraseña debe de tener minimo 8 carateres"
         ],
         user: {
             usuario: '',
@@ -75,7 +75,7 @@ export default {
             } catch (error) {
             }
         },
-
+        
         ...mapActions(["login"]),
     },
 

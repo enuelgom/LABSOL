@@ -2,7 +2,7 @@
     <div>
         <v-container>
             <!-- Selector de categorias -->
-            <v-row justify="center" v-if="usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1'">
+            <v-row justify="center" v-if="(usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1') && labExistente===1">
                 <v-col cols="12" sm="4">
                     <v-select v-if="usuarioLogeado.nombre != this.$route.params.nameLab && !usuarioLogeado.tipUsuario==='0'" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
                     <v-select v-else v-model="proyectosNuevos" :items="options" @input="categorias" outlined label="Seleccione la categoria"/>

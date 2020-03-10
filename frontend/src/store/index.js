@@ -101,7 +101,6 @@ export default new Vuex.Store({
         })
 
         const msj = data.agregarAlumno;
-        console.log(msj)
         if(msj === "Usuario registrado"){
           EventBus.$emit("successRegistro", msj);
         }else{

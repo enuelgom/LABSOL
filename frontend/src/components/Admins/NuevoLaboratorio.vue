@@ -3,7 +3,7 @@
         <v-snackbar color="green" v-model="msjsuccess" top>¡{{ msjSatisfactorio }}! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
-        <v-dialog v-model="agregarLaboratorio" max-width="950" persistent>
+        <v-dialog v-model="agregarLaboratorio" max-width="1000" persistent>
             <v-form ref="formLaboratorio" v-model="isValid"> 
                 <v-card color="grey lighten-3">
                     <v-toolbar color="primary" dark>
@@ -14,9 +14,14 @@
                     <v-card-text>
                         <v-card-subtitle class="subtitle-2" front-weight-black style="padding: 5px;"><strong>Datos del laboratorio</strong></v-card-subtitle>
                         <v-container fluid>
+                             <v-row>
+                                <v-col cols="12" sm="12" md="12" lg="12">
+                                   <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre de la intitución" v-model="datosRegistro.nombre" clearable />
+                                </v-col>
+                            </v-row>
                             <v-row>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre del laboratorio" v-model="datosRegistro.nombre" clearable />
+                                    <v-text-field :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" v-model="datosRegistro.siglas" clearable />
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
                                     <v-select :rules="tipLabs" :items="tipLab"  prepend-icon="fa fa-university" label="Tipo de laboratorio" v-model="datosRegistro.tipoLaboratorio"  clearable />
@@ -36,11 +41,10 @@
                                     @click:append="show = !show"/>
                                 </v-col> 
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmar" v-model="pswConfirm" clearable 
+                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm" clearable 
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
-                                    @click:append="show1 = !show1"
-                                    />
+                                    @click:append="show1 = !show1"/>
                                 </v-col>    
                             </v-row>
                         </v-container>
@@ -74,6 +78,7 @@ export default {
         tipLab:['Intel', 'Labsol'],
         datosRegistro: {
             nombre: '',
+            siglas: '',
             tipoLaboratorio: '',
             usuario: '',
             psw: ''
@@ -85,17 +90,21 @@ export default {
         nombre: [
             value => !!value || "El nombre requerido"
         ],
+        siglas: [
+            value => !!value || "Sigla de la institución requerida"
+        ],
         tipLabs: [
              value => !!value || "Seleccione el tipo de laboratorio"
         ],
         usuario: [
-            value => !!value || "El usuario requerido"
+            value => !!value || "El usuario requerido",
+            value => (value || '').length >= 8 || "El usuario debe de tener 8 caracteres"
         ],
         contraseña: [
-            value => !!value || "El contraseña requerido"
+            value => !!value || "El contraseña requerido",
+            value => (value || '').length >= 8 || "La contraseña debe de tener minimo 8 carateres"
         ],
         isValid: true
-
     }),
 
     computed:{
@@ -123,13 +132,14 @@ export default {
             try {              
                 const {data} = await this.$apollo.mutate({
                     mutation: gql`
-                        mutation($nombre: String!, $tipoLaboratorio: String!, $usuario: String!, $psw: String!)
+                        mutation($nombre: String!, $siglas: String!, $tipoLaboratorio: String!, $usuario: String!, $psw: String!)
                         {
-                            nuevoLab(nombre: $nombre, tipoLaboratorio: $tipoLaboratorio, usuario: $usuario, clave: $psw)
+                            nuevoLab(nombre: $nombre, siglas: $siglas, tipoLaboratorio: $tipoLaboratorio, usuario: $usuario, clave: $psw)
                         }
                     `,
                     variables: {
                         nombre: this.datosRegistro.nombre,
+                        siglas: this.datosRegistro.siglas,
                         tipoLaboratorio: this.datosRegistro.tipoLaboratorio,
                         usuario: this.datosRegistro.usuario,
                         psw: this.datosRegistro.psw
@@ -181,9 +191,7 @@ export default {
             if(keypressed === "Escape"){
                 this.cerrarModal();
             }    
-        });
-
-       
+        }); 
     }
 }
 </script>

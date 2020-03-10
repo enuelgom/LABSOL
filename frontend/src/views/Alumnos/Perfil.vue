@@ -7,7 +7,7 @@
             <Proyecto />
             <br>
             <v-row justify="center">
-                <v-btn clearable color="success">Pagina inicial</v-btn>
+                <v-btn to="/" clearable color="success">Pagina inicial</v-btn>
             </v-row>
         </v-container>
     </div>

@@ -10,6 +10,14 @@
             <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
+                    <v-btn text icon color="" v-on="on" @click="abrirModalEditar">
+                        <v-icon>fa fa-edit</v-icon>
+                    </v-btn>
+                </template>
+                <span>Editar cuenta</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <template v-slot:activator="{on}">
                     <v-btn text icon color="" v-on="on" @click="abrirModalRegLab">
                         <v-icon>fa fa-plus</v-icon>
                     </v-btn>
@@ -27,6 +35,7 @@
         </v-toolbar>
     <NuevoLaboratorio :agregarLaboratorio="abrirRegistroLab"/>
     <Logout :confirmacionLogout="abrirLogout"/>
+    <EditarCuenta :modalEditarDatos="editarDatos"/>
     </div>
 </template>
 
@@ -35,23 +44,29 @@ import { EventBus } from '@/EventBus'
 import NuevoLaboratorio from '@/components/Admins/NuevoLaboratorio'
 import { mapState } from "vuex"
 import Logout from '../Logout'
+import EditarCuenta from '@/components/Admins/EditarCuenta'
 
 export default {
     name: 'navAdmin',
-    components: { NuevoLaboratorio, Logout },
+    components: { NuevoLaboratorio, Logout, EditarCuenta },
 
     data: () => ({
         abrirRegistroLab: false,
-        abrirLogout: false
+        abrirLogout: false,
+        editarDatos: false
     }),
 
     methods: {
         abrirModalRegLab(){
-                this.abrirRegistroLab = true;
+            this.abrirRegistroLab = true;
         },
         
         logOut(){
             this.abrirLogout = true;
+        },
+
+        abrirModalEditar(){
+            this.editarDatos = true;
         }
     },
 
@@ -62,15 +77,22 @@ export default {
     mounted(){
         EventBus.$on("cerrarRegistroLab", () => {
             this.abrirRegistroLab = false;
-        })
+        });
 
         EventBus.$on("cerrarModelNuevoLaboratorio", () => {
             this.abrirRegistroLab = false;
-        })
+        });
 
         EventBus.$on("cerrarLogoutAdmin", ()=>{
             this.abrirLogout = false;
-        })
+        });
+
+        EventBus.$on("cerrarModalEditarAdmin", ()=>{
+            this.editarDatos = false;
+        });
+
+
+
     }
 }
 </script>
