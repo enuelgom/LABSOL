@@ -75,6 +75,7 @@ export default {
         }
     },
 
+
     mounted(){
         EventBus.$on("datosCancelarProyecto", (dato1, dato2)=>{
             this.nomProyecto = dato1;
