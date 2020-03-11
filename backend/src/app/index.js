@@ -7,7 +7,7 @@ import cors from "cors"
 import bodyParser from "body-parser"
 
 
-const HOST = "192.168.1.103";
+const HOST = "192.168.1.136";
 const PORT = "3000";
 const app = express();
 
