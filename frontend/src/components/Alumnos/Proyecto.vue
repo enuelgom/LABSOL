@@ -28,6 +28,7 @@
             </template>
       </v-data-table>
     </v-card>
+    <CancelarSolicitud :cancelarSolicitudAlumno="alertaCancelar" />
   </div>
 </template>
 
@@ -35,14 +36,19 @@
 import { apolloClient } from '../../graphql/apollo'
 import gql from 'graphql-tag'
 import { mapState } from "vuex"
-
+import CancelarSolicitud from '@/components/Alertas/CancelarSolicitud'
+import { EventBus } from '../../EventBus'
 
 export default {
   name: "Proyectos",
+  components: {CancelarSolicitud},
 
   data: () => ({
     filtro: "",
     loading: false,
+    alertaCancelar: false,
+    nomProyecto: "",
+    nomLaboratorio: "",
     headers: [
       {text: "Numero", value: "numero", filerable: false},
       {text: "Nombre", value: "proyecto"},
@@ -96,29 +102,24 @@ export default {
 
       }
     },
-    async cancelarSolicitud(datos){
-      try {
-        const {data} = await apolloClient.mutate({
-          mutation: gql`
-            mutation($nombre: String!, $proyecto: String!)
-            {
-              cancelarSolicitudAlumno(nombre: $nombre, proyecto: $proyecto)
-            }
-          `,
-          variables: {
-            nombre: datos.nombre,
-            proyecto: datos.proyecto
-          }
-        })
-        this.solicitudesProyectos();
-      } catch (error) {
-        console.log(error);
-        
-      }
+    cancelarSolicitud(datos){
+      this.nomProyecto = datos.proyecto;
+      this.nomLaboratorio = datos.nombre;
+      EventBus.$emit("datosCancelarProyecto", this.nomProyecto, this.nomLaboratorio);
+      this.alertaCancelar = true;
     }
+
   },
 
   mounted(){
+    EventBus.$on("cerrarAlertaCancelarSolicitud", ()=>{
+      this.alertaCancelar = false;
+    });
+
+    EventBus.$on("actualizarTablaSolicitudes",()=>{
+      this.solicitudesProyectos();
+    });
+    
     this.solicitudesProyectos();
   }
 }

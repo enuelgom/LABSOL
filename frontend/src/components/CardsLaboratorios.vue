@@ -24,13 +24,13 @@
                                                     <v-icon color="blue">fa fa-bell</v-icon>
                                                 </v-badge>
                                             </v-toolbar>
-                                            <v-card-text style="height: 185px;">
+                                            <v-card-text style="height: 200px;">
                                                 <v-container style="width: 42%; margin: 0 auto 0 auto; padding: 1%;">
                                                     <v-img id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
                                                 </v-container>
                                             </v-card-text>
                                             <v-card-text class="font-weight-bold">
-                                                <p class="body-2">Laboratorio de software libre unad elas cias una del asocas</p>
+                                                <p class="body-2">{{ item.nombre }}</p>
                                                 Total de proyectos: {{ item.count }}
                                             </v-card-text>
                                             <v-card-actions>
@@ -67,8 +67,10 @@
                                                     <v-img id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
                                                 </v-container>
                                             </v-card-text>
-                                            <v-card-title style="margin-bottom:0px;"><p class="body-2">Laboratorio de software libre unad elas cias una del asocas</p></v-card-title>
-                                            <v-card-text class="font-weight-bold">Total de proyectos: {{ item.count }}</v-card-text>
+                                            <v-card-text class="font-weight-bold">
+                                                <p class="body-2">{{ item.nombre }}</p>
+                                                Total de proyectos: {{ item.count }}
+                                            </v-card-text>
                                             <v-card-actions>
                                                 <v-btn text color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
                                         <v-btn dark block color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1' && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
@@ -190,10 +192,10 @@ export default {
         EventBus.$on("actualizarCardsLab", ()=>{
             this.obtenerLaboratorios();
         });
+
+        EventBus.$on("updateNameLab", ()=>{
+            this.obtenerLaboratorios();
+        });
     }
 }
 </script>
-
-<style scoped>
-   
-</style>

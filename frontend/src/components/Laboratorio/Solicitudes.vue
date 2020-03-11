@@ -8,7 +8,7 @@
                       <v-btn icon @click="closeModalSolicitudes()"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
-                    <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.nombre ===this.$route.params.nameLab">
+                    <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab">
                         <v-col cols="12" sm="12" md="12" lg="12">
                             <v-data-table 
                                 :headers="headers"   
@@ -133,7 +133,7 @@ export default {
 
         // Obtener los alumnos por proyecto
         async obtenerAlumnos(){
-            let status = "Nuevo";
+            let status = "En espera";
             try {
                 const {data} = await this.$apollo.query({
                     query: gql`
@@ -151,7 +151,7 @@ export default {
                     variables: {
                         nombre: this.$route.params.nameLab,
                         proyecto: this.Infoproyecto,
-                        status: 'Nuevo'
+                        status: status
                     } 
 
                 })

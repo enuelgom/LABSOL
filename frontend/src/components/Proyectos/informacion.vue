@@ -58,7 +58,7 @@
                                 </v-textarea>
                             </v-col>
                         </v-row>
-                        <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.nombre ===this.$route.params.nameLab">
+                        <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab">
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Integrantes del desarrollo</strong></v-card-subtitle>
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <v-data-table 

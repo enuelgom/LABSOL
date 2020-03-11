@@ -102,6 +102,7 @@ export default {
 
         // Actualizar datos del admistrador
         async actualizarDatos(){
+            this.actualizar = true;
             try {
                const {data} = await apolloClient.mutate({
                    mutation: gql`

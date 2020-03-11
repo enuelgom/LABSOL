@@ -21,6 +21,7 @@ import navLab from '@/components/navegacion/navLab'
 import tablasProyectos from '../components/tablasProyectos'
 import { mapMutations, mapState } from "vuex"
 import gql from 'graphql-tag'
+import { EventBus } from '@/EventBus'
 
 export default {
     name: "ProyectoLaboratorios",
@@ -64,6 +65,10 @@ export default {
     mounted(){
         this.name = this.$route.params.nameLab;
         this.getLabName();
+
+        EventBus.$on("updateNombre", ()=>{
+            this.getLabName();
+        })
     }
 }
 </script>

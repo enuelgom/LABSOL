@@ -4,7 +4,7 @@
             <!-- Selector de categorias -->
             <v-row justify="center" v-if="(usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1') && labExistente===1">
                 <v-col cols="12" sm="4">
-                    <v-select v-if="usuarioLogeado.nombre != this.$route.params.nameLab && !usuarioLogeado.tipUsuario==='0'" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
+                    <v-select v-if="usuarioLogeado.siglas != this.$route.params.nameLab && !usuarioLogeado.tipUsuario==='0'" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
                     <v-select v-else v-model="proyectosNuevos" :items="options" @input="categorias" outlined label="Seleccione la categoria"/>
                 </v-col>
             </v-row>
@@ -15,7 +15,7 @@
                         <v-spacer />
                         <v-text-field prepend-icon="fa fa-search" label="Buscar proyecto por nombre" v-model="filtro"></v-text-field>
                     </v-card-title>
-                    <v-data-table :headers="headers" v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.nombre === this.$route.params.nameLab"
+                    <v-data-table :headers="headers" v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas === this.$route.params.nameLab"
                     :search="filtro" 
                     no-data-text="No existen proyectos disponibles" 
                     :loading="loading"
@@ -62,6 +62,22 @@
                                     </v-btn>
                                 </template>
                                 <span>Ver información</span>
+                            </v-tooltip>
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{on}">
+                                    <v-btn text icon color="success" v-on="on" @click="actualizarProyecto(item)">
+                                    <v-icon>fa fa-edit</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Editar proyecto</span>
+                            </v-tooltip>
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{on}">
+                                    <v-btn text icon color="error" v-on="on" @click="borrarProyecto(item)">
+                                    <v-icon>fa fa-trash</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Borrar proyecto</span>
                             </v-tooltip>
                         </template>
                         <template v-slot:item.notificaciones="{item}" v-if="usuarioLogeado.tipUsuario === '1'">
@@ -168,6 +184,10 @@
         <Loading :openLoading="open" />
         <informacion :visible="mostrarInfProyecto" :nomProyecto="nombreProyecto"/>
         <Solicitudes :mostrarSolocitudes="abrirModalSolicitud"/>
+        <Editar :actualizarInfoProyecto="ActualizarInfoProyecto" />
+        <Eliminar :confirmacionBorrar="abrirAlertaBorrar" />
+        <SolicitudEnviada :msjAvisoSolicitud="msjAvisoSolicitudProyecto" />
+
     </div>
 </template>
 
@@ -180,12 +200,18 @@ import { mapState } from "vuex"
 import { apolloClient } from '../graphql/apollo'
 import gql from 'graphql-tag'
 import Solicitudes from '@/components/Laboratorio/Solicitudes'
+import Editar from '@/components/Proyectos/Editar'
+import Eliminar from '../components/Alertas/Eliminar'
+import SolicitudEnviada from '@/components/Alertas/SolicitudEnviada'
 
 export default {
-    components: {Login, Loading, informacion, Solicitudes},
     name: 'tablasProyectos',
+    components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada},
     
     data: () => ({
+        abrirAlertaBorrar: false,
+        msjAvisoSolicitudProyecto: false,
+        ActualizarInfoProyecto: false,
         labExistente: 0,
         proyectosNuevos: "Nuevos proyectos",
         nombreRuta: "",
@@ -197,6 +223,8 @@ export default {
         mostrarInfProyecto: false,
         abrirModalSolicitud: false,
         nombreProyecto: "",
+        nomProyecto: "",
+        idProyecto: "",
         selected: "Nuevos proyectos",
         headers: [
             {text: "Número", value: "numero", filerable: false},
@@ -225,6 +253,20 @@ export default {
     },
 
     methods: {
+        // Abrir alerta de borrar proyecto
+        borrarProyecto(item){
+            this.idProyecto = item.proyecto;
+            EventBus.$emit("enviarIDProyecto", this.idProyecto);
+            this.abrirAlertaBorrar = true;
+        },
+        
+        // Abrir modal actualizar proyecto
+        actualizarProyecto(item){
+            this.nomProyecto = item.proyecto;
+            EventBus.$emit("ActualizarInfoProyectos", this.nomProyecto)
+            this.ActualizarInfoProyecto = true;
+        },
+
         categorias(item){
             this.selected = item;
             if(item==="Proyectos en catalogo") {
@@ -251,7 +293,7 @@ export default {
                         estatus: estatus
                     }
                 })
-                
+                this.obtenerProyectos();
             } catch (error) {
                 
             }
@@ -333,7 +375,7 @@ export default {
                     })
                     
                     for(let val of data.proyecto.alumnos){
-                        if(val.status==="Nuevo") i++
+                        if(val.status==="En espera") i++
                     }
 
                 }catch(err){
@@ -346,26 +388,26 @@ export default {
         async solicitarProyecto(proyecto){
             if (localStorage.getItem("token")===null) {
                 this.abrirLogin = true;
-                }else{
-            try{
-                this.open=true;
-                 const { data } = await apolloClient.mutate({
-                     mutation:gql`
-                            mutation($nombre: String!, $proyecto: String!)
-                            {
-                                solicitarProyecto(nombre: $nombre, proyecto: $proyecto)
-                            }    
-                        `,
-                        variables:{
-                            nombre: this.$route.params.nameLab,
-                            proyecto: proyecto.proyecto
-                        }
-                    })
-                
-                this.obtenerProyectos();
-                }
-            catch(error){
-                console.log(error)
+            }else{
+                try{
+                    this.open=true;
+                    const { data } = await apolloClient.mutate({
+                        mutation:gql`
+                                mutation($nombre: String!, $proyecto: String!)
+                                {
+                                    solicitarProyecto(nombre: $nombre, proyecto: $proyecto)
+                                }    
+                            `,
+                            variables:{
+                                nombre: this.$route.params.nameLab,
+                                proyecto: proyecto.proyecto
+                            }
+                        })
+                    this.msjAvisoSolicitudProyecto = true;
+                    this.obtenerProyectos();
+                    }
+                catch(error){
+                    console.log(error)
             }
             }
         },
@@ -385,7 +427,7 @@ export default {
     mounted(){
         this.com = this.headers;
         this.headers = this.headers2;
-        if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.nombre != this.$route.params.nameLab) && this.usuarioLogeado.tipUsuario != '0'){
+        if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.siglas != this.$route.params.nameLab) && this.usuarioLogeado.tipUsuario != '0'){
             this.selected = 'Proyectos en catalogo'
             this.proyectosNuevos = 'Proyectos en catalogo'
             this.obtenerProyectos();
@@ -415,7 +457,30 @@ export default {
 
         EventBus.$on("ActualizarTablaProyectos", ()=>{
             this.obtenerProyectos();
-        })
+        });
+
+        EventBus.$on("cerrarModalActualizarInfoProyecto",()=>{
+            this.ActualizarInfoProyecto = false;
+        });
+
+        EventBus.$on("actualizarInfoDeProyecto", ()=>{
+            setTimeout(() => {
+                this.ActualizarInfoProyecto = false
+            }, 3000);
+            this.obtenerProyectos();
+        });
+
+        EventBus.$on("cerrarAlertaEliminarPro", ()=>{
+            this.abrirAlertaBorrar = false;
+        });
+
+        EventBus.$on("updateTableProject", ()=>{
+            this.obtenerProyectos();
+        });
+
+        EventBus.$on("cerrarModalAvisoSolicitud", ()=>{
+             this.msjAvisoSolicitudProyecto = false;
+        });
     },
     created(){
         this.obtenerProyectos();

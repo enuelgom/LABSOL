@@ -13,7 +13,7 @@
                             <p>¿Estás seguro de quierer cerrar sesión?</p>
                         </v-col>
                     </v-row>
-                    <hr>
+                    <v-divider></v-divider>
                     <v-row justify="center">
                         <v-col cols="6" sm="6" md="6" lg="6">
                             <v-btn class="mx-4" style="width:100px; height:40px;" color="error" @click="cerrarLogout" outlined>Cerrar</v-btn>

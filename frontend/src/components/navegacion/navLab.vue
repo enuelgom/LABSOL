@@ -59,7 +59,7 @@ export default {
         msjerror: false,
         añadirProyecto: false,
         abrirLogout: false,
-        ActulizarLab: false
+        ActulizarLab: false,
     }),
     
     computed:{
@@ -100,11 +100,23 @@ export default {
         EventBus.$on("msjErrorActualizarLab", (msj)=>{
             this.msjErrorActualizacion = msj;
             this.msjerror = true;
+            setTimeout(() => {
+                this.msjerror = false;
+            }, 3000);
         });
 
         EventBus.$on("msjDatosLabActualizados", ()=>{
             this.msjsuccess = true;
+            setTimeout(() => {
+                this.msjsuccess = false;
+            }, 3000);
         });
+
+        EventBus.$on("cerrarModalActualizacion", ()=>{
+            setTimeout(() => {
+                this.ActulizarLab = false;
+            }, 3000);
+        })
     }
 
 

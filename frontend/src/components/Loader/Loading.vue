@@ -19,7 +19,9 @@ export default {
     watch:{
         openLoading(val){
             if(!val) return
-             setTimeout(() => EventBus.$emit("closeLoader"), 2000)
+             setTimeout(() => {
+               EventBus.$emit("closeLoader")
+             }, 3000);
         }
     }
 }

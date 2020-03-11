@@ -178,6 +178,7 @@ export default {
         
         // Actualizar datos del laboratorio
         async actualizarDatos(){
+            this.actualizar = true;
             try {
                 const {data} = await apolloClient.mutate({
                     mutation: gql`
@@ -199,12 +200,19 @@ export default {
                 const msj = data.updateLab;
                 if (msj === "Usuario existente") {
                     EventBus.$emit("msjErrorActualizarLab", msj);
-                } else {
+                    this.obtenerDatosLab();
+                } else if(msj === "Siglas existente"){
+                     EventBus.$emit("msjErrorActualizarLab", msj);
+                     this.obtenerDatosLab();
+                }else{
                     // Obtener el token y guardarlo
+                    EventBus.$emit("cerrarModalActualizacion");
+                    EventBus.$emit("updateNombre");
                     localStorage.setItem("token", data.updateLab);
                     this.guardarUsuarioLog();
                     this.obtenerDatosLab();
                     EventBus.$emit("msjDatosLabActualizados");
+                    EventBus.$emit("updateNameLab");
                 }   
 
                  // Mandar el logo

@@ -16,6 +16,7 @@ export default new Vuex.Store({
       tipUsuario: "",
       nom_usuario: "",
       nombre: "",
+      siglas: "",
       _id: ""
     }
   },
@@ -28,6 +29,7 @@ export default new Vuex.Store({
         state.usuarioLogeado.tipUsuario = tokenDec.typeUser
         state.usuarioLogeado.nom_usuario = tokenDec.usuario
         state.usuarioLogeado.nombre = tokenDec.nombre
+        state.usuarioLogeado.siglas = tokenDec.siglas
         state.usuarioLogeado._id = tokenDec._id   
       }
     }
