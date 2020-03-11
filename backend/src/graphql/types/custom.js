@@ -8,6 +8,7 @@ export const custom = `
     }
 
     type Proyecto {
+        _id: String,
         proyecto: String,
         objetivo: String,
         requerimientos: String,

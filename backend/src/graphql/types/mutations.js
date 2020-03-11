@@ -17,7 +17,6 @@ type Mutation{
         perfiles: String,
         habilidades: String,
         avances: String,
-        status: String,
         numAlu: String,
         alumnos: String
     ): String
@@ -116,6 +115,21 @@ type Mutation{
         usuario: String,
         clave: String,
         tipoLaboratorio: String,
+    ): String
+
+    updateProyecto(
+        _id: String,
+        proyecto: String,
+        objetivo: String,
+        requerimientos: String,
+        perfiles: String,
+        habilidades: String,
+        avances: String,
+        numAlu: String,
+    ):String
+
+    eliminarProyecto(
+        proyecto: String,
     ): String
     
 }

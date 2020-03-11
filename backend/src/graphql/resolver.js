@@ -10,6 +10,7 @@ import { verifyExp } from "../auth/index";
 import { loadavg } from "os";
 import { valueFromAST } from "graphql";
 import { addMockFunctionsToSchema } from "graphql-tools";
+import { callbackify } from "util";
 
 const  SECRET = fs.readFileSync("src/private.key");
 const pubsub = new PubSub();
@@ -69,7 +70,7 @@ const resolvers = {
 
         async proyecto(root,args,context){
             const {nombre, proyecto} = args;
-            const _onepro = await labs.findOne({nombre});
+            const _onepro = await labs.findOne({siglas:nombre});
             let _proyecto = {};
             for (let val of _onepro.proyectos) {
                 if (val.proyecto===proyecto) {
@@ -82,8 +83,10 @@ const resolvers = {
         async alumnos(root, args, context){
             try {
                 const{nombre, proyecto, status}= args;
-                const laboratorio = await labs.findOne({nombre});
+                const laboratorio = await labs.findOne({siglas:nombre});
                 let _proyecto = [];
+                console.log(laboratorio);
+                
                 for (let val of laboratorio.proyectos) {
                     if (val.proyecto===proyecto) {
                         _proyecto=val;
@@ -126,7 +129,7 @@ const resolvers = {
             const alumno = await alumnos.findOne({usuario:decoded["usuario"]})
             let misSolicitudes = [];
             for(let val of alumno.solicitudes){
-                const laboratorio = await labs.findOne({nombre: val.nombre})
+                const laboratorio = await labs.findOne({siglas: val.nombre})
                 for(let val2 of laboratorio.proyectos){
                     if(val2.proyecto === val.proyecto){
                         if(alumno.status!="cancelado"){
@@ -173,8 +176,9 @@ const resolvers = {
                 if(lab){
                     if (await bcrypt.compare(clave,lab.clave)) {
                         const typeUser = "1";
-                        const nombre = lab.nombre
-                        return jwt.sign({ usuario, nombre, typeUser, }, SECRET, { expiresIn: '5h' })
+                        const nombre = lab.nombre;
+                        const siglas = lab.siglas;
+                        return jwt.sign({ usuario, nombre, typeUser, siglas }, SECRET, { expiresIn: '5h' })
                     }else{
                         return "Contraseña incorrecta"
                     }
@@ -220,7 +224,14 @@ const resolvers = {
                 await new labs({ nombre,siglas, usuario, clave, tipoLaboratorio }).save();
                 return "Laboratorio registrado";
             } catch (error) {
-                return "El usuario ya existe";
+                const msjerror = error.message;
+                if(msjerror.includes('siglas')){
+                    return "Siglas existentes";
+                }else
+                if(msjerror.includes('usuario')){
+                    return "Usuario existente";
+                }
+
             }
         },
         async updateLab(root, args, context){
@@ -251,12 +262,16 @@ const resolvers = {
                 const typeUser = "1";
                 const nombre = updateLab.nombre;
                 const usuario= updateLab.usuario;
+                const siglas = updateLab.siglas;
                 await updateLab.save();
-                return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+                return jwt.sign({ usuario, siglas, nombre, typeUser}, SECRET, { expiresIn: '2h' })
             } catch (error) {
                 const msjerror = error.message;
-                if(msjerror.includes('E11000')){
+                if(msjerror.includes('usuario')){
                     return "Usuario existente";
+                }else
+                if(msjerror.includes('siglas')){
+                    return "Siglas existente";
                 }
             }
         },
@@ -291,6 +306,70 @@ const resolvers = {
             } catch (error) {
                 return error;
             }
+        },
+
+        async updateProyecto(root, args, context){
+            const  token  = context.token;
+                const decoded = jwt.decode(token, SECRET);       
+                const _blacklist = await blackList.find({token}).findOne();
+                if (!context.token || verifyExp(token) || !_blacklist==""){
+                    return "Tu sesion ha expirado";
+            }
+            const usuario = decoded["usuario"];
+            const {proyecto} = args;
+            const id = args["_id"];
+            const laboratorio = await labs.where({usuario: usuario}).findOneAndUpdate()
+            const datos =["proyecto", "objetivo", "requerimientos", "habilidades", "perfiles", "numAlu"];
+            try{
+                for(let val of laboratorio.proyectos){
+                    if(val._id==id){
+                        const oldpro = val.proyecto;
+                        for(let data of datos){
+                            if (args[data]!="") {
+                                val[data]=args[data];
+                            }
+                            await laboratorio.save();
+                        }
+                        for(let alumno of val.alumnos){
+                            const _alumno = await alumnos.where({_id:alumno["id"]}).findOneAndUpdate();
+                            for(let findalum of _alumno.solicitudes){
+                                if (findalum.proyecto === oldpro) {
+                                    findalum.proyecto =proyecto;
+                                }
+                            }
+                            await _alumno.save();
+                        }
+
+                    }
+
+                }
+                return "hola";
+            }
+            catch(er){
+
+            }
+
+        },
+
+        async eliminarProyecto(root, args, context){
+            const token = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+            try{
+                const decoded = jwt.decode(token, SECRET);
+                const _proyecto = args["proyecto"];
+                const laboratorio = await labs.where({siglas:decoded["siglas"] }).findOneAndUpdate();
+                for(let val of laboratorio.proyectos){
+                    if(val.proyecto==_proyecto){
+                        val.status="Eliminado";
+                    }
+                }
+                await laboratorio.save();
+                return "eliminado"
+            }catch(er){
+
+            }
+
         },
 
         async agregarAlumno(root,args, context){
@@ -413,7 +492,7 @@ const resolvers = {
             const alumno = decoded["usuario"];
 
             const alum = await alumnos.where({usuario:alumno}).findOneAndUpdate();
-            const laboratorio = await labs.where({nombre:nombre}).findOneAndUpdate();
+            const laboratorio = await labs.where({siglas:nombre}).findOneAndUpdate();
 
             for (let val of laboratorio.proyectos) {
                 if (val["proyecto"] == proyecto){
@@ -432,7 +511,7 @@ const resolvers = {
         async aceptarSolicitud(root, args, context){
             const {nombre, proyecto, _id, accion} = args;
 
-            const laboratorio = await labs.where({nombre}).findOneAndUpdate();
+            const laboratorio = await labs.where({siglas:nombre}).findOneAndUpdate();
             for(let val of laboratorio.proyectos){
                 if(val.proyecto === proyecto){
                     for(let val2 of val.alumnos){
@@ -461,7 +540,7 @@ const resolvers = {
 
         async aceptarNuevoProyecto(root, args, context){
             const {nombre, proyecto, accion} = args;
-            const laboratorio = await labs.where({nombre}).findOneAndUpdate();
+            const laboratorio = await labs.where({siglas:nombre}).findOneAndUpdate();
             for (let val of laboratorio.proyectos) {
                 if(val.proyecto === proyecto){
                     val.status=accion;
