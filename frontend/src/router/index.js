@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/proyectos',
+    path: '/',
     name: 'ListaLaboratorios',
     component: () => import('../views/ListaLaboratorios.vue')
   },
@@ -21,7 +21,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: '/proyectos'
+    redirect: '/'
   },
 ]
 

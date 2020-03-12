@@ -10,7 +10,7 @@
                         </v-row>
                     </v-toolbar>
                     <v-card-text>
-                        <v-row class="mt-1" justify="center">
+                        <v-row class="mt-4" justify="center">
                             <p><strong>¿Estás seguro de que desea cancelar la solicitud de este proyecto?</strong></p>
                         </v-row>
                         <v-divider></v-divider>
@@ -74,7 +74,6 @@ export default {
             }
         }
     },
-
 
     mounted(){
         EventBus.$on("datosCancelarProyecto", (dato1, dato2)=>{

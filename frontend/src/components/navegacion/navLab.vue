@@ -10,7 +10,7 @@
                 <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
             </v-toolbar-items>
             <v-spacer />
-            <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
+            <v-toolbar-title>{{ usuarioLogeado.siglas.toUpperCase() }}</v-toolbar-title>
              <v-tooltip bottom>
                 <template v-slot:activator="{on}">
                     <v-btn text icon color="" @click="abrirModalActualizar" v-on="on">

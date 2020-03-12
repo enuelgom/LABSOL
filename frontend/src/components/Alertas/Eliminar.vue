@@ -10,7 +10,7 @@
                         </v-row>
                     </v-toolbar>
                     <v-card-text>
-                        <v-row justify="center">
+                        <v-row class="mt-4" justify="center">
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <p><strong>¿Está seguro que desea borrar este proyecto?</strong></p>
                             </v-col>

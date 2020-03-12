@@ -67,7 +67,7 @@ export default new Vuex.Store({
             setTimeout(()=>{
               localStorage.setItem("token", data.login)
               commit("guardarUsuarioLog")
-            },3000)
+            },1000)
             EventBus.$emit("cerrarLoginTabla");
             break;
         }
@@ -110,7 +110,7 @@ export default new Vuex.Store({
         }
 
       } catch (error) {
-        console.log(datosAlumno)
+        
       }
     },
 
