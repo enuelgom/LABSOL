@@ -14,9 +14,13 @@ filesRoutes.post('/upload', subirImagen.single("imagen"), async (req, res) =>{
 })
 
 filesRoutes.get('/sendImg/:lab',async(req, res) => {
-    const {lab} = req.params;
-    const _lab = await labs.where({nombre: lab}).findOne()
-    res.download(_lab.logo);
+    try {
+        const {lab} = req.params;
+        const _lab = await labs.where({nombre: lab}).findOne()
+        res.download(_lab.logo);
+    } catch (error) {
+        return "fallo"
+    }
 
 })
 

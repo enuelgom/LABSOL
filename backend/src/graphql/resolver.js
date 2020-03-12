@@ -34,14 +34,19 @@ const resolvers = {
             const _allLabs = await labs.find();
             let _count=[];
             for(let val of _allLabs){
-                let i=0;
+                let i=0, j=0;
                 for (let val2 of val.proyectos){
                     if (val2.status === "Nuevo") {
                         i++
                     }
+                    if (val2.status === "Aceptado") {
+                        j++
+                    }
                 }
                 if(i===0){i="";}
-                _count.push({nombre:val.nombre, count: ""+val.proyectos.length, notificaciones: i, tipoLaboratorio: val.tipoLaboratorio,siglas:val.siglas});
+                if (val._status!="Eliminado") {
+                    _count.push({nombre:val.nombre, count: ""+j, notificaciones: i, tipoLaboratorio: val.tipoLaboratorio,siglas:val.siglas});
+                }
             }
             return _count;
 
@@ -118,6 +123,9 @@ const resolvers = {
         },
 
         async infoAlumno(root, args, context){
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
             const {usuario} =args;
             const alum= await alumnos.findOne({usuario});
             return alum;
@@ -187,7 +195,7 @@ const resolvers = {
                 if(alumno){
                     if (await bcrypt.compare(clave, alumno.clave)) {
                         const typeUser = "2";
-                        const nombre = alumno.alumno+" "+alumno.ape_p+" "+alumno.ape_m;
+                        const nombre = alumno.alumno;
                         const _id = alumno._id;
                         return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2h' })
                     }else{
@@ -234,6 +242,28 @@ const resolvers = {
 
             }
         },
+
+        async eliminarLaboratorio(root, args, context){
+
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+
+            const {nombre} = args;
+            const laboratorio = await labs.where({siglas: nombre}).findOneAndUpdate();
+            try{
+                let stat = "Eliminado";            
+                laboratorio._status=stat;
+                await laboratorio.save();
+                return "hecho";
+            }catch(er){
+                
+            }
+
+
+
+        },
+
         async updateLab(root, args, context){
             try {
                 const  token  = context.token;
@@ -421,7 +451,7 @@ const resolvers = {
                     Alumno["clave"]=Clave;
                 }
                 const typeUser = "2";
-                const nombre = Alumno.alumno+" "+Alumno.ape_p+" "+Alumno.ape_m;
+                const nombre = Alumno.alumno;
                 const usuario= Alumno.usuario;
                 await Alumno.save();
                 return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2h' })

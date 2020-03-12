@@ -131,6 +131,10 @@ type Mutation{
     eliminarProyecto(
         proyecto: String,
     ): String
+
+    eliminarLaboratorio(
+        nombre: String
+    ): String
     
 }
 `
