@@ -24,7 +24,10 @@ const  alumnosSchema = new Schema({
     carrera: String,
     semestre_cursado: String,
     domicilio: String,
-    solicitudes: [solicitud],
+    solicitudes: {
+        type: [solicitud],
+        required: true
+    },
     usuario: {
         required: true,
         type: String,

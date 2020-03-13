@@ -19,9 +19,8 @@ filesRoutes.get('/sendImg/:lab',async(req, res) => {
         const _lab = await labs.where({nombre: lab}).findOne()
         res.download(_lab.logo);
     } catch (error) {
-        return "fallo"
+        return error
     }
-
 })
 
 export {filesRoutes};

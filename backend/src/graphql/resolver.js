@@ -90,7 +90,6 @@ const resolvers = {
                 const{nombre, proyecto, status}= args;
                 const laboratorio = await labs.findOne({siglas:nombre});
                 let _proyecto = [];
-                console.log(laboratorio);
                 
                 for (let val of laboratorio.proyectos) {
                     if (val.proyecto===proyecto) {
@@ -458,7 +457,7 @@ const resolvers = {
 
             } catch (error) {
                 const msjerror = error.message;
-                if(msjerror.includes('usuario')){
+                if(msjerror.includes('usuario')){ 
                     return "Usuario existente";
                 }else if(msjerror.includes('correo')){
                     return "Correo existente";
@@ -507,7 +506,7 @@ const resolvers = {
                 await new admin ({ nombre, usuario, clave }).save();
                 return "guardado";
             } catch (error) {
-                
+                return error
             }
         },
 
