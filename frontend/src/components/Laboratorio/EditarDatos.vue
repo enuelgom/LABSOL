@@ -12,15 +12,15 @@
                         <v-container fluid>
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                   <v-text-field v-model="datosLab.nombre" :disabled="actualizar" :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre de la intitución" clearable />
+                                   <v-text-field v-model="datosLab.nombre" :disabled="actualizar" :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre de la intitución" />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field v-model="datosLab.siglas" :disabled="actualizar" :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" clearable />
+                                    <v-text-field v-model="datosLab.siglas" :disabled="actualizar" :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" />
                                 </v-col>
                                  <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-select v-model="datosLab.tipoLaboratorio" :disabled="actualizar" @input="categoria" :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Tipo de laboratorio" clearable />
+                                    <v-select v-model="datosLab.tipoLaboratorio" :disabled="actualizar" @input="categoria" :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Tipo de laboratorio" />
                                 </v-col>
                                  <v-col cols="12" sm="4" md="4" lg="4">
                                     <v-file-input :disabled="actualizar" :rules="ruleslogo" @change="obtenerlogo($event)" accept="image/*" label="Logo de la institución" prepend-icon="fa fa-file-image" ref="fileInput" show-size chips></v-file-input>
@@ -28,16 +28,16 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field v-model="datosLab.usuario" :disabled="actualizar" :rules="usuario" prepend-icon="fa fa-user" label="Usuario" clearable />
+                                    <v-text-field v-model="datosLab.usuario" :disabled="actualizar" :rules="usuario" prepend-icon="fa fa-user" label="Usuario" />
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :disabled="actualizar" :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosLab.psw" clearable 
+                                    <v-text-field :disabled="actualizar" :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosLab.psw" 
                                     :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show ? 'text' : 'password'"
                                     @click:append="show = !show"/>
                                 </v-col> 
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :disabled="actualizar" :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm" clearable 
+                                    <v-text-field :disabled="actualizar" :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm"
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"/>
@@ -134,6 +134,7 @@ export default {
 
         cerrarModalEditar(){
             try {
+                this.$refs.fileInput.reset();
                 this.$refs.vaciar.reset();
                 this.obtenerDatosLab();
                 this.actualizar = true;

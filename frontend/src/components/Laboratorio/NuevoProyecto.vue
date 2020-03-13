@@ -14,15 +14,15 @@
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 1px;"><strong>Informacion del proyecto</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="8" lg="8">
-                                <v-text-field :rules="reglaNombre" prepend-icon="fa fa-info" label="Nombre" v-model="datosProyecto.nombre" clearable />
+                                <v-text-field :rules="reglaNombre" prepend-icon="fa fa-info" label="Nombre" v-model="datosProyecto.nombre" />
                             </v-col>
                             <v-col cols="12" sm="12" md="4" lg="4">
-                                <v-text-field v-mask="mask" type="text" :rules="reglaAlumnosRequeridos" prepend-icon="fa fa-info" label="Alumnos requeridos" v-model="datosProyecto.alumnosRequeridos" min="1" clearable/>
+                                <v-text-field v-mask="mask" type="text" :rules="reglaAlumnosRequeridos" prepend-icon="fa fa-info" label="Alumnos requeridos" v-model="datosProyecto.alumnosRequeridos" min="1" />
                             </v-col>
                         </v-row>
                         <v-row>   
                             <v-col cols="12" sm="12" md="6" lg="6">
-                                <v-textarea rows="3" :rules="reglaObjetivo" prepend-icon="fa fa-list-alt" label="Objetivo" v-model="datosProyecto.objetivo" clearable>
+                                <v-textarea rows="3" :rules="reglaObjetivo" prepend-icon="fa fa-list-alt" label="Objetivo" v-model="datosProyecto.objetivo">
                                   <template v-slot:label>
                                     <div>
                                         <p>Objetivo</p>
@@ -31,7 +31,7 @@
                                 </v-textarea>
                             </v-col>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="3" :rules="reglaRequerimientos" prepend-icon="fa fa-list-alt" label="Alcences" v-model="datosProyecto.requerimientos" clearable>
+                                <v-textarea rows="3" :rules="reglaRequerimientos" prepend-icon="fa fa-list-alt" label="Alcences" v-model="datosProyecto.requerimientos">
                                   <template v-slot:label>
                                     <div>
                                         <p>Requerimientos</p>
@@ -43,7 +43,7 @@
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 1px;"><strong>Perfiles y habilidades requeridas</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="3" :rules="reglaPerfiles" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.perfiles" clearable>
+                                <v-textarea rows="3" :rules="reglaPerfiles" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.perfiles">
                                   <template v-slot:label>
                                     <div>
                                         <p>Perfiles</p>
@@ -52,7 +52,7 @@
                                 </v-textarea>
                             </v-col>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="3" :rules="reglaHabilidades" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.habilidades" clearable>
+                                <v-textarea rows="3" :rules="reglaHabilidades" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.habilidades">
                                   <template v-slot:label>
                                     <div>
                                         <p>Habilidades</p>

@@ -13,21 +13,21 @@
                         <v-container fluid>
                             <v-row>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :disabled="actualizar" :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre" v-model="datosAdmin.nombre" clearable />
+                                    <v-text-field :disabled="actualizar" :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre" v-model="datosAdmin.nombre" />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :disabled="actualizar" :rules="usuario"  prepend-icon="fa fa-id-card" label="Usuario" v-model="datosAdmin.usuario" clearable />
+                                    <v-text-field :disabled="actualizar" :rules="usuario"  prepend-icon="fa fa-id-card" label="Usuario" v-model="datosAdmin.usuario" />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :disabled="actualizar" :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAdmin.psw" clearable 
+                                    <v-text-field :disabled="actualizar" :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAdmin.psw"
                                     :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show ? 'text' : 'password'"
                                     @click:append="show = !show"/>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :disabled="actualizar" :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm" clearable 
+                                    <v-text-field :disabled="actualizar" :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm" 
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"/>
@@ -81,7 +81,8 @@ export default {
             value => !!value || "El nombre es requerido"
         ],
         usuario: [
-            value => !!value || "El usuario es requerido"
+            value => !!value || "El usuario requerido",
+            value => (value || '').length >= 8 || "El usuario debe de tener 8 caracteres"
         ],
         contraseña: [
            value => (value || "").length > 7 || (value || "").length == 0 || "Minimo 8 caracteres"

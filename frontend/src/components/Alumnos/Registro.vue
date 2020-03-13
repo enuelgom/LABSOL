@@ -16,50 +16,50 @@
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Información del alumno</strong></v-card-subtitle>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="nomAlumno" prepend-icon="fa fa-user" label="Nombre" v-model="datosAlumno.nombre" clearable dense />
+                                    <v-text-field :rules="nomAlumno" prepend-icon="fa fa-user" label="Nombre" v-model="datosAlumno.nombre" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="apAlumno" prepend-icon="fa fa-id-card" label="Apellido paterno" v-model="datosAlumno.apellidoP" clearable dense />
+                                    <v-text-field :rules="apAlumno" prepend-icon="fa fa-id-card" label="Apellido paterno" v-model="datosAlumno.apellidoP" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="amAlumno" prepend-icon="fa fa-id-card" label="Apellido materno" v-model="datosAlumno.apellidoM" clearable dense />
+                                    <v-text-field :rules="amAlumno" prepend-icon="fa fa-id-card" label="Apellido materno" v-model="datosAlumno.apellidoM" dense />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="domicilioAlumno" prepend-icon="fa fa-map-marker" label="Domicilio" v-model="datosAlumno.domicilio" clearable dense />
+                                    <v-text-field :rules="domicilioAlumno" prepend-icon="fa fa-map-marker" label="Domicilio" v-model="datosAlumno.domicilio" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field v-mask="mask" :rules="telefonoAlumno" type="text" prepend-icon="fa fa-phone" label="Número telefono" v-model="datosAlumno.telefono" clearable dense />
+                                    <v-text-field v-mask="mask" :rules="telefonoAlumno" type="text" prepend-icon="fa fa-phone" label="Número telefono" v-model="datosAlumno.telefono" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="correoAlumno" prepend-icon="fa fa-envelope" label="Correo" v-model="datosAlumno.correo" clearable dense />
+                                    <v-text-field :rules="correoAlumno" prepend-icon="fa fa-envelope" label="Correo" v-model="datosAlumno.correo" dense />
                                 </v-col>
                             </v-row>
                             <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Información escolar</strong></v-card-subtitle>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="escuelaAlumno" prepend-icon="fa fa-university" label="Institución" v-model="datosAlumno.institucion" clearable dense/>
+                                    <v-text-field :rules="escuelaAlumno" prepend-icon="fa fa-university" label="Institución" v-model="datosAlumno.institucion" dense/>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="carreraAlumno" prepend-icon="fa fa-graduation-cap" label="Carrera" v-model="datosAlumno.carrera" clearable dense/>
+                                    <v-text-field :rules="carreraAlumno" prepend-icon="fa fa-graduation-cap" label="Carrera" v-model="datosAlumno.carrera" dense/>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field v-mask="mask1" dense :rules="semestreAlumno" required v-model="datosAlumno.semestre" clearable prepend-icon="fa fa-sort" type="text" label="Semestre" min="1" max="13"></v-text-field>
+                                    <v-text-field v-mask="mask1" dense :rules="semestreAlumno" required v-model="datosAlumno.semestre"  prepend-icon="fa fa-sort" type="text" label="Semestre" min="1" max="13"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="usuarioAlumno" prepend-icon="fa fa-user" label="Usuario" v-model="datosAlumno.usuario" clearable dense />
+                                    <v-text-field :rules="usuarioAlumno" prepend-icon="fa fa-user" label="Usuario" v-model="datosAlumno.usuario" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="pswAlumno" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAlumno.psw" clearable dense
+                                    <v-text-field :rules="pswAlumno" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAlumno.psw" dense
                                     :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show ? 'text' : 'password'"
                                     @click:append="show = !show"/>
                                 </v-col>
                                 <v-col cols="12" sm=" 6" md="4" lg="4">
-                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmar" v-model="pswConfirm" clearable dense 
+                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmar" v-model="pswConfirm" dense 
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"

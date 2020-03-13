@@ -16,15 +16,15 @@
                         <v-container fluid>
                              <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                   <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre de la intitución" v-model="datosRegistro.nombre" clearable />
+                                   <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre de la intitución" v-model="datosRegistro.nombre" />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" v-model="datosRegistro.siglas" clearable />
+                                    <v-text-field :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" v-model="datosRegistro.siglas" />
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-select :rules="tipLabs" :items="tipLab"  prepend-icon="fa fa-university" label="Tipo de laboratorio" v-model="datosRegistro.tipoLaboratorio"  clearable />
+                                    <v-select :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Laboratorio perteneciente" v-model="datosRegistro.tipoLaboratorio"></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
                                     <v-file-input :rules="ruleslogo" @change="obtenerlogo($event)" accept="image/*" label="Logo de la institución" prepend-icon="fa fa-file-image" show-size chips></v-file-input>
@@ -32,16 +32,16 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="usuario" prepend-icon="fa fa-user" label="Usuario" v-model="datosRegistro.usuario" clearable />
+                                    <v-text-field :rules="usuario" prepend-icon="fa fa-user" label="Usuario" v-model="datosRegistro.usuario" />
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosRegistro.psw" clearable 
+                                    <v-text-field :rules="contraseña" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosRegistro.psw" 
                                     :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show ? 'text' : 'password'"
                                     @click:append="show = !show"/>
                                 </v-col> 
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm" clearable 
+                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmación" v-model="pswConfirm"
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"/>
@@ -75,7 +75,7 @@ export default {
         show: false,
         show1: false,
         pswConfirm: "",
-        tipLab:['Intel', 'Labsol'],
+        tipLab:['Intel','Labsol'],
         datosRegistro: {
             nombre: '',
             siglas: '',

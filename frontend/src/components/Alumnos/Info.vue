@@ -15,51 +15,51 @@
             <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Información del alumno</strong></v-card-subtitle>
             <v-row>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="nombre" :disabled="actualizar" prepend-icon="fa fa-user" label="Nombre" v-model="datoAlumno.alumno" clearable dense />
+                <v-text-field :rules="nombre" :disabled="actualizar" prepend-icon="fa fa-user" label="Nombre" v-model="datoAlumno.alumno" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="apellidoP" :disabled="actualizar" prepend-icon="fa fa-id-card" label="Apellido paterno" v-model="datoAlumno.ape_p" clearable dense />
+                <v-text-field :rules="apellidoP" :disabled="actualizar" prepend-icon="fa fa-id-card" label="Apellido paterno" v-model="datoAlumno.ape_p" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="apellidoM" :disabled="actualizar" prepend-icon="fa fa-id-card" label="Apellido materno" v-model="datoAlumno.ape_m" clearable dense />
+                <v-text-field :rules="apellidoM" :disabled="actualizar" prepend-icon="fa fa-id-card" label="Apellido materno" v-model="datoAlumno.ape_m" dense />
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaDomicilio" :disabled="actualizar" prepend-icon="fa fa-map-marker" label="Domicilio" v-model="datoAlumno.domicilio" clearable dense />
+                <v-text-field :rules="reglaDomicilio" :disabled="actualizar" prepend-icon="fa fa-map-marker" label="Domicilio" v-model="datoAlumno.domicilio" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaTelefono" v-mask="mask" :disabled="actualizar" prepend-icon="fa fa-phone" label="Número de telefono" v-model="datoAlumno.telefono" clearable dense />
+                <v-text-field :rules="reglaTelefono" v-mask="mask" :disabled="actualizar" prepend-icon="fa fa-phone" label="Número de telefono" v-model="datoAlumno.telefono" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaCorreo" :disabled="actualizar" prepend-icon="fa fa-envelope" label="Correo" v-model="datoAlumno.correo" clearable dense />
+                <v-text-field :rules="reglaCorreo" :disabled="actualizar" prepend-icon="fa fa-envelope" label="Correo" v-model="datoAlumno.correo" dense />
               </v-col>
             </v-row>
             <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Información escolar</strong></v-card-subtitle>
             <v-row>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaInstitucion" :disabled="actualizar" prepend-icon="fa fa-university" label="Institución" v-model="datoAlumno.institucion" clearable dense />
+                <v-text-field :rules="reglaInstitucion" :disabled="actualizar" prepend-icon="fa fa-university" label="Institución" v-model="datoAlumno.institucion" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaCarrera" :disabled="actualizar" prepend-icon="fa fa-graduation-cap" label="Carrera" v-model="datoAlumno.carrera" clearable dense />
+                <v-text-field :rules="reglaCarrera" :disabled="actualizar" prepend-icon="fa fa-graduation-cap" label="Carrera" v-model="datoAlumno.carrera" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaSemestre" v-mask="mask1" :disabled="actualizar" type="text" prepend-icon="fa fa-sort" label="Semestre" v-model="datoAlumno.semestre_cursado" min="1" max="13" clearable dense />
+                <v-text-field :rules="reglaSemestre" v-mask="mask1" :disabled="actualizar" type="text" prepend-icon="fa fa-sort" label="Semestre" v-model="datoAlumno.semestre_cursado" min="1" max="13" dense />
               </v-col>
             </v-row>
             <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Cuenta</strong></v-card-subtitle>
             <v-row>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="reglaUsuario" :disabled="actualizar" prepend-icon="fa fa-user" label="Usuario" v-model="datoAlumno.usuario" clearable dense />
+                <v-text-field :rules="reglaUsuario" :disabled="actualizar" prepend-icon="fa fa-user" label="Usuario" v-model="datoAlumno.usuario" dense />
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :rules="pswAlumno" :disabled="actualizar" prepend-icon="fa fa-lock" label="Contraseña" v-model="datoAlumno.psw" clearable dense
+                <v-text-field :rules="pswAlumno" :disabled="actualizar" prepend-icon="fa fa-lock" label="Contraseña" v-model="datoAlumno.psw" dense
                 :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                 :type="show ? 'text' : 'password'"
                 @click:append="show = !show"/>
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="4">
-                <v-text-field :disabled="actualizar" :rules="confirmacionPsw" v-model="pswConfirm" prepend-icon="fa fa-lock" label="Contraseña" clearable dense
+                <v-text-field :disabled="actualizar" :rules="confirmacionPsw" v-model="pswConfirm" prepend-icon="fa fa-lock" label="Contraseña" dense
                 :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                 :type="show1 ? 'text' : 'password'"
                 @click:append="show1 = !show1"/>

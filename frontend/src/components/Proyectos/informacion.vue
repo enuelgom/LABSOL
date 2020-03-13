@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div> 
         <v-dialog v-model="visible" fullscreen hide-overlay transition="dialog-bottom-transition" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
@@ -11,15 +11,15 @@
                      <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Informacion del proyecto</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="9" lg="9">
-                                <v-text-field prepend-icon="fa fa-info" label="Nombre" v-model="datosProyecto.nombre" clearable readonly/>
+                                <v-text-field prepend-icon="fa fa-info" label="Nombre" v-model="datosProyecto.nombre" readonly/>
                             </v-col>
                             <v-col cols="12" sm="12" md="3" lg="3">
-                                <v-text-field type="text" prepend-icon="fa fa-users" label="Alumnos requeridos" v-model="datosProyecto.alumnosRequeridos" min="1" clearable readonly/>
+                                <v-text-field type="text" prepend-icon="fa fa-users" label="Alumnos requeridos" v-model="datosProyecto.alumnosRequeridos" min="1" readonly/>
                             </v-col>
                         </v-row>
                         <v-row>   
                             <v-col cols="12" sm="12" md="6" lg="6">
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Objetivo" v-model="datosProyecto.objetivo" clearable readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Objetivo" v-model="datosProyecto.objetivo" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Objetivo</p>
@@ -28,7 +28,7 @@
                                 </v-textarea>
                             </v-col>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Alcences" v-model="datosProyecto.requerimientos" clearable readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Alcences" v-model="datosProyecto.requerimientos" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Requerimientos</p>
@@ -40,7 +40,7 @@
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Perfiles y habilidades requeridas</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.perfiles" clearable readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.perfiles" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Perfiles</p>
@@ -49,7 +49,7 @@
                                 </v-textarea>
                             </v-col>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.habilidades" clearable readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.habilidades" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Habilidades</p>
@@ -72,6 +72,7 @@
                         </v-row>
                 </v-card-text>
             </v-card>
+        </v-dialog>
         </v-dialog>
     </div>
 </template>

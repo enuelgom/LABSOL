@@ -6,15 +6,15 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" sm="6" md="6" lg="6">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la metodología" clearable />
+                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la metodología" />
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" sm="4" md="4" lg="4">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la fase" clearable />
+                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la fase" />
                         </v-col>
                         <v-col cols="10" sm="5" md="5" lg="5">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de actividad" clearable />
+                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de actividad" />
                         </v-col>
                         <v-col cols="2" sm="3" md="3" lg="3">
                             <v-tooltip bottom>

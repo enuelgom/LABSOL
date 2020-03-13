@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-dialog v-model="openModel" max-width="400" persistent>
-            <v-form ref="formLogin" v-model="isValid">
+            <v-form ref="formLogin" v-model="isValid" v-on:submit.prevent>
                 <v-card color="grey lighten-3">
                     <v-toolbar color="primary" dark>
                         <v-card-title>Iniciar sesión</v-card-title> 
@@ -12,19 +12,19 @@
                         <v-container fluid>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field autofocus :rules="rulesUser" prepend-icon="fas fa-user-circle" label="Usuario" v-model="user.usuario" clearable />
+                                    <v-text-field autofocus :rules="rulesUser" prepend-icon="fas fa-user-circle" label="Usuario" v-model="user.usuario"  />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field :rules="rulesPsw" prepend-icon="fas fa-lock" label="Contraseña" v-model="user.password" clearable
+                                    <v-text-field :rules="rulesPsw" prepend-icon="fas fa-lock" label="Contraseña" v-model="user.password"
                                         :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                         :type="show ? 'text' : 'password'"
                                         @click:append="show = !show"/>
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-btn block :disabled="!isValid" color="success" @click="login(user)" rounded>Ingresar</v-btn>
+                                <v-btn block :disabled="!isValid" color="success" type="submit" @click="login(user)" rounded>Ingresar</v-btn>
                             </v-row>
                         </v-container>
                         <div class="text-center my-2">
@@ -74,9 +74,9 @@ export default {
                 this.$refs.formLogin.reset();
             } catch (error) {
             }
-        },
-        
-        ...mapActions(["login"]),
+        },      
+        ...mapActions(["login"])
+  
     },
 
     mounted(){
