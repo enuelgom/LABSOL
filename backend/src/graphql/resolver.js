@@ -17,12 +17,59 @@ const pubsub = new PubSub();
 let lista = [];
 
 const resolvers = {
+    
     Subscription:{
         lista:{ 
             subscribe: () => pubsub.asyncIterator(["LISTA"])
         }
     },
     Query: {
+        async getFaseAct(root, args, context){
+            try{
+                const {nombre, proyecto} = args;
+                const _lab = await labs.where({nombre}).findOne();
+                let datos = [];
+                for ( let val of _lab.proyectos ) {
+                    if(val.proyecto===proyecto){
+                        for(let val2 of val.avances.fases){
+                            datos.push({fase:val2.fase, _rowVariant:"success"});
+                            for(let val3 of val2.actividades){
+                                if((val3.evaluacion===null || val3.evaluacion==="")){
+                                    datos.push({actividades:val3._actividad,semI:val3.semanaInicio,semF:val3.semanaTerminacion,evaluacion:""})
+                                }else{
+                                    datos.push({actividades:val3._actividad,semI:val3.semanaInicio,semF:val3.semanaTerminacion,evaluacion:val3.evaluacion}); 
+                                }
+                            }
+                        }
+                    }    
+                }
+                return datos;
+            }
+            catch(e){
+                console.log(e);
+                return e;
+            }
+        },
+
+        async existeMetod(root, args, context){
+            try{
+                const {nombre, proyecto} = args;
+                const _lab = await labs.where({nombre}).findOne();
+                for(let val of _lab.proyectos){
+                    if (val.proyecto===proyecto) {
+                        if(val.avances.metodologia===""){
+                            return false
+                        }else{
+                            return val.avances.metodologia
+                        }
+                    }
+                }
+            }
+            catch(e){
+                return e
+            }
+        },
+
         async getLabName(root, args, context){
             const {siglas}=args;
             const nameLab = await labs.where({siglas}).findOne();
@@ -165,6 +212,12 @@ const resolvers = {
             return "agregado";
         },
         async login(root, args, context){
+            // const date = new Date(2020,2,18);
+            // const dateNow = new Date();
+            // if(date > dateNow) console.log("aun no es fecha")
+
+            // console.log(date)
+
             const {usuario, clave} = args;
             try{
                 const alumno = await alumnos.where({ usuario}).findOne();
@@ -196,7 +249,7 @@ const resolvers = {
                         const typeUser = "2";
                         const nombre = alumno.alumno;
                         const _id = alumno._id;
-                        return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2h' })
+                        return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '5h' })
                     }else{
                         return "Contraseña incorrecta"
                     }
@@ -209,8 +262,7 @@ const resolvers = {
         async logOut(root,args,context){
             const  token  = context.token;
             const _blacklist = await blackList.find({token}).findOne();
-            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
-            
+            if (!context.token || !_blacklist=="") return "Tu sesion ha expirado";
             await new blackList({ token }).save();
             return "sesion Cerrada";
         },
@@ -545,6 +597,13 @@ const resolvers = {
                 if(val.proyecto === proyecto){
                     for(let val2 of val.alumnos){
                         if(val2._id===_id){
+                            const alum = await alumnos.where({_id}).findOneAndUpdate();
+                            for(let val3 of alum.solicitudes){
+                                if(val3.proyecto===proyecto && val3.nombre===nombre){
+                                    val3._status = accion;
+                                }
+                            }
+                            await alum.save();
                             val2.status=accion;
                         }
                     }
@@ -552,19 +611,6 @@ const resolvers = {
             }
             await laboratorio.save();
             return "hecho..."
-        },
-        
-        async asignarAvance(root, args, context){
-
-            const {laboratorio, proyecto , metodologia, fase, actividad0, actividad1, actividad2, actividad3, actividad4} = args;
-            const lab = await labs.where().findOneAndUpdate();
-            for(let val of lab.proyectos){
-                if(val["proyectos"] == proyecto){
-
-                    val.proyectos.avances.push()
-                }
-            }
-
         },
 
         async aceptarNuevoProyecto(root, args, context){
@@ -582,6 +628,8 @@ const resolvers = {
             const {nombre, proyecto} = args;
 
             const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
             const decoded = jwt.decode(token, SECRET);
             const alumno = await alumnos.where({usuario:decoded["usuario"]}).findOneAndUpdate()
             for(let val of alumno.solicitudes){
@@ -602,6 +650,98 @@ const resolvers = {
             }
             await laboratorio.save()
             return "Hecho"
+        },
+
+        async Metodologia(root, args, context){
+            const {nombre, proyecto, metodologia} = args;
+            const lab = await labs.where({nombre}).findOneAndUpdate()
+            try{
+                for(let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                        if(val.avances.metodologia!=""){
+                            console.log("gola")
+                            val.avances.metodologia=metodologia
+                        }else{
+                            val.avances=({metodologia:metodologia})
+                        }
+                    }
+                }
+                await lab.save();
+                return "Metodologia agregada"
+            }catch(e){
+                return e;
+            }
+        },
+
+        async asignarAvance(root, args, context){
+            const {nombre, proyecto,fase,actividad,semanaInicial,semanaTerminacion} = args;
+            const lab = await labs.where({nombre}).findOneAndUpdate();
+            try{
+                for(let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                        let existe = false;
+                        if(val.avances.fases.length>0){
+                            // console.log("si hay datos");
+                            for(let val2 of val.avances.fases){
+                                if(val2.fase===fase){
+                                    // console.log("funciona!");
+                                    existe=true;
+                                    val2.actividades.push({_actividad:actividad, semanaInicio:semanaInicial,semanaTerminacion:semanaTerminacion, evaluacion:null});
+                                }
+                            }
+                            if (!existe) {
+                                // console.log("no existe la fase");
+                                val.avances.fases.push({fase:fase, actividades:{_actividad:actividad, semanaInicio:semanaInicial,semanaTerminacion:semanaTerminacion,evaluacion:null}});
+                            }
+                        }else{
+                            // console.log("no hay ni una fase");
+                            val.avances.fases.push({fase:fase, actividades:{_actividad:actividad, semanaInicio:semanaInicial,semanaTerminacion:semanaTerminacion, evaluacion:null}});
+                        }
+                    }
+                }
+                await lab.save();
+                return "Hecho"
+            }catch(e){
+                return e
+            }
+        },
+        
+        async calificarAvance(root, args, context){
+            const {nombre, proyecto, actividad, calificacion} = args;
+            const lab = await labs.where({nombre}).findOneAndUpdate();
+            try{
+                for(let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                            for(let val2 of val.avances.fases){
+                                for(let val3 of val2.actividades){
+                                    if (val3._actividad===actividad) {
+                                        val3.evaluacion=calificacion;
+                                    }
+                                }
+                            }
+                    }
+                }
+                await lab.save();
+                return "Hecho"
+            }catch(e){
+                return e
+            }
+        },
+
+        async borrarCronograma(root,args,context){
+            const {nombre, proyecto, actividad, calificacion} = args;
+            const lab = await labs.where({nombre}).findOneAndUpdate();
+            try{
+                for(let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                        val.avances.fases=[];
+                    }
+                }
+                await lab.save();
+                return "Hecho"
+            }catch(e){
+                return e
+            }          
         }
     }
 }

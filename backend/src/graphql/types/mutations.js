@@ -55,19 +55,23 @@ type Mutation{
         elemento: String
     ): String
 
-    asignarAvance(
-        laboratorio: String,
+    Metodologia(
+        nombre: String,
         proyecto: String,
-        metodologia: String,
+        metodologia: String
+    ): String
+
+    asignarAvance(
+        nombre: String,
+        proyecto: String,
         fase: String,
-        actividad0: String,
-        actividad1: String,
-        actividad2: String,
-        actividad3: String,
-        actividad4: String
+        actividad: String,
+        semanaInicial: String,
+        semanaTerminacion: String
     ): String
 
         
+    
     actualizarALumno(
         _id: String,
         alumno: String
@@ -134,6 +138,18 @@ type Mutation{
 
     eliminarLaboratorio(
         nombre: String
+    ): String
+
+    calificarAvance(
+        nombre: String,
+        proyecto: String,
+        actividad: String,
+        calificacion: String
+    ): String
+
+    borrarCronograma(
+        nombre: String,
+        proyecto: String,
     ): String
     
 }

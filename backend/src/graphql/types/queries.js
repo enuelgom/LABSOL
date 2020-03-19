@@ -35,5 +35,15 @@ export const queries = `
         getLabName(
             siglas: String
         ): String
+
+        existeMetod(
+            nombre: String,
+            proyecto: String
+        ): String
+
+        getFaseAct(
+            nombre: String,
+            proyecto: String
+        ): [_Actividades]
     }
 `

@@ -9,6 +9,22 @@ let id_alu = {
     status: String
 }
 
+let Actividad = {
+    _actividad: String,
+    semanaInicio: String,
+    semanaTerminacion: String,
+    evaluacion: String
+}
+
+let fase = {
+    fase: String,
+    actividades: [Actividad]
+}
+
+let avance = {
+    metodologia: String,
+    fases: [fase]
+}
 
 
 const  proyectos = new Schema({
@@ -17,7 +33,7 @@ const  proyectos = new Schema({
     requerimientos: String,
     perfiles: String,
     habilidades: String,
-    avances: [String],
+    avances: avance,
     status: String,
     numAlu: String,
     alumnos:{

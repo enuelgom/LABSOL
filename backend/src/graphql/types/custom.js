@@ -117,4 +117,13 @@ export const custom = `
         usuario: String,    
         tipoLaboratorio: String,
     }
+
+    type _Actividades{
+        fase: String,
+        actividades: String,
+        semI: String,
+        semF: String,
+        evaluacion: String,
+        _rowVariant: String
+    }
 `
