@@ -20,7 +20,16 @@
                           <v-icon>fa fa-ban</v-icon>
                       </v-btn>
                   </template>
-                  <span>Cancelar solicitud</span>
+                  <span v-if="item.status!='Aceptado'">Cancelar solicitud</span>
+                  <span v-else>Cancelar proyecto</span>
+                </v-tooltip>
+                <v-tooltip bottom v-if="item.status === 'Aceptado'">
+                  <template v-slot:activator="{on}">
+                      <v-btn text color="blue" v-on="on" @click="verficarMetodologia(item.nombre, item.proyecto)">
+                        <v-icon>fa fa-file</v-icon>
+                      </v-btn>
+                  </template>
+                  <span>Agregar metodologia</span>
                 </v-tooltip>
             </template>
             <template v-slot:item.status="{item}">
@@ -29,6 +38,7 @@
       </v-data-table>
     </v-card>
     <CancelarSolicitud :cancelarSolicitudAlumno="alertaCancelar" />
+    <AgregarMetodologia :modalAlertaMetodologia="alertaMetodologia" />
   </div>
 </template>
 
@@ -37,24 +47,29 @@ import { apolloClient } from '../../graphql/apollo'
 import gql from 'graphql-tag'
 import { mapState } from "vuex"
 import CancelarSolicitud from '@/components/Alertas/CancelarSolicitud'
+import AgregarMetodologia from '@/components/Alertas/AgregarMetodologia'
 import { EventBus } from '../../EventBus'
 
 export default {
   name: "Proyectos",
-  components: {CancelarSolicitud},
+  components: {CancelarSolicitud, AgregarMetodologia},
 
   data: () => ({
+    validacionMetodologia: '',
     filtro: "",
     loading: false,
+    alertaMetodologia: false,
     alertaCancelar: false,
     nomProyecto: "",
     nomLaboratorio: "",
+    existeMetod: false,
+    nomMetod: '',
     headers: [
       {text: "Numero", value: "numero", filerable: false},
       {text: "Nombre", value: "proyecto"},
       {text: "Laboratorio", value: "nombre", filerable: false, align: 'center', sortable: false, value: 'nombre'},
       {text: "Estatus", value: "status", filerable: false, align: 'center', sortable: false, value: 'status'},
-      {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
+      {text: "Acciones", value: "acciones", filerable: false, sortable: false, value: 'acciones'},
     ],
     misSolicitudes: []
   }),
@@ -96,17 +111,46 @@ export default {
               var numero="numero";
               var value = ""+i;
               val[numero]=value;
-          }
+              }
         this.misSolicitudes=data.misSolicitudes;
       } catch (error) {
 
       }
     },
+
     cancelarSolicitud(datos){
       this.nomProyecto = datos.proyecto;
       this.nomLaboratorio = datos.nombre;
       EventBus.$emit("datosCancelarProyecto", this.nomProyecto, this.nomLaboratorio);
       this.alertaCancelar = true;
+    },
+
+    async verficarMetodologia(nombre, proyecto){
+      try {
+        const {data} = await this.$apollo.query({
+          query: gql`
+            query($nombre: String!, $proyecto: String!)
+            {
+              existeMetod(nombre: $nombre, proyecto: $proyecto)
+            }
+          `,
+          variables: {
+            nombre: nombre,
+            proyecto: proyecto
+          }
+        })
+        if (data.existeMetod!='') {
+          this.nomMetod = data.existeMetod;
+          EventBus.$emit("tablaMetodologiaVisible",nombre, proyecto, this.nomMetod);
+        }else{
+          let Nombre = nombre;
+          let Proyecto = proyecto;
+          this.alertaMetodologia = true;
+          EventBus.$emit("datosMetodologia", Nombre, Proyecto);
+        }
+      } catch (error) {
+                
+      }
     }
 
   },
@@ -118,6 +162,10 @@ export default {
 
     EventBus.$on("actualizarTablaSolicitudes",()=>{
       this.solicitudesProyectos();
+    });
+
+    EventBus.$on("cerrarModalAlertaMetodologia", ()=>{
+      this.alertaMetodologia = false;
     });
     
     this.solicitudesProyectos();

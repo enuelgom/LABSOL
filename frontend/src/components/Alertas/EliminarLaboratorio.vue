@@ -11,7 +11,7 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-row class="mt-4" justify="center">
-                            <p><strong>¿Está seguro que desea borrar este laboratorio?</strong></p>
+                            <p class="text-center"><strong>¿Está seguro que desea borrar este laboratorio?</strong></p>
                         </v-row>
                         <v-divider></v-divider>
                         <v-row justify="center">

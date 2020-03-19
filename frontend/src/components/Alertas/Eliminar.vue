@@ -12,7 +12,7 @@
                     <v-card-text>
                         <v-row class="mt-4" justify="center">
                             <v-col cols="12" sm="12" md="12" lg="12">
-                                <p><strong>¿Está seguro que desea borrar este proyecto?</strong></p>
+                                <p class="text-center"><strong>¿Está seguro que desea borrar este proyecto?</strong></p>
                             </v-col>
                         </v-row>
                         <v-divider></v-divider>

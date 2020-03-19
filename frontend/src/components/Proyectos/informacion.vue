@@ -1,6 +1,6 @@
 <template>
     <div> 
-        <v-dialog v-model="visible" fullscreen hide-overlay transition="dialog-bottom-transition" persistent>
+        <v-dialog v-model="visible" :fullscreen="isLab" :max-width="900" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
                     <v-card-title>Información del proyecto</v-card-title>
@@ -8,7 +8,6 @@
                         <v-btn icon @click="closeModalProyecto()"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
-                     <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Informacion del proyecto</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="9" lg="9">
                                 <v-text-field prepend-icon="fa fa-info" label="Nombre" v-model="datosProyecto.nombre" readonly/>
@@ -37,10 +36,9 @@
                                 </v-textarea>
                             </v-col>
                         </v-row>
-                        <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Perfiles y habilidades requeridas</strong></v-card-subtitle>
                         <v-row>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.perfiles" readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Perfiles" v-model="datosProyecto.perfiles" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Perfiles</p>
@@ -49,7 +47,7 @@
                                 </v-textarea>
                             </v-col>
                             <v-col cols="12" sm="12" md="6" lg="6" >
-                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Metas" v-model="datosProyecto.habilidades" readonly>
+                                <v-textarea rows="4" prepend-icon="fa fa-list-alt" label="Habilidades" v-model="datosProyecto.habilidades" readonly>
                                   <template v-slot:label>
                                     <div>
                                         <p>Habilidades</p>
@@ -58,8 +56,8 @@
                                 </v-textarea>
                             </v-col>
                         </v-row>
-                        <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab">
-                        <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Integrantes del desarrollo</strong></v-card-subtitle>
+                        <v-row v-if="(usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab) && visible3">
+                        <v-card-subtitle class="subtitle-2 font-weight-black ml-3" style="padding: 5px;"><strong>Integrantes del proyecto</strong></v-card-subtitle>
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <v-data-table 
                                     :headers="headers"   
@@ -70,9 +68,14 @@
                                 </v-data-table>
                             </v-col>
                         </v-row>
+                        <v-row v-if="(usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab)&& visible2">
+                            <v-card-subtitle class="subtitle-2 font-weight-black ml-3" style="padding: 5px;"><strong>Cronograma de actividades</strong></v-card-subtitle>
+                            <v-col cols="12" sm="12" md="12" lg="12">
+                                <Metodologia />
+                            </v-col>
+                        </v-row>
                 </v-card-text>
             </v-card>
-        </v-dialog>
         </v-dialog>
     </div>
 </template>
@@ -82,12 +85,18 @@ import gql from 'graphql-tag'
 import { EventBus } from '@/EventBus'
 import { mapState } from "vuex"
 import { apolloClient } from '../../graphql/apollo'
+import Metodologia from '@/components/Proyectos/Metodologia'
 
 export default {
     name: "Informacion",
     props: ["visible","nomProyecto"],
+    components: {Metodologia},
 
     data: ()=>({
+        isLab: false,
+        visible2: false,
+        Estatus: '',
+        visible3: false,
         alumnos: [],
         Infoproyecto: "",
         datosProyecto:{
@@ -183,22 +192,74 @@ export default {
             }
         },
 
-        closeModalProyecto(){EventBus.$emit("CerrarVerProyecto")}
+        async verficarMetodologia(){
+            try {
+                const {data} = await this.$apollo.query({
+                query: gql`
+                    query($nombre: String!, $proyecto: String!)
+                    {
+                        existeMetod(nombre: $nombre, proyecto: $proyecto)
+                    }
+                `,
+                variables: {
+                    nombre: this.usuarioLogeado.nombre,
+                    proyecto: this.Infoproyecto
+                }
+                })
+                if (data.existeMetod===null || data.existeMetod===false) {
+                    this.visible2=false;
+                }else{
+                    this.visible2=true;
+                    setTimeout(() => {
+                        EventBus.$emit("tablaMetodologiaDatos", this.usuarioLogeado.nombre, this.Infoproyecto, data.existeMetod);
+                    }, 500);
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+
+        closeModalProyecto(){
+            this.visible2=false;
+            setTimeout(() => {
+                EventBus.$emit("CerrarVerProyecto")
+                EventBus.$emit("vaciarTablaActividades")
+            }, 10);
+        }
     },
 
     mounted(){
         document.addEventListener("keydown", event => {
             const keypressed = event.key;
             if(keypressed === "Escape"){
-                EventBus.$emit("CerrarVerProyecto")
+                this.closeModalProyecto();
             }
         });
      
-        EventBus.$on("VerInfoProyecto", (proyecto)=>{
+        EventBus.$on("VerInfoProyecto", ( nombre, proyecto, estatus)=>{
+            this.Estatus = estatus;
+
+        if (this.Estatus==='Nuevo') {
+            this.visible3 = false;
+        }else{
+            this.visible3 = true;
+        }
+        
+        if(this.usuarioLogeado.tipUsuario==='1' && this.visible3){
+            this.isLab = true;
+        }else{
+            this.isLab = false;
+        }
+
             this.Infoproyecto = proyecto;
             this.ObtenerInfoLab();
             this.obtenerAlumnos();
+            setTimeout(() => {
+                this.verficarMetodologia();
+            }, 300);
         });
     }
 }
 </script>
+

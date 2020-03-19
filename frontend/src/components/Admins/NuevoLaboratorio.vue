@@ -24,7 +24,7 @@
                                     <v-text-field :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" v-model="datosRegistro.siglas" />
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-select :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Laboratorio perteneciente" v-model="datosRegistro.tipoLaboratorio"></v-select>
+                                    <v-select :rules="tipLabs" :items="tipLab" ref="vaciarSelect" prepend-icon="fa fa-university" label="Tipo laboratorio" v-model="datosRegistro.tipoLaboratorio"></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="4" md="4" lg="4">
                                     <v-file-input :rules="ruleslogo" @change="obtenerlogo($event)" accept="image/*" label="Logo de la institución" prepend-icon="fa fa-file-image" show-size chips></v-file-input>
@@ -119,9 +119,10 @@ export default {
         cerrarModal(){
             EventBus.$emit("cerrarRegistroLab");
             try {
-                this.$refs.formLaboratorio.reset();                
+                this.$refs.formLaboratorio.reset(); 
+                this.$refs.vaciarSelect.reset();           
             } catch (error) {
-            }
+                }
         },
 
         obtenerlogo(e){

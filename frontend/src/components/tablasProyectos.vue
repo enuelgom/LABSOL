@@ -18,9 +18,9 @@
                     <v-data-table :headers="headers" v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas === this.$route.params.nameLab"
                     :search="filtro" 
                     no-data-text="No existen proyectos disponibles" 
-                    :loading="loading"
                     class="elevation-1" 
-                    loading-text="Cargando..."
+                    :loading="loading"
+                    loading-text="Cargando... espere por favor"
                     no-results-text="Proyecto no encontrado"
                     :footer-props="{itemsPerPageText:'Paginación'}"
                     :items="proyectos">
@@ -98,9 +98,9 @@
                     <v-data-table :headers="headers2" v-else
                     :search="filtro" 
                     no-data-text="No existen proyectos disponibles" 
-                    :loading="loading"
+                    :loading="loading" 
+                    loading-text="Cargando... espere por favor"
                     class="elevation-1" 
-                    loading-text="Cargando..."
                     no-results-text="Proyecto no encontrado"
                     :footer-props="{itemsPerPageText:'Paginación'}"
                     :items="proyectos"> 
@@ -225,7 +225,9 @@ export default {
         nombreProyecto: "",
         nomProyecto: "",
         idProyecto: "",
+        metodologia: false,
         selected: "Nuevos proyectos",
+        comodin: [],
         headers: [
             {text: "Número", value: "numero", filerable: false},
             {text: "Nombre", value: "proyecto"},
@@ -313,6 +315,8 @@ export default {
 
         // Obtener los proyectos de los laboratorios
         async obtenerProyectos(){
+            this.proyectos=[];
+            this.loading=true;
             try {
                 const { data } = await this.$apollo.query({
                     query:gql`
@@ -339,24 +343,24 @@ export default {
                 }else{
                     this.labExistente=2;
                 }
-                var i = 0;
-                for(let val of data.oneLab){
-                    i=i+1;
+                let j =0;
+                for (let val of data.oneLab){
+                    j=j+1;
                     var numero="numero";
-                    var value = ""+i;
+                    var value = ""+j;
                     val[numero]=value;
                 }
-                this.proyectos = data.oneLab;
-                this.loading = false;
+
+                this.comodin = data.oneLab;
+                this.notificaciones();
                 
             } catch (error) {
                
             }
-            this.notificaciones();
         },
         async notificaciones(){
-            for(let val of this.proyectos){
-                let i =0;
+            let i = 0;
+            for(let val of this.comodin){
                 try{
                     const { data } = await this.$apollo.query({
                         query:gql`
@@ -374,15 +378,20 @@ export default {
                         }
                     })
                     
-                    for(let val of data.proyecto.alumnos){
-                        if(val.status==="En espera") i++
+                    for(let val2 of data.proyecto.alumnos){
+                        if(val2.status==="En espera") i++
+                    }
+                    if (i===0) {
+                        i="";
                     }
 
+                    val["notificaciones"]=""+i;
                 }catch(err){
                     console.log(err)
                 }
-                val["notificaciones"]=i;
             }
+            this.proyectos = this. comodin
+            this.loading = false;
         },
        
         async solicitarProyecto(proyecto){
@@ -413,9 +422,11 @@ export default {
         },
 
         verInfo(proyecto){
-            this.nombreProyecto = proyecto.proyecto;
-            EventBus.$emit("VerInfoProyecto", this.nombreProyecto)
-            this.mostrarInfProyecto = true;   
+            setTimeout(() => {
+                EventBus.$emit("VerInfoProyecto",this.usuarioLogeado.nombre, proyecto.proyecto, proyecto.status);
+                this.nombreProyecto = proyecto.proyecto;
+                this.mostrarInfProyecto = true;   
+            }, 500);
         },
 
         verSolicitudes(proyecto){
@@ -425,6 +436,7 @@ export default {
         }
     },
     mounted(){
+
         this.com = this.headers;
         this.headers = this.headers2;
         if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.siglas != this.$route.params.nameLab) && this.usuarioLogeado.tipUsuario != '0'){
@@ -486,6 +498,7 @@ export default {
         this.obtenerProyectos();
         this.name = this.$route.params.nameLab
     }
+
 
 }
 </script>

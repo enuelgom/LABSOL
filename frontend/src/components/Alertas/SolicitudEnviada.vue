@@ -10,7 +10,7 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-row class="mt-4" justify="center">
-                            <p><strong>Tu solicitud fue enviada. Podras verificar en tu perfil las solicitudes realizadas.</strong></p>
+                            <p class="text-center"><strong>Tu solicitud fue enviada. Podras verificar en tu perfil las solicitudes realizadas.</strong></p>
                         </v-row>
                         <v-divider></v-divider>
                         <v-row justify="center">

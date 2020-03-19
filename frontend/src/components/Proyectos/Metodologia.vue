@@ -1,59 +1,388 @@
 <template>
     <div>
-        <v-container>
-            <v-card color="grey lighten-3">
-                <v-card-title>Metodología</v-card-title>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="6" md="6" lg="6">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la metodología" />
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12" sm="4" md="4" lg="4">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de la fase" />
-                        </v-col>
-                        <v-col cols="10" sm="5" md="5" lg="5">
-                            <v-text-field prepend-icon="fas fa-user-circle" label="Nombre de actividad" />
-                        </v-col>
-                        <v-col cols="2" sm="3" md="3" lg="3">
-                            <v-tooltip bottom>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn text icon color="primary" class="mt-4" v-on="on">
-                                        <v-icon>fa fa-plus</v-icon>
+        <v-card elevation="6">
+            <v-toolbar flat color="white">
+                <v-card-title>Cronograma</v-card-title>
+                <v-spacer></v-spacer>
+                 <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
+                    <template v-slot:activator="{on}">
+                        <v-btn text icon color="success" v-on="on" @click="abrirModalFaseAct">
+                        <v-icon>fa fa-pencil-alt</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Agregar fases y actividades</span>
+                </v-tooltip>
+                <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
+                    <template v-slot:activator="{on}">
+                        <v-btn text icon color="red" v-on="on" @click="AlertaBorrarCronograma">
+                        <v-icon>fa fa-trash</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Borrar fases y actividades</span>
+                </v-tooltip>
+            </v-toolbar>
+
+            <v-card-text>
+                <b-table  small :fields="fields" :items="DatosFaseAct" responsive="sm">
+                    <template v-slot:thead-top>
+                        <b-tr >
+                        <b-th colspan="6">Laboratorio: {{Nombre}}</b-th>
+                        <b-th colspan="12">Nombre del proyecto: {{Proyecto}}</b-th>    
+                        </b-tr>
+                        <b-tr >
+                        <b-th colspan="3">Metodologia: {{nomMetod}}
+                            <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
+                                <template v-slot:activator="{on}">
+                                    <v-btn text icon color="success" v-on="on" @click="editarMetodologia" x-small>
+                                    <v-icon small>fa fa-edit</v-icon>
                                     </v-btn>
                                 </template>
-                                <span>Agregar fase</span>
+                                <span>Editar metodologia</span>
                             </v-tooltip>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-btn class="success ml-7">Agregar</v-btn>
-                        </v-col>
-                    </v-row>
-                    <!-- Tabla de metodologia -->
-                    <v-toolbar class="mt-5" flat color="white">
-                        <v-toolbar-title><p class="title">Metodología</p></v-toolbar-title>
-                    </v-toolbar> 
-                    <v-data-table :headers="headers" >
+                        </b-th>
+                        
+                        <b-th colspan="7"></b-th>    
+                        <b-th colspan="6">Semanas</b-th>
+                        <b-th colspan="3"></b-th>
+                        </b-tr>
+                    </template>
 
-                    </v-data-table>
-                </v-card-text>
-            </v-card>
-        </v-container>
+                    <template v-slot:thead-foot>
+                        <b-tr>
+                            <b-th colspan="17"></b-th>
+                            <b-th colspan="1">85</b-th>
+                        </b-tr>
+                    </template>
+                    
+                    <template v-slot:cell(1)="{item}">
+                        <div v-if="item.semI<=1 && 1 <= item.semF" icon>
+                            <v-icon color="success" class="sm">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(2)="{item}">
+                        <div v-if="item.semI<=2 && 2 <= item.semF" icon>
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(3)="{item}">
+                        <div v-if="item.semI<=3 && 3 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(4)="{item}">
+                        <div v-if="item.semI<=4 && 4 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(5)="{item}">
+                        <div v-if="item.semI<=5 && 5 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(6)="{item}">
+                        <div v-if="item.semI<=6 && 6 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(7)="{item}">
+                        <div v-if="item.semI<=7 && 7 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(8)="{item}">
+                        <div v-if="item.semI<=8 && 8 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(9)="{item}">
+                        <div v-if="item.semI<=9 && 9 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(10)="{item}">
+                        <div v-if="item.semI<=10 && 10 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(11)="{item}">
+                        <div v-if="item.semI<=11 && 11 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(12)="{item}">
+                        <div v-if="item.semI<=12 && 12 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(13)="{item}">
+                        <div v-if="item.semI<=13 && 13 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(14)="{item}">
+                        <div v-if="item.semI<=14 && 14 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(15)="{item}">
+                        <div v-if="item.semI<=15 && 15 <= item.semF">
+                            <v-icon color="success">fa fa-circle</v-icon>
+                        </div>
+                    </template>
+                    <template v-slot:cell(evaluacion)="{item}">
+                        <div v-if="(usuarioLogeado.tipUsuario === '2') && item.actividades!=null">
+                            <span>{{item.evaluacion}}</span>
+                        </div>
+                        <v-row justify="center"> 
+                            <div v-if="usuarioLogeado.tipUsuario === '1' && item.actividades!=null" style="width:100px;">
+                                <b-form-select v-model="item.evaluacion" @input="calificar(item.actividades,item.evaluacion)" :options="tipEvaluacion" size="sm" style="font-size:8pt"></b-form-select>
+                            </div>
+                        </v-row>
+                    </template>
+                </b-table>
+            </v-card-text>
+            <v-progress-linear :value="avance" color="light-blue"  height="25" striped>
+                 <strong>{{ Math.ceil(avance) }}%</strong>
+            </v-progress-linear>
+        </v-card>
+        <FaseActividad :agregarFaseAct="modalFaseAct" />
+        <AgregarMetodologia :modalAlertaMetodologia="editarMetod" />
+        <BorrarCronograma :alertaBorrarCronograma="abrirBorrarCronograma" />
     </div>
 </template>
 
 <script>
+import bootstrap from "@/plugins/Bootstrap-vue"
+import { mapState } from "vuex"
+import { EventBus } from '@/EventBus'
+import FaseActividad from '@/components/Proyectos/FaseActividad'
+import gql from 'graphql-tag'
+import AgregarMetodologia from '@/components/Alertas/AgregarMetodologia'
+import BorrarCronograma from '@/components/Alertas/BorrarCronograma'
 
 export default {
     name: 'Metodologia',
-
+    components: { FaseActividad, AgregarMetodologia, BorrarCronograma },
+  
     data: () => ({
-        headers: [
-            {text: "Actividad", value: "actividad"}
+        abrirBorrarCronograma: false,
+        tipEvaluacion: [
+            {value:  "", text: 'Seleccione'},
+            {value: '4', text:'Exelente'},
+            {value: '3', text:'Bueno'},
+            {value: '2', text:'Regular'},
+            {value: '1', text:'Deficiente'}
+        ],
+        evaluacion: null,
+        avance: 0,
+        totalAvance: 0,
+        totalFinalizado: 0,
+        editarMetod: false,
+        modalFaseAct: false,
+        nomMetod: '',
+        Nombre: '',
+        Proyecto: '',
+        DatosFaseAct: [],
+        fields: [
+            { key:'fase', label: 'Fase'},
+            { key:'actividades', label: 'Actividades'},
+            { key:'1', label: '1'},
+            { key:'2', label: '2'},
+            { key:'3', label: '3'},
+            { key:'4', label: '4'},
+            { key:'5', label: '5'},
+            { key:'6', label: '6'},
+            { key:'7', label: '7'},
+            { key:'8', label: '8'},
+            { key:'9', label: '9'},
+            { key:'10', label: '10'},
+            { key:'11', label: '11'},
+            { key:'12', label: '12'},
+            { key:'13', label: '13'},
+            { key:'14', label: '14'},
+            { key:'15', label: '15'},
+            { key:'evaluacion', label:'Evaluación', class: 'text-center'}
         ]
-    })
+    }),
+
+    computed:{
+        ...mapState(["usuarioLogeado"])
+    },
+
+    methods: {
+        // Abrir alerta para borrar el cronograma
+        AlertaBorrarCronograma(){
+            this.abrirBorrarCronograma = true;
+        },
+
+        // Calificar las actividades del cronograma de actividades
+        async calificar(act, cali){
+            if(cali===null)cali='';
+            try {
+                const {data} = this.$apollo.mutate({
+                    mutation: gql`
+                        mutation($nombre: String!, $proyecto: String!, $actividad: String!, $calificacion: String!)
+                        {
+                            calificarAvance(nombre: $nombre, proyecto:$proyecto, actividad:$actividad, calificacion:$calificacion)
+                        }
+                    `,
+                    variables: {
+                        nombre: this.Nombre,
+                        proyecto: this.Proyecto,
+                        actividad: act,
+                        calificacion: cali
+                    }
+                })
+                setTimeout(() => {
+                    this.obtenerFaseAct();
+                }, 700);
+            } catch (error) {
+                
+            }
+        },
+        
+        //Borrar el cronograma de actividades
+        async borrarCronograma(){
+            try {
+                const {data} = this.$apollo.mutate({
+                    mutation: gql`
+                        mutation($nombre: String!, $proyecto: String!)
+                        {
+                            borrarCronograma(nombre: $nombre, proyecto: $proyecto)
+                        }
+                    `,
+                    variables: {
+                        nombre: this.Nombre,
+                        proyecto: this.Proyecto,
+                    }   
+                })
+                this.obtenerFaseAct();
+            } catch (error) {
+                console.log(error)
+            }
+        }, 
+
+        // Editar metodologia 
+        editarMetodologia(){
+            this.editarMetod = true;
+            EventBus.$emit("datosMetodologia",this.Nombre, this.Proyecto);
+        },
+        
+        abrirModalFaseAct(){
+            this.modalFaseAct = true;
+            EventBus.$emit("datosProyectoAndLab",this.Nombre, this.Proyecto);
+        },
+
+        async obtenerFaseAct(){
+            try {
+                const {data} = await this.$apollo.query({
+                    query: gql`
+                        query($nombre: String!, $proyecto: String!)
+                        {
+                            getFaseAct(nombre:$nombre, proyecto:$proyecto){
+                                fase
+                                actividades
+                                semI
+                                semF
+                                evaluacion
+                                _rowVariant
+                            }
+                        }
+                    `,
+                    variables: {
+                        nombre: this.Nombre,
+                        proyecto: this.Proyecto
+                    }
+                })
+                let i=0;
+                let j=0;
+
+                for(let val of data.getFaseAct){
+                    if (val.actividades==='' || val.actividades===null){} else{
+                        i=i+1;
+                    }
+                    if (val.evaluacion===null || val.evaluacion==='') {}else{
+                        j=j+1;
+                    }
+
+                    if (this.usuarioLogeado.tipUsuario==="2") {
+
+                      switch (val.evaluacion) {
+                            case "4": 
+                                val.evaluacion = "Exelente"; 
+                                break;
+                            case "3": 
+                                val.evaluacion = "Bueno"; 
+                                break;
+                            case "2": 
+                                val.evaluacion = "Regular"; 
+                                break;
+                            case "1": 
+                                val.evaluacion = "Deficiente"; 
+                                break;
+                            case "":
+                                val.evaluacion="Sin calificar"; 
+                                break; 
+                                                      
+                        }
+                    }
+                }
+                this.totalAvance=i;
+                this.totalFinalizado=j;
+                setTimeout(() => {
+                    this.avance = (j/i)*100;
+                    this.DatosFaseAct = data.getFaseAct;
+                }, 100);
+
+            } catch (error) {
+                
+            }
+        }
+    },
+    
+    mounted(){
+        // setTimeout(() => {
+        //     this.obtenerFaseAct();
+        // }, 100);
+
+        EventBus.$on("cerrarModalFaseAct",()=>{
+            this.modalFaseAct = false;
+        });
+
+        EventBus.$on("cerrarModalAlertaMetodologia", ()=>{
+            this.editarMetod = false;
+        });
+
+        EventBus.$on("cerrarBorrarCronogramaAct", ()=>{
+            this.abrirBorrarCronograma = false;
+        });
+
+        EventBus.$on("borrarCronogramaDeAct", ()=>{
+            this.borrarCronograma();
+            setTimeout(() => {
+               this.abrirBorrarCronograma = false;
+               this.obtenerFaseAct();
+            }, 1000);
+        });
+
+        EventBus.$on("tablaMetodologiaDatos", (nombre, proyecto, Metod)=>{
+            
+            this.Nombre = nombre;
+            this.Proyecto = proyecto;
+            this.nomMetod = Metod;
+            setTimeout(() => {
+                this.obtenerFaseAct();
+            }, 100);
+        });
+
+        EventBus.$on("actualizarCronogramaAct", ()=>{
+            this.obtenerFaseAct();
+        })
+
+        EventBus.$on("vaciarTablaActividades", ()=>{
+            this.DatosFaseAct=[]
+        })
+        
+    }
 }
 </script>

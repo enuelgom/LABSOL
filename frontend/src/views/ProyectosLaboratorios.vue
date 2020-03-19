@@ -5,10 +5,17 @@
         <navLab  v-else-if="usuarioLogeado.tipUsuario === '1'"/>
         <navAlum  v-else-if="usuarioLogeado.tipUsuario === '2'"/>
         
-      <v-container>
-        <p class="display-1 text-center">{{ this.nombreLab.toUpperCase() }}</p>
-        <hr>
-        <tablasProyectos />
+      <v-container class="scroll-y">
+        <v-layout align-center justify-center>
+            <v-flex xs12>
+                <p class="display-1 text-center">{{ this.nombreLab.toUpperCase() }}</p>
+                <hr>
+                <tablasProyectos />
+                <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" :to="{ name: 'ListaLaboratorios'}" style="outline:none;">
+                    <v-icon>fa fa-arrow-left</v-icon>
+                </v-btn>
+            </v-flex>
+        </v-layout>
       </v-container>
   </div>
 </template>
@@ -27,7 +34,8 @@ export default {
     name: "ProyectoLaboratorios",
     components: { Navbar, tablasProyectos, navAdmin, navAlum, navLab  },
     
-    data: () => ({    
+    data: () => ({ 
+        fab:false,   
         name: "",
         nombreLab: "",
         direccion:"", 
@@ -38,6 +46,15 @@ export default {
     },
 
     methods: {
+        onScroll (e) {
+            if (typeof window === 'undefined') return
+            const top = window.pageYOffset ||   e.target.scrollTop || 0
+            this.fab = top > 20
+        },
+        toTop () {
+      this.$vuetify.goTo(0)
+    },
+
         ...mapMutations(['guardarUsuarioLog']),
 
         async getLabName(){

@@ -10,10 +10,9 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" sm="12" md="12" lg="12">
-                            <p>¿Estás seguro de quierer cerrar sesión?</p>
+                            <p>¿Estás seguro de querer cerrar sesión?</p>
                         </v-col>
                     </v-row>
-                    <v-divider></v-divider>
                     <v-row justify="center">
                         <v-col cols="6" sm="6" md="6" lg="6">
                             <v-btn class="mx-4" style="width:100px; height:40px;" color="error" @click="cerrarLogout" outlined>Cerrar</v-btn>

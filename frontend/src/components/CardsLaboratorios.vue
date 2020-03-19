@@ -148,7 +148,7 @@ export default {
                             }
                         }
                     `,
-                })   
+                }) 
 
                 // Obtener las imagenes de cada laboratorio labsol
                 for(let i of data.allLabs){
