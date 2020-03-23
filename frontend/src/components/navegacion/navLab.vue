@@ -20,18 +20,27 @@
                 <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
             </v-toolbar-items>
             <v-spacer />
-            <v-toolbar-title>{{ usuarioLogeado.siglas.toUpperCase() }}</v-toolbar-title>
-             <v-tooltip bottom>
+            <v-toolbar-title v-if="usuarioLogeado.tipUsuario==='1'">{{ usuarioLogeado.siglas.toUpperCase() }}</v-toolbar-title>
+            <v-toolbar-title v-else>{{ usuarioLogeado.siglas.toUpperCase() }} (Colaborador)</v-toolbar-title>
+            <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" @click="abrirModalActualizar" v-on="on">
+                    <v-btn text icon @click="abrirModalActualizar" v-on="on">
                         <v-icon>fa fa-edit</v-icon>
                     </v-btn>
                 </template>
                 <span>Editar cuenta</span>
             </v-tooltip>
-            <v-tooltip bottom>
+             <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" @click="abrirModalRegProyecto">
+                    <v-btn text icon @click="abrirModelAgregarUsuario" v-on="on">
+                        <v-icon>fa fa-user-plus</v-icon>
+                    </v-btn>
+                </template>
+                <span>Agregar colaborador</span>
+            </v-tooltip>
+            <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
+                <template v-slot:activator="{on}">
+                    <v-btn text icon v-on="on" @click="abrirModalRegProyecto">
                         <v-icon>fa fa-plus</v-icon>
                     </v-btn>
                 </template>
@@ -49,6 +58,7 @@
         <NuevoProyecto :abrirRegProyecto="añadirProyecto"/>
         <Logout :confirmacionLogout="abrirLogout"/>
         <EditarDatos :EditarDatosLab="ActulizarLab"/>
+        <AgregarColaborador :agregarUsuario="AbrirAgregarUsuario" />
     </div>
 </template>
 
@@ -58,10 +68,11 @@ import { EventBus } from "@/EventBus"
 import NuevoProyecto from "../Laboratorio/NuevoProyecto"
 import Logout from '../Logout'
 import EditarDatos from '../Laboratorio/EditarDatos'
+import AgregarColaborador from '@/components/Laboratorio/AgregarColaborador'
 
 export default {
     name: "navLab",
-    components: { NuevoProyecto, Logout, EditarDatos },
+    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador },
 
     data: () => ({
         msjErrorActualizacion: "",
@@ -70,6 +81,8 @@ export default {
         añadirProyecto: false,
         abrirLogout: false,
         ActulizarLab: false,
+        AbrirAgregarUsuario: false,
+        desabilitar: false
     }),
     
     computed:{
@@ -87,6 +100,10 @@ export default {
 
         abrirModalActualizar(){
             this.ActulizarLab = true;
+        },
+
+        abrirModelAgregarUsuario(){
+            this.AbrirAgregarUsuario = true;
         }
     },
 
@@ -126,7 +143,11 @@ export default {
             setTimeout(() => {
                 this.ActulizarLab = false;
             }, 3000);
-        })
+        });
+
+        EventBus.$on("cerrarModalRegUsuario", ()=>{
+            this.AbrirAgregarUsuario = false;
+        });
     }
 }
 </script>

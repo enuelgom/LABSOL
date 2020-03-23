@@ -71,6 +71,14 @@
                                 </template>
                                 <span>Editar proyecto</span>
                             </v-tooltip>
+                             <v-tooltip bottom v-if="item['status']!='Nuevo'">
+                                <template v-slot:activator="{on}">
+                                    <v-btn text icon color="orange" v-on="on" @click="agregarColaborador(item)">
+                                    <v-icon>fa fa-user-plus</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Añadir colaborador</span>
+                            </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
                                     <v-btn text icon color="error" v-on="on" @click="borrarProyecto(item)">
@@ -187,6 +195,7 @@
         <Editar :actualizarInfoProyecto="ActualizarInfoProyecto" />
         <Eliminar :confirmacionBorrar="abrirAlertaBorrar" />
         <SolicitudEnviada :msjAvisoSolicitud="msjAvisoSolicitudProyecto" />
+        <ListaColaboradores :listaColaboradores="abrirListaColab" />
 
     </div>
 </template>
@@ -203,13 +212,15 @@ import Solicitudes from '@/components/Laboratorio/Solicitudes'
 import Editar from '@/components/Proyectos/Editar'
 import Eliminar from '../components/Alertas/Eliminar'
 import SolicitudEnviada from '@/components/Alertas/SolicitudEnviada'
+import ListaColaboradores from '@/components/Laboratorio/ListaColaboradores'
 
 export default {
     name: 'tablasProyectos',
-    components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada},
+    components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada, ListaColaboradores},
     
     data: () => ({
         abrirAlertaBorrar: false,
+        abrirListaColab: false,
         msjAvisoSolicitudProyecto: false,
         ActualizarInfoProyecto: false,
         labExistente: 0,
@@ -255,6 +266,11 @@ export default {
     },
 
     methods: {
+        // Abrir modal agregar colaborador
+        agregarColaborador(){
+            this.abrirListaColab = true;
+        },
+
         // Abrir alerta de borrar proyecto
         borrarProyecto(item){
             this.idProyecto = item.proyecto;
@@ -493,12 +509,14 @@ export default {
         EventBus.$on("cerrarModalAvisoSolicitud", ()=>{
              this.msjAvisoSolicitudProyecto = false;
         });
+
+        EventBus.$on("cerrarModalListColab", ()=>{
+            this.abrirListaColab = false;
+        });
     },
     created(){
         this.obtenerProyectos();
         this.name = this.$route.params.nameLab
     }
-
-
 }
 </script>
