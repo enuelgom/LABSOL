@@ -22,6 +22,14 @@
             <v-spacer />
             <v-toolbar-title v-if="usuarioLogeado.tipUsuario==='1'">{{ usuarioLogeado.siglas.toUpperCase() }}</v-toolbar-title>
             <v-toolbar-title v-else>{{ usuarioLogeado.siglas.toUpperCase() }} (Colaborador)</v-toolbar-title>
+             <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1.1'">
+                <template v-slot:activator="{on}">
+                    <v-btn text icon @click="abrirModalActualizarColaborador" v-on="on">
+                        <v-icon>fa fa-edit</v-icon>
+                    </v-btn>
+                </template>
+                <span>Editar cuenta</span>
+            </v-tooltip>
             <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
                     <v-btn text icon @click="abrirModalActualizar" v-on="on">
@@ -59,6 +67,7 @@
         <Logout :confirmacionLogout="abrirLogout"/>
         <EditarDatos :EditarDatosLab="ActulizarLab"/>
         <AgregarColaborador :agregarUsuario="AbrirAgregarUsuario" />
+        <ActualizarDatos :modalActDatosColab="actDatosColaborador" />
     </div>
 </template>
 
@@ -69,12 +78,14 @@ import NuevoProyecto from "../Laboratorio/NuevoProyecto"
 import Logout from '../Logout'
 import EditarDatos from '../Laboratorio/EditarDatos'
 import AgregarColaborador from '@/components/Laboratorio/AgregarColaborador'
+import ActualizarDatos from '@/components/Colaborador/ActualizarDatos'
 
 export default {
     name: "navLab",
-    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador },
+    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador, ActualizarDatos },
 
     data: () => ({
+        actDatosColaborador: false,
         msjErrorActualizacion: "",
         msjsuccess: false,
         msjerror: false,
@@ -90,6 +101,10 @@ export default {
     },
 
     methods: {
+        abrirModalActualizarColaborador(){
+            this.actDatosColaborador = true;
+        },
+
         abrirModalRegProyecto(){
             this.añadirProyecto = true;
         },
@@ -147,6 +162,16 @@ export default {
 
         EventBus.$on("cerrarModalRegUsuario", ()=>{
             this.AbrirAgregarUsuario = false;
+        });
+
+        EventBus.$on("cerrarModalAgregarColab", ()=>{
+            setTimeout(() => {
+                this.AbrirAgregarUsuario = false;
+            }, 3000);
+        });
+
+        EventBus.$on("cerrarModalActDatosColab", ()=>{
+            this.actDatosColaborador = false;
         });
     }
 }

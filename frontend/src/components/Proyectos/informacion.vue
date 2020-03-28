@@ -56,19 +56,20 @@
                                 </v-textarea>
                             </v-col>
                         </v-row>
-                        <v-row v-if="(usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab) && visible3">
+                        <v-row v-if="((usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && usuarioLogeado.siglas ===this.$route.params.nameLab) && visible3">
                         <v-card-subtitle class="subtitle-2 font-weight-black ml-3" style="padding: 5px;"><strong>Integrantes del proyecto</strong></v-card-subtitle>
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <v-data-table 
                                     :headers="headers"   
                                     class="elevation-1"
+                                    hide-default-footer
                                     no-data-text="Aún no existen alumnos en este proyecto" 
                                     :footer-props="{itemsPerPageText:'Paginación'}" 
                                     :items="alumnos">
                                 </v-data-table>
                             </v-col>
                         </v-row>
-                        <v-row v-if="(usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab)&& visible2">
+                        <v-row v-if="((usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1')  && usuarioLogeado.siglas ===this.$route.params.nameLab)&& visible2">
                             <v-card-subtitle class="subtitle-2 font-weight-black ml-3" style="padding: 5px;"><strong>Cronograma de actividades</strong></v-card-subtitle>
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <Metodologia />
@@ -93,6 +94,7 @@ export default {
     components: {Metodologia},
 
     data: ()=>({
+        colaboradores: "",
         isLab: false,
         visible2: false,
         Estatus: '',
@@ -211,7 +213,7 @@ export default {
                 }else{
                     this.visible2=true;
                     setTimeout(() => {
-                        EventBus.$emit("tablaMetodologiaDatos", this.usuarioLogeado.nombre, this.Infoproyecto, data.existeMetod);
+                        EventBus.$emit("tablaMetodologiaDatos", this.usuarioLogeado.nombre, this.Infoproyecto, data.existeMetod, this.colaboradores);
                     }, 500);
                 }
             } catch (error) {
@@ -237,8 +239,9 @@ export default {
             }
         });
      
-        EventBus.$on("VerInfoProyecto", ( nombre, proyecto, estatus)=>{
+        EventBus.$on("VerInfoProyecto", ( nombre, proyecto, estatus, colaboradores)=>{
             this.Estatus = estatus;
+            this.colaboradores = colaboradores;
 
         if (this.Estatus==='Nuevo') {
             this.visible3 = false;
@@ -246,7 +249,7 @@ export default {
             this.visible3 = true;
         }
         
-        if(this.usuarioLogeado.tipUsuario==='1' && this.visible3){
+        if((this.usuarioLogeado.tipUsuario === '1' || this.usuarioLogeado.tipUsuario === '1.1')  && this.visible3){
             this.isLab = true;
         }else{
             this.isLab = false;

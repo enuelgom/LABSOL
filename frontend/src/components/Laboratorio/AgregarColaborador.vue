@@ -169,8 +169,15 @@ export default {
                             this.msjerror = false;
                         }, 3000);
                         break;
+                    case 'Correo existente':
+                        this.msjErrorRegistro = msj;
+                        this.msjerror = true;
+                        setTimeout(() => {
+                            this.msjerror = false;
+                        }, 3000);
+                        break;
                 }
-                
+                EventBus.$emit("cerrarModalAgregarColab");
             } catch (error) {
                 console.log(error)
             }

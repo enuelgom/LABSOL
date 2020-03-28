@@ -9,7 +9,7 @@
         <v-layout align-center justify-center>
             <v-flex xs12>
                 <p class="display-1 text-center">{{ this.nombreLab.toUpperCase() }}</p>
-                <hr>
+                <v-divider></v-divider>
                 <tablasProyectos />
                 <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" :to="{ name: 'ListaLaboratorios'}" style="outline:none;">
                     <v-icon>fa fa-arrow-left</v-icon>
@@ -50,10 +50,10 @@ export default {
             if (typeof window === 'undefined') return
             const top = window.pageYOffset ||   e.target.scrollTop || 0
             this.fab = top > 20
+            },
+            toTop () {
+            this.$vuetify.goTo(0)
         },
-        toTop () {
-      this.$vuetify.goTo(0)
-    },
 
         ...mapMutations(['guardarUsuarioLog']),
 

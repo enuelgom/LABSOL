@@ -130,11 +130,11 @@
                         </div>
                     </template>
                     <template v-slot:cell(evaluacion)="{item}">
-                        <div v-if="(usuarioLogeado.tipUsuario === '2') && item.actividades!=null">
+                        <div v-if="(((usuarioLogeado.tipUsuario === '2' || usuarioLogeado._id != colaborador) && usuarioLogeado.tipUsuario !='1')) && item.actividades!=null">
                             <span>{{item.evaluacion}}</span>
                         </div>
-                        <v-row justify="center"> 
-                            <div v-if="usuarioLogeado.tipUsuario === '1' && item.actividades!=null" style="width:100px;">
+                        <v-row justify="center"  v-else-if="(usuarioLogeado.tipUsuario === '1' || (usuarioLogeado.tipUsuario === '1.1' && usuarioLogeado._id === colaborador)) && item.actividades!=null"> 
+                            <div style="width:100px;">
                                 <b-form-select v-model="item.evaluacion" @input="calificar(item.actividades,item.evaluacion)" :options="tipEvaluacion" size="sm" style="font-size:8pt"></b-form-select>
                             </div>
                         </v-row>
@@ -175,6 +175,7 @@ export default {
         ],
         evaluacion: null,
         avance: 0,
+        colaborador: '',
         totalAvance: 0,
         totalFinalizado: 0,
         editarMetod: false,
@@ -305,7 +306,7 @@ export default {
                         j=j+1;
                     }
 
-                    if (this.usuarioLogeado.tipUsuario==="2") {
+                    if (this.usuarioLogeado.tipUsuario==="2" || (this.usuarioLogeado._id!=this.colaborador && this.usuarioLogeado.tipUsuario === '1.1')) {
 
                       switch (val.evaluacion) {
                             case "4": 
@@ -341,10 +342,6 @@ export default {
     },
     
     mounted(){
-        // setTimeout(() => {
-        //     this.obtenerFaseAct();
-        // }, 100);
-
         EventBus.$on("cerrarModalFaseAct",()=>{
             this.modalFaseAct = false;
         });
@@ -365,11 +362,11 @@ export default {
             }, 1000);
         });
 
-        EventBus.$on("tablaMetodologiaDatos", (nombre, proyecto, Metod)=>{
-            
+        EventBus.$on("tablaMetodologiaDatos", (nombre, proyecto, Metod, colaborador)=>{
             this.Nombre = nombre;
             this.Proyecto = proyecto;
             this.nomMetod = Metod;
+            this.colaborador = colaborador;
             setTimeout(() => {
                 this.obtenerFaseAct();
             }, 100);

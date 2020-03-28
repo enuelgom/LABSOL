@@ -20,7 +20,7 @@
                     no-data-text="No existen proyectos disponibles" 
                     class="elevation-1" 
                     :loading="loading"
-                    loading-text="Cargando... espere por favor"
+                    loading-text="Cargando... Espere por favor"
                     no-results-text="Proyecto no encontrado"
                     :footer-props="{itemsPerPageText:'Paginación'}"
                     :items="proyectos">
@@ -102,16 +102,30 @@
                         </template>
                     </v-data-table>
 
-                    <!-- para cuando no es el propietaro -->
+                    <!-- Para cuando no es el propietaro Alumno y token vacio-->
                     <v-data-table :headers="headers2" v-else
                     :search="filtro" 
                     no-data-text="No existen proyectos disponibles" 
                     :loading="loading" 
-                    loading-text="Cargando... espere por favor"
+                    loading-text="Cargando... Espere por favor"
                     class="elevation-1" 
                     no-results-text="Proyecto no encontrado"
                     :footer-props="{itemsPerPageText:'Paginación'}"
                     :items="proyectos"> 
+                        <template v-slot:item.status="{item}" v-if="usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2'">
+                            <v-tooltip v-if="item['alumnosExistentes'] < item['numAlu']" right>
+                                <template v-slot:activator="{on}">
+                                    <v-chip v-on="on" color="green" dark>Disponible</v-chip>
+                                </template>
+                                <span>El proyecto aún recibe solicitudes</span>
+                            </v-tooltip>
+                            <v-tooltip right v-else>
+                                <template v-slot:activator="{on}">
+                                    <v-chip v-on="on" color="red" dark>No disponibles</v-chip>
+                                </template>
+                                <span>El proyecto ya cuenta con los alumnos requeridos</span>
+                            </v-tooltip>
+                        </template>
                         <template v-slot:item.acciones="{item}" v-if="(usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2')">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
@@ -123,7 +137,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="green" :disabled="comprobarSolicitud(item.proyecto)" v-on="on" @click="solicitarProyecto(item)">
+                                    <v-btn text icon color="green" :disabled="comprobarSolicitud(item.proyecto, item.numAlu, item.alumnosExistentes)" v-on="on" @click="solicitarProyecto(item)">
                                     <v-icon>fa fa-paper-plane</v-icon>
                                     </v-btn>
                                 </template>
@@ -158,14 +172,22 @@
                             </v-tooltip>
                         </template>
 
-                        <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1'">
-                            <v-tooltip bottom>
+                        <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1'">
+                            <v-tooltip bottom v-if="usuarioLogeado._id!=item['colaboradores']">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)" >
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
                                 <span>Ver información</span>
+                            </v-tooltip>
+                            <v-tooltip bottom v-else>
+                                <template v-slot:activator="{on}">
+                                    <v-btn text icon :color="obtenerColor(item['colaboradores'])" v-on="on" @click="verInfo(item)">
+                                    <v-icon>fa fa-check-square</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Ver mi proyecto</span>
                             </v-tooltip>
                         </template>
                     </v-data-table>
@@ -234,6 +256,7 @@ export default {
         mostrarInfProyecto: false,
         abrirModalSolicitud: false,
         nombreProyecto: "",
+        nomProyecto2: "",
         nomProyecto: "",
         idProyecto: "",
         metodologia: false,
@@ -241,18 +264,18 @@ export default {
         comodin: [],
         headers: [
             {text: "Número", value: "numero", filerable: false},
-            {text: "Nombre", value: "proyecto"},
-            {text: "Alumnos requeridos", value: "numAlu", align: 'center', sortable: false, value: 'numAlu'},
-            {text: "Estatus", value: "status", filerable: false},
+            {text: "Nombre", value: "proyecto", sortable: false,},
+            {text: "Alumnos requeridos", value: "numAlu", sortable: false, align: 'center', value: 'numAlu', filerable: false},
+            {text: "Estatus", value: "status", sortable: false, align: 'center', filerable: false},
             {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
             {text: "Solicitudes", value: "notificaciones", filerable: false, align: 'center', sortable: false, value: 'notificaciones'}
         ],
         headers2: [
             {text: "Número", value: "numero", filerable: false},
-            {text: "Nombre", value: "proyecto"},
-            {text: "Alumnos requeridos", value: "numAlu", align: 'center', sortable: false, value: 'numAlu'},
-            {text: "Estatus", value: "status", filerable: false},
-            {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
+            {text: "Nombre", value: "proyecto", sortable: false,},
+            {text: "Alumnos requeridos", value: "numAlu", sortable: false, align: 'center', filerable: false, value: 'numAlu'},
+            {text: "Estatus", value: "status", sortable: false, filerable: false, align: 'center'},
+            {text: "Acciones", value: "acciones", sortable: false, filerable: false, align: 'center', value: 'acciones'},
         ],
         com: [],
         proyectos: [],
@@ -266,8 +289,18 @@ export default {
     },
 
     methods: {
+        obtenerColor(colaboradores){
+            if(this.usuarioLogeado._id === colaboradores){
+                return "green"
+            }else{
+                return "primary"
+            }
+        },
+
         // Abrir modal agregar colaborador
-        agregarColaborador(){
+        agregarColaborador(item){
+            this.nomProyecto2 = item.proyecto;
+            EventBus.$emit("eviarNomProyectoColaborador", this.nomProyecto2, item.colaboradores);
             this.abrirListaColab = true;
         },
 
@@ -286,6 +319,7 @@ export default {
         },
 
         categorias(item){
+            this.proyectos=[];
             this.selected = item;
             if(item==="Proyectos en catalogo") {
                 this.headers = this.com
@@ -317,7 +351,10 @@ export default {
             }
         },
 
-        comprobarSolicitud(proyecto){
+        comprobarSolicitud(proyecto, numAlumnos, alumnosExist){
+            if (numAlumnos <= alumnosExist) {
+                return true;
+            }
             for(let val of this.proyectos){
                 if(val.proyecto===proyecto){
                     for(let val2 of val.alumnos){
@@ -331,20 +368,23 @@ export default {
 
         // Obtener los proyectos de los laboratorios
         async obtenerProyectos(){
-            this.proyectos=[];
+        
+        //this.proyectos=[];
             this.loading=true;
             try {
                 const { data } = await this.$apollo.query({
                     query:gql`
                         query($nombre: String!, $proyectoCategoria: String!){
                             oneLab(nombre: $nombre, proyectoCategoria: $proyectoCategoria){
-                                    proyecto
-                                    status
-                                    objetivo
-                                    numAlu
-                                    alumnos{
-                                        _id
-                                    }
+                                proyecto
+                                status
+                                objetivo
+                                numAlu
+                                colaboradores
+                                alumnosExistentes
+                                alumnos{
+                                    _id
+                                }
                             }
                         }
                     `,
@@ -375,8 +415,9 @@ export default {
             }
         },
         async notificaciones(){
-            let i = 0;
+            let k =0;
             for(let val of this.comodin){
+            let i = 0;
                 try{
                     const { data } = await this.$apollo.query({
                         query:gql`
@@ -402,11 +443,17 @@ export default {
                     }
 
                     val["notificaciones"]=""+i;
+                    if(this.proyectos[k]){
+                        this.proyectos[k]=val;
+                    }else{
+                        this.proyectos.push(val);
+                    }
                 }catch(err){
                     console.log(err)
                 }
+                k=k+1;
             }
-            this.proyectos = this. comodin
+            //this.proyectos = this. comodin
             this.loading = false;
         },
        
@@ -432,14 +479,14 @@ export default {
                     this.obtenerProyectos();
                     }
                 catch(error){
-                    console.log(error)
+                    
             }
             }
         },
 
         verInfo(proyecto){
             setTimeout(() => {
-                EventBus.$emit("VerInfoProyecto",this.usuarioLogeado.nombre, proyecto.proyecto, proyecto.status);
+                EventBus.$emit("VerInfoProyecto",this.usuarioLogeado.nombre, proyecto.proyecto, proyecto.status, proyecto.colaboradores);
                 this.nombreProyecto = proyecto.proyecto;
                 this.mostrarInfProyecto = true;   
             }, 500);
@@ -452,10 +499,9 @@ export default {
         }
     },
     mounted(){
-
         this.com = this.headers;
         this.headers = this.headers2;
-        if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.siglas != this.$route.params.nameLab) && this.usuarioLogeado.tipUsuario != '0'){
+        if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.siglas != this.$route.params.nameLab || this.usuarioLogeado.tipUsuario === '1.1') && this.usuarioLogeado.tipUsuario != '0'){
             this.selected = 'Proyectos en catalogo'
             this.proyectosNuevos = 'Proyectos en catalogo'
             this.obtenerProyectos();
@@ -465,6 +511,8 @@ export default {
             this.abrirLogin = false;
             },3000)
         });
+
+        this.obtenerColor();
 
         EventBus.$on("closeLoader",() => {
             this.open = false;
@@ -512,6 +560,18 @@ export default {
 
         EventBus.$on("cerrarModalListColab", ()=>{
             this.abrirListaColab = false;
+        });
+
+        EventBus.$on("recargate", (proyecto,colaborador)=>{
+            for(let val of this.proyectos){
+                if(val.proyecto===proyecto){
+                    val.colaboradores=colaborador
+                }
+            }
+        });
+
+        EventBus.$on("VerificarAlumRequeridos",()=>{
+            this.obtenerProyectos();
         });
     },
     created(){

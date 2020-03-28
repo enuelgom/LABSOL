@@ -171,7 +171,7 @@ export default {
                 // Obtener las imagenes de cada laboratorio intel
                 for(let i of data.allLabs){
                     if(i.tipoLaboratorio==="Intel"){
-                        const dataImage = await axios.get(`/api/logos/sendImg/${i.nombre}`,{
+                        const dataImage1 = await axios.get(`/api/logos/sendImg/${i.nombre}`,{
                                     responseType: "arraybuffer",
                                     headers: {
                                         Autorization: localStorage.getItem("token")
@@ -179,13 +179,14 @@ export default {
                                 })
 
                                 const logo = window.URL.createObjectURL(
-                                    new Blob([dataImage.data], {type: "image/png"})
+                                    new Blob([dataImage1.data], {type: "image/png"})
                                 )
 
                                     Object.defineProperty(i, "imagenLogo", {value: logo})
                         }
                 }
-                                
+                this.DatosIntel = [];
+                this.DatosLabsol = [];
                 for(let val of data.allLabs){
                     if(val.tipoLaboratorio === "Intel"){
                         this.DatosIntel.push(val);

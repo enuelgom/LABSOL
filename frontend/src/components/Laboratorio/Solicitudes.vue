@@ -13,13 +13,14 @@
                             <v-data-table 
                                 :headers="headers"   
                                 class="elevation-1"
-                                no-data-text="Aún no existen alumnos en este proyecto" 
+                                no-data-text="Aún no existen solicitudes" 
+                                hide-default-footer
                                 :footer-props="{itemsPerPageText:'Paginación'}" 
                                 :items="alumnos">
                                 <template v-slot:item.solicitudes="{item}" >
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
-                                            <v-btn text icon color="green" v-on="on" @click="respuestaSolicitud(item['_id'],'Aceptado')">
+                                            <v-btn text icon color="green"  :disabled="NoHayCupo" v-on="on" @click="respuestaSolicitud(item['_id'],'Aceptado')">
                                             <v-icon>fa fa-check</v-icon>
                                             </v-btn>
                                         </template>
@@ -54,6 +55,7 @@ export default {
     props: ["mostrarSolocitudes"],
 
     data: ()=>({
+        NoHayCupo:false,
         alumnos: [],
         Infoproyecto: "",
         headers: [
@@ -67,7 +69,8 @@ export default {
         ],
         datosProyecto:{
             alumnosRequeridos: "",
-            nombre: ""
+            nombre: "",
+            alumExist: ""
         },
     }),
 
@@ -84,11 +87,8 @@ export default {
                         query($nombre: String!, $proyecto: String!){
                             proyecto(nombre: $nombre, proyecto: $proyecto){
                                 proyecto
-                                objetivo
-                                requerimientos
-                                perfiles
-                                habilidades
                                 numAlu  
+                                alumnosExistentes
                             }
                         }
                     `,
@@ -97,10 +97,14 @@ export default {
                         proyecto: this.Infoproyecto
                     }   
                 }) 
-
-            this.datosProyecto.alumnosRequeridos =data.proyecto.numAlu;
-            this.datosProyecto.nombre =data.proyecto.proyecto;
-               
+                this.datosProyecto.alumnosRequeridos =data.proyecto.numAlu;
+                this.datosProyecto.nombre =data.proyecto.proyecto;
+                this.datosProyecto.alumExist = data.proyecto.alumnosExistentes;
+                if(data.proyecto.numAlu<=data.proyecto.alumnosExistentes){
+                   this.NoHayCupo=true;
+                }else{
+                    this.NoHayCupo=false;
+                }
             } catch (error) {
                 
             } 
@@ -124,7 +128,8 @@ export default {
                 }
             })
             
-            this.obtenerAlumnos();  
+            this.ObtenerInfoLab(); 
+            this.obtenerAlumnos(); 
             
             } catch (error) {
                 
@@ -177,6 +182,8 @@ export default {
     },
 
     mounted(){
+        this.ObtenerInfoLab();
+        console.log(this.datosProyecto.alumExist)
         EventBus.$on("verSolicitudesProyecto", (proyecto)=>{
            this.Infoproyecto = proyecto;
            this.ObtenerInfoLab();

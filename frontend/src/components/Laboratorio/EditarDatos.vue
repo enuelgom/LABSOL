@@ -173,7 +173,7 @@ export default {
                 this.datosLab.usuario = data.infoLab.usuario
                 this.datosLab.tipoLaboratorio = data.infoLab.tipoLaboratorio
             } catch (error) {
-               console.log(error) 
+                
             }
         },
         
@@ -202,12 +202,14 @@ export default {
                 if (msj === "Usuario existente") {
                     EventBus.$emit("msjErrorActualizarLab", msj);
                     this.obtenerDatosLab();
-                } else if(msj === "Siglas existente"){
+                } else if(msj === "Sigla existente"){
                      EventBus.$emit("msjErrorActualizarLab", msj);
                      this.obtenerDatosLab();
                 }else{
                     // Obtener el token y guardarlo
-                    EventBus.$emit("cerrarModalActualizacion");
+                    setTimeout(() => {
+                        this.cerrarModalEditar();
+                    }, 3000);
                     EventBus.$emit("updateNombre");
                     localStorage.setItem("token", data.updateLab);
                     this.guardarUsuarioLog();
@@ -228,6 +230,7 @@ export default {
                         }
                     }) 
                 }
+                this.$refs.fileInput.reset();
                 EventBus.$emit("actualizarCardsLab");
             } catch (error) {
                                 
