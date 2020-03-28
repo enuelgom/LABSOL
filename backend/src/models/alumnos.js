@@ -26,7 +26,6 @@ const  alumnosSchema = new Schema({
     domicilio: String,
     solicitudes: {
         type: [solicitud],
-        required: true
     },
     usuario: {
         required: true,

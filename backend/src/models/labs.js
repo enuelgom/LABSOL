@@ -31,4 +31,6 @@ const  labsSchema = new Schema({
 });
 
 const labs = mongoose.model('labs', labsSchema);
+
 export default labs;
+

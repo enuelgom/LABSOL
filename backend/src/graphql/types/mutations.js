@@ -152,5 +152,25 @@ type Mutation{
         proyecto: String,
     ): String
     
+    addColaborador(
+        nombre: String,
+        telefono: String,
+        correo: String,
+        usuario: String,
+        clave: String
+    ): String
+
+    updateColaborador(
+        nombre: String,
+        telefono: String,
+        correo: String,
+        usuario: String,
+        clave: String
+    ): String
+
+    asignarColaborador(
+        proyecto: String,
+        _id: String
+    ): String
 }
 `

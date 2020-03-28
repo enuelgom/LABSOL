@@ -4,6 +4,10 @@ import mongoose from '../db/connections';
 // import Avances from "../models/avances";
 
 const Schema = mongoose.Schema;
+let colaborador = {
+    _id: String
+}
+
 let id_alu = {
     _id: String,
     status: String
@@ -40,6 +44,7 @@ const  proyectos = new Schema({
      type: [id_alu],
         // validate: [limit, 'exediste el limite']
      },
+    colaboradores: String,
 });
 // function limit(val){
     // return val.length <= 6;
