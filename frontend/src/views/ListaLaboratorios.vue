@@ -2,7 +2,7 @@
   <div>
       <Navbar v-if="usuarioLogeado.tipUsuario === '' "/>
       <navAdmin v-else-if="usuarioLogeado.tipUsuario === '0'"/>
-      <navLab  v-else-if="usuarioLogeado.tipUsuario === '1'"/>
+      <navLab  v-else-if="usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1'"/>
       <navAlum  v-else-if="usuarioLogeado.tipUsuario === '2'"/>
       <CardsLaboratorios />
   </div>

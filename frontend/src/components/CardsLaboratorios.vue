@@ -36,7 +36,7 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
-                                                <v-btn dark block color="primary accent-4" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1' && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
+                                                <v-btn dark block color="primary accent-4" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>
@@ -75,7 +75,7 @@
                                             </v-card-text>
                                             <v-card-actions>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
-                                                <v-btn dark block color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1' && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
+                                                <v-btn dark block color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
                                                 <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>

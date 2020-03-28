@@ -10,7 +10,6 @@
             </v-row>
         </v-toolbar>
 
-
         <v-toolbar color="secondary">
             <v-toolbar-items class="ocultarDiv">
                 <v-img aspect-ratio="2" contain src="@/assets/cozyt.png"  style="height: 70px; width: 260px;" />
