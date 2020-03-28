@@ -45,5 +45,9 @@ export const queries = `
             nombre: String,
             proyecto: String
         ): [_Actividades]
+
+        Colaboradores: [_colaboradores]
+
+        Colaborador: _colaboradores
     }
 `

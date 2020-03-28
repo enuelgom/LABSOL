@@ -17,8 +17,10 @@ export const custom = `
         avances: String,
         status: String,
         numAlu: String,
+        alumnosExistentes: String,
         alumnos: [_ids],
-        notificaciones: String
+        notificaciones: String,
+        colaboradores: String
     }
 
     type Categorias{
@@ -126,4 +128,13 @@ export const custom = `
         evaluacion: String,
         _rowVariant: String
     }
+
+    type _colaboradores{
+        _id: String,
+        nombre: String,
+        telefono: String,
+        correo: String,
+        usuario: String
+    }
+
 `

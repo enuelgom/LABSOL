@@ -1,5 +1,6 @@
 import labs from "../models/labs";
 import alumnos from "../models/alumnos";
+import colaborador from "../models/colaborador";
 import fs from "fs";
 import jwt from "jsonwebtoken";
 import admin from "../models/admin";
@@ -24,6 +25,39 @@ const resolvers = {
         }
     },
     Query: {
+        async Colaborador(root, args, context){
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+            
+            try {
+                const decoded = jwt.decode(token, SECRET);
+                const _id = decoded._id;
+                const colaboradores = await colaborador.where({_id}).findOne();
+                return colaboradores;    
+            } catch (error) {
+                return error
+            }
+        },
+
+        async Colaboradores(root,args,context){
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+            try {
+                const decoded = jwt.decode(token, SECRET);
+                const {siglas} = decoded;
+                const lab = await labs.where({siglas}).findOne();
+                const id_lab = lab._id
+                const colaboradores = await colaborador.where({id_lab}).find();
+                return colaboradores;    
+            } catch (error) {
+                return error
+            }
+        },
+
         async getFaseAct(root, args, context){
             try{
                 const {nombre, proyecto} = args;
@@ -111,10 +145,27 @@ const resolvers = {
                 case "Proyectos finalizados": cat = "Finalizado"; break;
                 default: return "";
             }
+
             let categoria = [];
             for(let val of _oneLab.proyectos){
                 if(val.status===cat){
-                    categoria.push(val);
+                    let i =0;
+                        for(let val2 of val.alumnos){
+                            if(val2.status==="Aceptado"){
+                                i=i+1;
+                            }
+                        }
+                        categoria.push({_id:val._id,proyecto:val.proyecto,
+                        objetivo:val.objetivo,
+                        requerimientos:val.requerimientos,
+                        perfiles:val.perfiles,
+                        habilidades:val.habilidades,
+                        avances:val.avances,
+                        status:val.status,
+                        numAlu:val.numAlu,
+                        alumnos:val.alumnos,
+                        colaboradores:val.colaboradores
+                        ,alumnosExistentes:""+i});
                 }
             }
             return categoria;
@@ -126,7 +177,15 @@ const resolvers = {
             let _proyecto = {};
             for (let val of _onepro.proyectos) {
                 if (val.proyecto===proyecto) {
+                    let i =0;
+                    for(let val2 of val.alumnos){
+
+                        if(val2.status==="Aceptado"){
+                            i=i+1;
+                        }
+                    }
                     _proyecto=val;
+                    _proyecto["alumnosExistentes"]=""+i;
                 }
             }
             return _proyecto
@@ -223,6 +282,7 @@ const resolvers = {
                 const alumno = await alumnos.where({ usuario}).findOne();
                 const adm = await admin.where({usuario}).findOne();
                 const lab = await labs.where({usuario}).findOne();
+                const colaboradores = await colaborador.where({usuario}).findOne()
 
                 if(adm) {
                     if (await bcrypt.compare(clave,adm.clave)) {
@@ -249,13 +309,27 @@ const resolvers = {
                         const typeUser = "2";
                         const nombre = alumno.alumno;
                         const _id = alumno._id;
-                        return jwt.sign({ usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '5h' })
+                        return jwt.sign({usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '5h' })
+                    }else{
+                        return "Contraseña incorrecta"
+                    }
+                }
+
+                if(colaboradores){
+                    if (await bcrypt.compare(clave, colaboradores.clave)) {
+                        const typeUser = "1.1";
+                        const lab = await labs.where({_id:colaboradores.id_lab}).findOne();
+                        const nombre = lab.nombre;
+                        const siglas = lab.siglas;
+                        const _id = colaboradores._id;
+                        return jwt.sign({nombre, siglas, typeUser, _id}, SECRET, { expiresIn: '5h' })
                     }else{
                         return "Contraseña incorrecta"
                     }
                 }
                 return "El usuario no existe";
             } catch(err){
+                return err
             }
         },
 
@@ -352,7 +426,7 @@ const resolvers = {
                     return "Usuario existente";
                 }else
                 if(msjerror.includes('siglas')){
-                    return "Siglas existente";
+                    return "Sigla existente";
                 }
             }
         },
@@ -637,6 +711,7 @@ const resolvers = {
                     val._status="cancelado";
                 }
             }
+            
             await alumno.save();
             const laboratorio = await labs.where({nombre}).findOneAndUpdate();
             for(let val of laboratorio.proyectos){
@@ -742,6 +817,122 @@ const resolvers = {
             }catch(e){
                 return e
             }          
+        },
+         
+        async addColaborador(root, args, context){
+            
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+
+            const {nombre, telefono, correo, usuario} = args;
+            let {clave} = args;
+            const passHashed= await bcrypt.hash(clave,10);
+            clave = passHashed;
+
+            const decoded = jwt.decode(token, SECRET);
+            try {
+                const chAdmins = await admin.where({usuario:args["usuario"]}).findOne();
+                const chLabs = await labs.where({usuario:args["usuario"]}).findOne();
+                const chAlum = await alumnos.where({usuario:args["usuario"]}).findOne();
+                if(!chLabs==""||!chAdmins=="" || !chAlum==""){
+                    return "Usuario existente"
+                }
+
+                const _nombre = decoded["nombre"]
+                const lab = await labs.where({nombre:_nombre}).findOne();
+                const id_lab = lab._id;
+                await new colaborador ({nombre, telefono, correo, id_lab, usuario, clave}).save();
+                return "hecho";
+                
+            } catch (error) {
+                const msjerror = error.message;
+                if(msjerror.includes('usuario')){
+                    return "Usuario existente";
+                }else
+                if(msjerror.includes('correo')){
+                    return "Correo existente";
+                }
+            }
+        },
+
+        async updateColaborador(root, args, context){
+            const token = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+            const decoded = jwt.decode(token, SECRET);
+            let {clave} = args
+            const Clave = await bcrypt.hash(clave,10);
+            const id = decoded._id
+            
+            try {
+                const _colaborador = await colaborador.where({_id:id}).findOneAndUpdate();
+
+                  const lab= await labs.where({_id:_colaborador.id_lab}).findOne();
+                  console.log(lab);
+                  
+                  let Datos=["nombre", "telefono", "correo", "usuario"];
+                  const Alumno = await alumnos.where({usuario:args["usuario"]}).findOne();
+                  const chAdmins = await admin.where({usuario:args["usuario"]}).findOne();
+                  const chLabs = await labs.where({usuario:args["usuario"]}).findOne();
+                  if(!chLabs==""||!chAdmins==""||!Alumno==""){
+                      return "Usuario existente"
+                  }
+
+                  for (let val of Datos){
+                      if(args[val]!=""){
+                          _colaborador[val]=args[val]
+                      }
+                  }
+
+                  if(clave!=""){
+                      _colaborador["clave"]=Clave;
+                  }
+
+                  await _colaborador.save();
+                  return "hecho"
+
+            } catch (error) {
+                const msjerror = error.message;
+                if(msjerror.includes('usuario')){ 
+                    return "Usuario existente";
+                }else if(msjerror.includes('correo')){
+                    return "Correo existente";
+                }
+                return error;
+            }
+        },
+
+        async asignarColaborador(root, args, context){
+            const {proyecto, _id} = args
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+
+            const decoded = jwt.decode(token, SECRET);
+            const nombre = decoded["nombre"];
+
+            try {
+                const lab = await labs.where({nombre:nombre}).findOneAndUpdate();
+                
+                for (let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                        if(val.colaboradores!=_id){
+                            val.colaboradores = _id;   
+                        }else{
+                            val.colaboradores = "";
+                            await lab.save()
+                            return "";
+                        }
+                    }
+                }
+                await lab.save()
+                return _id;
+            } catch (error) {
+                return error
+            }
         }
     }
 }
