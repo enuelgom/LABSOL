@@ -345,6 +345,7 @@ export default {
                         estatus: estatus
                     }
                 })
+                this.proyectos=[];
                 this.obtenerProyectos();
             } catch (error) {
                 
