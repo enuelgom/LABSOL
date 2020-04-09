@@ -13,7 +13,7 @@ Vue.use(VueApollo)
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = "http://127.0.0.1:3000"
+axios.defaults.baseURL = "http://10.110.69.204:3000"
 
 axios.defaults.headers.common[
   "Authorization"

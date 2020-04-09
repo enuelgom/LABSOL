@@ -13,7 +13,7 @@ import { valueFromAST } from "graphql";
 import { addMockFunctionsToSchema } from "graphql-tools";
 import { callbackify } from "util";
 
-const  SECRET = fs.readFileSync("src/private.key");
+const  SECRET = fs.readFileSync("./src/private.key");
 const pubsub = new PubSub();
 let lista = [];
 
