@@ -6,8 +6,8 @@
         <v-card elevation="0" class="mt-1">
             <v-tabs v-model="lab" background-color="#CFD8DC" centered >
             <v-tabs-slider></v-tabs-slider>
-            <v-tab style="color: black;" class="font-weight-medium" href="#intel">INTEL</v-tab>
-            <v-tab style="color: black;" class="font-weight-medium" href="#labsol">LABSOL</v-tab>
+            <v-tab style="color: black; text-decoration:none;" class="font-weight-medium" href="#intel">INTEL</v-tab>
+            <v-tab style="color: black; text-decoration:none;" class="font-weight-medium" href="#labsol">LABSOL</v-tab>
 
             <v-tabs-items v-model="lab">
                 <v-tab-item value="intel">
@@ -20,7 +20,7 @@
                                             <v-toolbar color="white" elevation="1">
                                             <v-card-title class="text-center">{{ item.siglas.toUpperCase()}}</v-card-title>
                                                 <v-spacer />
-                                                <v-btn @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
+                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
                                                 <v-badge v-if="item['notificaciones'] != '' && usuarioLogeado.tipUsuario === '0'" :content="item['notificaciones']" :value="item['notificaciones']" color="red" overlap>
                                                     <v-icon color="blue">fa fa-bell</v-icon>
                                                 </v-badge>
@@ -35,11 +35,11 @@
                                                 Total de proyectos: {{ item.count }}
                                             </v-card-text>
                                             <v-card-actions>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
-                                                <v-btn dark block color="primary accent-4" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
+                                                <v-btn style="outline:none; text-decoration:none;" dark block color="primary accent-4" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>
                                             </v-card-actions>
                                         </v-card>
                                     </v-hover>
@@ -59,7 +59,7 @@
                                             <v-toolbar color="white" elevation="1">
                                             <v-card-title class="text-center">{{ item.siglas.toUpperCase() }}</v-card-title>
                                                 <v-spacer />
-                                                <v-btn @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
+                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
                                                 <v-badge v-if="item['notificaciones'] != '' && usuarioLogeado.tipUsuario === '0'" :content="item['notificaciones']" :value="item['notificaciones']" color="red" overlap>
                                                     <v-icon color="blue">fa fa-bell</v-icon>
                                                 </v-badge>
@@ -74,11 +74,11 @@
                                                 Total de proyectos: {{ item.count }}
                                             </v-card-text>
                                             <v-card-actions>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
-                                                <v-btn dark block color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
-                                                <v-btn text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-if="usuarioLogeado.tipUsuario === '0'" >Ver proyectos</v-btn> 
+                                                <v-btn style="outline:none; text-decoration:none;" dark block color="blue-grey darken-3" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="(usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1') && item['nombre'] === usuarioLogeado.nombre">Mis proyectos</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '1'">Ver proyectos</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else-if="usuarioLogeado.tipUsuario === '2'">Ver catalogo</v-btn>
+                                                <v-btn style="outline:none; text-decoration:none;" text color="botones" :to="{ name: 'ProyectosLaboratorios', params:{nameLab:item.siglas} }" v-else>Ver catalogo</v-btn>
                                             </v-card-actions>
                                         </v-card>
                                     </v-hover>

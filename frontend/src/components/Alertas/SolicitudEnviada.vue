@@ -15,7 +15,7 @@
                         <v-divider></v-divider>
                         <v-row justify="center">
                             <v-col cols="5" sm="5">
-                                <v-btn style="width:100px; height:35px;" color="success" @click="cerrarAvisoSolicitud" outlined>Aceptar</v-btn>
+                                <v-btn class="mx-2" style="width:100px; height:35px; outline:none;" color="success" @click="cerrarAvisoSolicitud" outlined>Aceptar</v-btn>
                             </v-col>
                         </v-row>
                     </v-card-text>

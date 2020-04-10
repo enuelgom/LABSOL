@@ -6,7 +6,7 @@
                     <v-toolbar color="primary" dark>
                         <v-card-title>Editar datos</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="cerrarModalEditar"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="cerrarModalEditar"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-container fluid>
@@ -45,15 +45,15 @@
                             </v-row>
                             <v-row v-if="actualizar">
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn block outlined @click="cancelarActualizacion" color="orange darken-2">Modificar</v-btn>
+                                    <v-btn style="outline:none;" block outlined @click="cancelarActualizacion" color="orange darken-2">Modificar</v-btn>
                                 </v-col>
                             </v-row>
                             <v-row v-else>
                                 <v-col cols="12" sm="6" md="6" lg="6" >
-                                    <v-btn block outlined @click="cancelarActualizacion" color="red">Cancelar</v-btn>
+                                    <v-btn style="outline:none;" block outlined @click="cancelarActualizacion" color="red">Cancelar</v-btn>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-btn block outlined color="success" :disabled="!esValido"  @click="actualizarDatos">Actualizar</v-btn>
+                                    <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido"  @click="actualizarDatos">Actualizar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -139,6 +139,8 @@ export default {
                 this.obtenerDatosLab();
                 this.actualizar = true;
                 this.desactivar = true;
+                this.show = false;
+                this.show1 = false;
                 EventBus.$emit("cerrarModalActualizarLab");
             } catch (error) {
 
@@ -150,6 +152,8 @@ export default {
             this.$refs.fileInput.reset();
             this.datosLab.psw = "";
             this.pswConfirm = "";
+            this.show = false;
+            this.show1 = false;
             this.actualizar = !this.actualizar;
             this.desactivar = !this.desactivar;
         }, 

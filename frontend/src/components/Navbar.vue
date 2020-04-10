@@ -1,6 +1,6 @@
 <template>
     <div>
-      <v-snackbar color="red" v-model="msjError" top :timeout="4000">¡{{ mensajeErrorLogin }}! <v-btn color="white" text @click="msjError=false">Cerrar</v-btn></v-snackbar>
+      <v-snackbar color="red" v-model="msjError" top :timeout="4000">¡{{ mensajeErrorLogin }}! <v-btn style="outline:none;" color="white" text @click="msjError=false">Cerrar</v-btn></v-snackbar>
       
       <v-toolbar color="white" class="mostrarNavbar">
         <v-row justify="center">
@@ -20,7 +20,7 @@
           <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
         </v-toolbar-items>
         <v-spacer />
-        <v-btn text @click="open"><span class="pa-1"><v-icon dense>fa fa-user</v-icon></span> Iniciar sesion</v-btn>
+        <v-btn style="outline:none;" text @click="open"><span class="pa-1"><v-icon dense>fa fa-user</v-icon></span> Iniciar sesion</v-btn>
       </v-toolbar> 
       <Login :openModel="abrirLogin" />  
       <Registro :openModelStudent="openFormStudent"/>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Solicitud cancelada! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Solicitud cancelada! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-row justify="center"> 
             <v-dialog v-model="cancelarSolicitudAlumno" max-width="350" persistent>
                 <v-card>
@@ -16,10 +16,10 @@
                         <v-divider></v-divider>
                         <v-row justify="center">
                             <v-col cols="6" sm="6" >
-                                <v-btn class="mx-5" style="width:100px; height:35px;" color="error" @click="cerrarCancelarSolicitud" outlined>Cancelar</v-btn>
+                                <v-btn class="mx-5" style="width:100px; height:35px; outline:none;" color="error" @click="cerrarCancelarSolicitud" outlined>Cancelar</v-btn>
                             </v-col>
                             <v-col cols="6" sm="6">
-                                <v-btn class="mx-4" style="width:100px; height:35px;" color="success" @click="cancelarSolicitudProyecto" outlined>Aceptar</v-btn>
+                                <v-btn class="mx-4" style="width:100px; height:35px; outline:none;" color="success" @click="cancelarSolicitudProyecto" outlined>Aceptar</v-btn>
                             </v-col>
                         </v-row>
                     </v-card-text>

@@ -20,7 +20,7 @@
             <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" :to="{ name: 'Perfil'}">
+                    <v-btn style="outline:none;" text icon color="" v-on="on" :to="{ name: 'Perfil'}">
                         <v-icon>fa fa-user</v-icon>
                     </v-btn>
                 </template>
@@ -28,7 +28,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" @click="logOut">
+                    <v-btn style="outline:none;" text icon color="" v-on="on" @click="logOut">
                         <v-icon>fa fa-sign-out-alt</v-icon>
                     </v-btn>
                 </template>

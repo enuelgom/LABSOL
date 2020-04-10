@@ -16,7 +16,7 @@
             <template v-slot:item.acciones="{item}">
                 <v-tooltip bottom>
                   <template v-slot:activator="{on}">
-                      <v-btn text icon color="red" v-on="on" :disabled="item.status === 'cancelado'" @click="cancelarSolicitud(item)">
+                      <v-btn style="outline:none;" text icon color="red" v-on="on" :disabled="item.status === 'cancelado'" @click="cancelarSolicitud(item)">
                           <v-icon>fa fa-ban</v-icon>
                       </v-btn>
                   </template>
@@ -25,11 +25,19 @@
                 </v-tooltip>
                 <v-tooltip bottom v-if="item.status === 'Aceptado'">
                   <template v-slot:activator="{on}">
-                      <v-btn text color="blue" v-on="on" @click="verficarMetodologia(item.nombre, item.proyecto)">
+                      <v-btn style="outline:none;" text icon color="blue" v-on="on" @click="verficarMetodologia(item.nombre, item.proyecto)">
                         <v-icon>fa fa-file</v-icon>
                       </v-btn>
                   </template>
                   <span>Agregar metodologia</span>
+                </v-tooltip>
+                <v-tooltip bottom v-if="item.status === 'Aceptado'">
+                  <template v-slot:activator="{on}">
+                      <v-btn style="outline:none;" text icon color="blue" v-on="on" @click="abrirMsjRepositorio">
+                        <v-icon>fa fa-code-branch</v-icon>
+                      </v-btn>
+                  </template>
+                  <span>Agregar repositorio</span>
                 </v-tooltip>
             </template>
             <template v-slot:item.status="{item}">
@@ -39,6 +47,7 @@
     </v-card>
     <CancelarSolicitud :cancelarSolicitudAlumno="alertaCancelar" />
     <AgregarMetodologia :modalAlertaMetodologia="alertaMetodologia" />
+    <MsjAgregarRepositorio :msjAgregarRepositorio="abrirMsjAddRepo" />
   </div>
 </template>
 
@@ -49,16 +58,18 @@ import { mapState } from "vuex"
 import CancelarSolicitud from '@/components/Alertas/CancelarSolicitud'
 import AgregarMetodologia from '@/components/Alertas/AgregarMetodologia'
 import { EventBus } from '../../EventBus'
+import MsjAgregarRepositorio from '@/components/Alertas/MsjAgregarRepositorio'
 
 export default {
   name: "Proyectos",
-  components: {CancelarSolicitud, AgregarMetodologia},
+  components: {CancelarSolicitud, AgregarMetodologia, MsjAgregarRepositorio},
 
   data: () => ({
     validacionMetodologia: '',
     filtro: "",
     loading: false,
     alertaMetodologia: false,
+    abrirMsjAddRepo: false,
     alertaCancelar: false,
     nomProyecto: "",
     nomLaboratorio: "",
@@ -69,7 +80,7 @@ export default {
       {text: "Nombre", value: "proyecto"},
       {text: "Laboratorio", value: "nombre", filerable: false, align: 'center', sortable: false, value: 'nombre'},
       {text: "Estatus", value: "status", filerable: false, align: 'center', sortable: false, value: 'status'},
-      {text: "Acciones", value: "acciones", filerable: false, sortable: false, value: 'acciones'},
+      {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
     ],
     misSolicitudes: []
   }),
@@ -79,6 +90,11 @@ export default {
   },
 
   methods: {
+    // Abrir mensaje para agregar el repositorio
+    abrirMsjRepositorio(){
+      this.abrirMsjAddRepo = true;
+    },
+
     // Color del status
     obtenerColor(status){
       if (status === "En espera") {
@@ -139,7 +155,7 @@ export default {
             proyecto: proyecto
           }
         })
-        if (data.existeMetod!='') {
+        if (data.existeMetod!=null) {
           this.nomMetod = data.existeMetod;
           EventBus.$emit("tablaMetodologiaVisible",nombre, proyecto, this.nomMetod);
         }else{
@@ -168,6 +184,10 @@ export default {
       this.alertaMetodologia = false;
     });
     
+    EventBus.$on("cerrarMsjAgregarRepositorio", ()=>{
+      this.abrirMsjAddRepo = false;
+    });
+
     this.solicitudesProyectos();
   }
 }

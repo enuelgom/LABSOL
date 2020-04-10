@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorActualizacion }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorActualizacion }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
          <v-toolbar color="white" class="mostrarNavbar">
             <v-row justify="center">
@@ -24,7 +24,7 @@
             <v-toolbar-title v-else>{{ usuarioLogeado.siglas.toUpperCase() }} (Colaborador)</v-toolbar-title>
              <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1.1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon @click="abrirModalActualizarColaborador" v-on="on">
+                    <v-btn style="outline:none;" text icon @click="abrirModalActualizarColaborador" v-on="on">
                         <v-icon>fa fa-edit</v-icon>
                     </v-btn>
                 </template>
@@ -32,7 +32,7 @@
             </v-tooltip>
             <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon @click="abrirModalActualizar" v-on="on">
+                    <v-btn style="outline:none;" text icon @click="abrirModalActualizar" v-on="on">
                         <v-icon>fa fa-edit</v-icon>
                     </v-btn>
                 </template>
@@ -40,7 +40,7 @@
             </v-tooltip>
              <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon @click="abrirModelAgregarUsuario" v-on="on">
+                    <v-btn style="outline:none;" text icon @click="abrirModelAgregarUsuario" v-on="on">
                         <v-icon>fa fa-user-plus</v-icon>
                     </v-btn>
                 </template>
@@ -48,7 +48,7 @@
             </v-tooltip>
             <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
                 <template v-slot:activator="{on}">
-                    <v-btn text icon v-on="on" @click="abrirModalRegProyecto">
+                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalRegProyecto">
                         <v-icon>fa fa-plus</v-icon>
                     </v-btn>
                 </template>
@@ -56,7 +56,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                  <v-btn text icon color="" v-on="on" @click="logOut">
+                  <v-btn style="outline:none;" text icon color="" v-on="on" @click="logOut">
                     <v-icon>fa fa-sign-out-alt</v-icon>
                   </v-btn>
                 </template>

@@ -27,7 +27,7 @@
                         <template v-slot:item.acciones="{item}" v-if="usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -35,7 +35,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="green" v-on="on" @click="solicitarProyecto(item)">
+                                    <v-btn style="outline:none;" text icon color="green" v-on="on" @click="solicitarProyecto(item)">
                                     <v-icon>fa fa-paper-plane</v-icon>
                                     </v-btn>
                                 </template>
@@ -46,7 +46,7 @@
                         <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '0'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -57,7 +57,7 @@
                         <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -65,7 +65,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="success" v-on="on" @click="actualizarProyecto(item)">
+                                    <v-btn style="outline:none;" text icon color="success" v-on="on" @click="actualizarProyecto(item)">
                                     <v-icon>fa fa-edit</v-icon>
                                     </v-btn>
                                 </template>
@@ -73,7 +73,7 @@
                             </v-tooltip>
                              <v-tooltip bottom v-if="item['status']!='Nuevo'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="orange" v-on="on" @click="agregarColaborador(item)">
+                                    <v-btn style="outline:none;" text icon color="orange" v-on="on" @click="agregarColaborador(item)">
                                     <v-icon>fa fa-user-plus</v-icon>
                                     </v-btn>
                                 </template>
@@ -81,7 +81,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="error" v-on="on" @click="borrarProyecto(item)">
+                                    <v-btn style="outline:none;" text icon color="error" v-on="on" @click="borrarProyecto(item)">
                                     <v-icon>fa fa-trash</v-icon>
                                     </v-btn>
                                 </template>
@@ -91,7 +91,7 @@
                         <template v-slot:item.notificaciones="{item}" v-if="usuarioLogeado.tipUsuario === '1'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text color="blue" v-on="on" @click="verSolicitudes(item)">
+                                    <v-btn style="outline:none;" text color="blue" v-on="on" @click="verSolicitudes(item)">
                                         <v-badge :content="item['notificaciones']" :value="item['notificaciones']" color="red" overlap>
                                             <v-icon>fa fa-bell</v-icon>
                                         </v-badge>
@@ -121,7 +121,7 @@
                             </v-tooltip>
                             <v-tooltip right v-else>
                                 <template v-slot:activator="{on}">
-                                    <v-chip v-on="on" color="red" dark>No disponibles</v-chip>
+                                    <v-chip v-on="on" color="red" dark>No disponible</v-chip>
                                 </template>
                                 <span>El proyecto ya cuenta con los alumnos requeridos</span>
                             </v-tooltip>
@@ -129,7 +129,7 @@
                         <template v-slot:item.acciones="{item}" v-if="(usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2')">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -137,7 +137,7 @@
                             </v-tooltip>
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="green" :disabled="comprobarSolicitud(item.proyecto, item.numAlu, item.alumnosExistentes)" v-on="on" @click="solicitarProyecto(item)">
+                                    <v-btn style="outline:none;" text icon color="green" :disabled="comprobarSolicitud(item.proyecto, item.numAlu, item.alumnosExistentes)" v-on="on" @click="solicitarProyecto(item)">
                                     <v-icon>fa fa-paper-plane</v-icon>
                                     </v-btn>
                                 </template>
@@ -148,7 +148,7 @@
                         <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '0'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -156,7 +156,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="green" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Aceptado')">
+                                    <v-btn style="outline:none;" text icon color="green" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Aceptado')">
                                     <v-icon>fa fa-check</v-icon>
                                     </v-btn>
                                 </template>
@@ -164,7 +164,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="red" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Rechazado')">
+                                    <v-btn style="outline:none;" text icon color="red" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Rechazado')">
                                     <v-icon>fa fa-times</v-icon>
                                     </v-btn>
                                 </template>
@@ -175,7 +175,7 @@
                         <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1'">
                             <v-tooltip bottom v-if="usuarioLogeado._id!=item['colaboradores']">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="primary" v-on="on" @click="verInfo(item)" >
+                                    <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)" >
                                     <v-icon>fa fa-info</v-icon>
                                     </v-btn>
                                 </template>
@@ -183,7 +183,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-else>
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon :color="obtenerColor(item['colaboradores'])" v-on="on" @click="verInfo(item)">
+                                    <v-btn style="outline:none;" text icon :color="obtenerColor(item['colaboradores'])" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-check-square</v-icon>
                                     </v-btn>
                                 </template>
@@ -204,7 +204,7 @@
                         <h1 class="text-center">El laboratorio no existe</h1>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn block color="red" outlined to="/">Regresar al inicio</v-btn>
+                        <v-btn style="outline:none;" block color="red" outlined to="/">Regresar al inicio</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-container>
@@ -264,7 +264,7 @@ export default {
         comodin: [],
         headers: [
             {text: "Número", value: "numero", filerable: false},
-            {text: "Nombre", value: "proyecto", sortable: false,},
+            {text: "Nombre", value: "proyecto", sortable: false},
             {text: "Alumnos requeridos", value: "numAlu", sortable: false, align: 'center', value: 'numAlu', filerable: false},
             {text: "Estatus", value: "status", sortable: false, align: 'center', filerable: false},
             {text: "Acciones", value: "acciones", filerable: false, align: 'center', sortable: false, value: 'acciones'},
@@ -272,7 +272,7 @@ export default {
         ],
         headers2: [
             {text: "Número", value: "numero", filerable: false},
-            {text: "Nombre", value: "proyecto", sortable: false,},
+            {text: "Nombre", value: "proyecto", sortable: false},
             {text: "Alumnos requeridos", value: "numAlu", sortable: false, align: 'center', filerable: false, value: 'numAlu'},
             {text: "Estatus", value: "status", sortable: false, filerable: false, align: 'center'},
             {text: "Acciones", value: "acciones", sortable: false, filerable: false, align: 'center', value: 'acciones'},

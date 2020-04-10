@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡{{ msjSatisfactorio }}! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡{{ msjSatisfactorio }}! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
         <v-dialog v-model="agregarLaboratorio" max-width="1000" persistent>
             <v-form ref="formLaboratorio" v-model="isValid"> 
@@ -9,7 +9,7 @@
                     <v-toolbar color="primary" dark>
                         <v-card-title>Agregar nuevo laboratorio</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="cerrarModal()"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="cerrarModal()"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-card-subtitle class="subtitle-2" front-weight-black style="padding: 5px;"><strong>Datos del laboratorio</strong></v-card-subtitle>
@@ -49,7 +49,7 @@
                             </v-row>
                         </v-container>
                             <v-row>
-                                <v-btn :disabled="!isValid" block color="success" rounded @click="guardarLaboratorio()">Agregar laboratorio</v-btn>
+                                <v-btn style="outline:none;" :disabled="!isValid" block color="success" rounded @click="guardarLaboratorio()">Agregar laboratorio</v-btn>
                             </v-row>
                     </v-card-text>
                 </v-card>
@@ -120,7 +120,9 @@ export default {
             EventBus.$emit("cerrarRegistroLab");
             try {
                 this.$refs.formLaboratorio.reset(); 
-                this.$refs.vaciarSelect.reset();           
+                this.$refs.vaciarSelect.reset();
+                this.show = false;
+                this.show1 = false;           
             } catch (error) {
                 }
         },

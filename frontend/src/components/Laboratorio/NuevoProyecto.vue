@@ -1,14 +1,14 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjRegistrado" top>¡Proyecto registrado! <v-btn color="white" text @click="msjRegistrado=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjErrorDeRegistro" top>¡El proyecto ya existe!<v-btn color="white" text @click="msjErrorDeRegistro=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjRegistrado" top>¡Proyecto registrado! <v-btn style="outline:none;" color="white" text @click="msjRegistrado=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjErrorDeRegistro" top>¡El proyecto ya existe!<v-btn style="outline:none;" color="white" text @click="msjErrorDeRegistro=false">Cerrar</v-btn></v-snackbar>
         <v-dialog v-model="abrirRegProyecto" max-width="1000" persistent> 
             <v-form ref="formRegProyecto" v-model="esValido">
                 <v-card color="grey lighten-3">
                     <v-toolbar color="primary" dark>
                         <v-card-title>Nuevo proyecto</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="cerrarModalProyecto()"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="cerrarModalProyecto()"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 1px;"><strong>Informacion del proyecto</strong></v-card-subtitle>
@@ -62,7 +62,7 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-btn :disabled="!esValido" block color="success" rounded @click="regProyecto(datosProyecto)">Guardar</v-btn>
+                            <v-btn style="outline:none;" :disabled="!esValido" block color="success" rounded @click="regProyecto(datosProyecto)">Guardar</v-btn>
                         </v-row>
                     </v-card-text>
                 </v-card>

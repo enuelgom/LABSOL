@@ -20,7 +20,7 @@
             <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" @click="abrirModalEditar">
+                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalEditar">
                         <v-icon>fa fa-edit</v-icon>
                     </v-btn>
                 </template>
@@ -28,7 +28,15 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" @click="abrirModalRegLab">
+                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalAgregarAdmin">
+                        <v-icon>fa fa-user-plus</v-icon>
+                    </v-btn>
+                </template>
+                <span>Agregar administradores</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <template v-slot:activator="{on}">
+                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalRegLab">
                         <v-icon>fa fa-plus</v-icon>
                     </v-btn>
                 </template>
@@ -36,7 +44,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn text icon color="" v-on="on" @click="logOut">
+                    <v-btn style="outline:none;" text icon v-on="on" @click="logOut">
                         <v-icon>fa fa-sign-out-alt</v-icon>
                     </v-btn>
                 </template>
@@ -46,6 +54,7 @@
     <NuevoLaboratorio :agregarLaboratorio="abrirRegistroLab"/>
     <Logout :confirmacionLogout="abrirLogout"/>
     <EditarCuenta :modalEditarDatos="editarDatos"/>
+    <AgregarAdministrador :agregarAdministrador="agregarNuevosAdmins" />
     </div>
 </template>
 
@@ -55,18 +64,24 @@ import NuevoLaboratorio from '@/components/Admins/NuevoLaboratorio'
 import { mapState } from "vuex"
 import Logout from '../Logout'
 import EditarCuenta from '@/components/Admins/EditarCuenta'
+import AgregarAdministrador from '@/components/Admins/AgregarAdministrador'
 
 export default {
     name: 'navAdmin',
-    components: { NuevoLaboratorio, Logout, EditarCuenta },
+    components: { NuevoLaboratorio, Logout, EditarCuenta, AgregarAdministrador },
 
     data: () => ({
         abrirRegistroLab: false,
         abrirLogout: false,
-        editarDatos: false
+        editarDatos: false,
+        agregarNuevosAdmins: false
     }),
 
     methods: {
+        abrirModalAgregarAdmin(){
+            this.agregarNuevosAdmins = true;
+        },
+
         abrirModalRegLab(){
             this.abrirRegistroLab = true;
         },
@@ -99,6 +114,10 @@ export default {
 
         EventBus.$on("cerrarModalEditarAdmin", ()=>{
             this.editarDatos = false;
+        });
+
+        EventBus.$on("cerrarModalAddAdmin", ()=>{
+            this.agregarNuevosAdmins = false;
         });
     }
 }

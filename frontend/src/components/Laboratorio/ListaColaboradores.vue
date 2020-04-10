@@ -1,26 +1,25 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Colaborador asignado! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Colaborador asignado! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-dialog v-model="listaColaboradores" max-width="1500" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
                     <v-card-title>Lista de colaboradores</v-card-title>
                     <v-spacer />
-                    <v-btn icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
+                    <v-btn style="outline:none;" icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" sm="12" md="12" lg="12">
                             <v-data-table :headers="headers"   
                             class="elevation-1"
-                            no-data-text="Aún no existen colaboradores" 
-                            :footer-props="{itemsPerPageText:'Paginación'}"
-                            hide-default-footer 
+                            no-data-text="No existen colaboradores" 
+                            :footer-props="{itemsPerPageText:'Paginación'}" 
                             :items="colaboradores">
                                 <template v-slot:item.agregar="{item}" >
                                     <v-tooltip bottom v-if="item._id!=id_colaboradores">
                                         <template v-slot:activator="{on}">
-                                            <v-btn text icon color="green" v-on="on" @click="asigColaborador(item)">
+                                            <v-btn style="outline:none;" text icon color="green" v-on="on" @click="asigColaborador(item)">
                                             <v-icon>fa fa-check</v-icon>
                                             </v-btn>
                                         </template>
@@ -28,7 +27,7 @@
                                     </v-tooltip>
                                     <v-tooltip bottom v-else>
                                         <template v-slot:activator="{on}">
-                                            <v-btn text icon color="red" v-on="on" @click="asigColaborador(item)">
+                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="asigColaborador(item)">
                                             <v-icon>fa fa-times</v-icon>
                                             </v-btn>
                                         </template>
@@ -58,10 +57,10 @@ export default {
         colaboradores: [],
         headers: [
             {text: "Número", value: "numero"},
-            {text: "Nombre", value: "nombre"},
-            {text: "Correo", value: "correo"},
-            {text: "Teléfono", value: "telefono"},
-            {text: "Asignar", value: "agregar", align:'center'}  
+            {text: "Nombre", value: "nombre", sortable: false},
+            {text: "Correo", value: "correo", sortable: false},
+            {text: "Teléfono", value: "telefono", sortable: false},
+            {text: "Asignar", value: "agregar", align:'center', sortable: false}  
         ],
         proyecto: "",
         id_colaboradores: "",

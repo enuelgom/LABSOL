@@ -1,13 +1,13 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-dialog v-model="modalEditarDatos" max-width="800" persistent>
             <v-form v-model="esValido">
                 <v-card color="grey lighten-3">
                     <v-toolbar color="primary" dark>
                         <v-card-title>Editar datos</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="cerrarModalEditar"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="cerrarModalEditar"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-container fluid>
@@ -35,15 +35,15 @@
                             </v-row>
                             <v-row justify="center" v-if="actualizar">
                                 <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-btn block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
+                                    <v-btn style="outline:none;" block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
                                 </v-col>
                             </v-row>
                             <v-row v-else>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-btn block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
+                                    <v-btn style="outline:none;" block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-btn block outlined color="success" :disabled="!esValido" @click="actualizarDatos">Actualizar</v-btn>
+                                    <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido" @click="actualizarDatos">Actualizar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -133,6 +133,8 @@ export default {
         cerrarModalEditar(){
             this.actualizar = true;
             this.desactivar = true;
+            this.show = false;
+            this.show1 = false;
             EventBus.$emit("cerrarModalEditarAdmin");
             this.datosAdmin.psw = "";
             this.pswConfirm = "";
@@ -145,6 +147,8 @@ export default {
             this.desactivar = !this.desactivar;
             this.datosAdmin.psw = "";
             this.pswConfirm = "";
+            this.show = false;
+            this.show1 = false;
             this.datosAdmin.nombre = this.usuarioLogeado.nombre;
             this.datosAdmin.usuario = this.usuarioLogeado.nom_usuario;
         }

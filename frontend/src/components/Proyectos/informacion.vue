@@ -5,7 +5,7 @@
                 <v-toolbar color="primary" dark>
                     <v-card-title>Información del proyecto</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="closeModalProyecto()"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="closeModalProyecto()"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                         <v-row>

@@ -1,14 +1,14 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
         <v-dialog v-model="modalActDatosColab" max-width="800" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
                     <v-card-title>Editar datos</v-card-title>
                     <v-spacer />
-                    <v-btn icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
+                    <v-btn style="outline:none;" icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-container>
@@ -45,15 +45,15 @@
                                 </v-row>
                                 <v-row justify="center" v-if="desactivar">
                                     <v-col cols="12" sm="4" md="4" lg="4">
-                                        <v-btn block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
+                                        <v-btn style="outline:none;" block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
                                     </v-col>
                                 </v-row>
                                 <v-row v-else>
                                     <v-col cols="12" sm="6" md="6" lg="6">
-                                        <v-btn block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
+                                        <v-btn style="outline:none;" block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="6" lg="6">
-                                        <v-btn block outlined color="success" :disabled="!esValido" @click="actualizarDatos">Actualizar</v-btn>
+                                        <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido" @click="actualizarDatos">Actualizar</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-form>
@@ -68,7 +68,7 @@
 import { EventBus } from '@/EventBus'
 import gql from 'graphql-tag'
 import { mask } from "vue-the-mask"
-import { apolloClient } from '@//graphql/apollo'
+import { apolloClient } from '@/graphql/apollo'
 
 export default {
     name: "ActualizarDatos",
@@ -142,6 +142,8 @@ export default {
             this.datosUsuarios.psw = "";
             this.pswConfirm = "";
             this.desactivar = true;
+            this.show = false;
+            this.show1 = false;
             this.obtenerDatosColaborador();
         },
 
@@ -149,6 +151,8 @@ export default {
             this.desactivar = !this.desactivar;
             this.datosUsuarios.psw = "";
             this.pswConfirm = "";
+            this.show = false;
+            this.show1 = false;
             this.obtenerDatosColaborador();
         },
 

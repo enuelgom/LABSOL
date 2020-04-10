@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Registrado! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Registrado! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
         <v-dialog v-model="openModelStudent" max-width="800" persistent>
             <v-form ref="formStudent" v-model="esValido">
@@ -9,7 +9,7 @@
                     <v-toolbar color="primary" dark>
                         <v-card-title>Registro</v-card-title>
                         <v-spacer />
-                        <v-btn icon @click="closeModalStudent()"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="closeModalStudent()"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-container fluid>
@@ -67,7 +67,7 @@
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-btn :disabled="!esValido" block color="success" @click="agregarAlumno(datosAlumno)" rounded>Guardar registro</v-btn>
+                                <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="agregarAlumno(datosAlumno)" rounded>Guardar registro</v-btn>
                             </v-row>
                              <div class="text-center my-2">
                                 <span>¿Ya tienes una cuenta?</span><a style="color: #0277BD" @click="abrirLogin"> Inicia ahora</a>
@@ -196,6 +196,8 @@ export default {
             EventBus.$emit('closeModalStudent');
             try {
                 this.$refs.formStudent.reset();
+                this.show = false;
+                this.show1 = false;
             } catch (error) {
             }
         },

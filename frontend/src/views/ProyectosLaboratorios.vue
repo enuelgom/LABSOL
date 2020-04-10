@@ -11,7 +11,7 @@
                 <p class="display-1 text-center">{{ this.nombreLab.toUpperCase() }}</p>
                 <v-divider></v-divider>
                 <tablasProyectos />
-                <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" :to="{ name: 'ListaLaboratorios'}" style="outline:none;">
+                <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" :to="{ name: 'ListaLaboratorios'}" style="outline:none; text-decoration:none;">
                     <v-icon>fa fa-arrow-left</v-icon>
                 </v-btn>
             </v-flex>

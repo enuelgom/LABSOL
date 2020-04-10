@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-    <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+    <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+    <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
     <v-card elevation="6">
       <v-toolbar>
@@ -67,15 +67,15 @@
             </v-row>
             <v-row  justify="center" v-if="actualizar">
               <v-col cols="12" sm="4" md="4" lg="4">
-                  <v-btn block outlined @click="cancelarActualizacion" color="orange darken-2">Modificar</v-btn>
+                  <v-btn style="outline:none;" block outlined @click="cancelarActualizacion" color="orange darken-2">Modificar</v-btn>
               </v-col>
             </v-row>
             <v-row v-else>
               <v-col cols="12" sm="6" md="6" lg="6" >
-                  <v-btn block outlined @click="cancelarActualizacion" color="red">Cancelar</v-btn>
+                  <v-btn style="outline:none;" block outlined @click="cancelarActualizacion" color="red">Cancelar</v-btn>
               </v-col>
               <v-col cols="12" sm="6" md="6" lg="6">
-                  <v-btn block outlined color="success" :disabled="!esValido"  @click="actualizarDatos">Actualizar</v-btn>
+                  <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido"  @click="actualizarDatos">Actualizar</v-btn>
               </v-col>
             </v-row>
           </v-container>

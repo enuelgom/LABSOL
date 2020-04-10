@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-    <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+    <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+    <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
       <v-dialog v-model="actualizarInfoProyecto" max-width="1000" persistent>
           <v-form ref="formRegProyecto" v-model="esValido">
@@ -9,7 +9,7 @@
                 <v-toolbar color="primary" dark>
                     <v-card-title>Actualizar datos</v-card-title>
                     <v-spacer />
-                    <v-btn icon @click="cerrarModalActualizarInfPro"><v-icon>fa fa-times</v-icon></v-btn>
+                    <v-btn style="outline:none;" icon @click="cerrarModalActualizarInfPro"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Informacion del proyecto</strong></v-card-subtitle>
@@ -64,15 +64,15 @@
                     </v-row>
                     <v-row justify="center" v-if="actualizar">
                         <v-col cols="12" sm="4" md="4" lg="4">
-                            <v-btn block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
+                            <v-btn style="outline:none;" block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
                         </v-col>
                     </v-row>
                     <v-row v-else>
                         <v-col cols="12" sm="6" md="6" lg="6">
-                            <v-btn block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
+                            <v-btn style="outline:none;" block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
                         </v-col>
                         <v-col cols="12" sm="6" md="6" lg="6">
-                            <v-btn block outlined color="success" :disabled="!esValido" @click="actulizarInfoProyecto">Actualizar</v-btn>
+                            <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido" @click="actulizarInfoProyecto">Actualizar</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-text>

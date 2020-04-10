@@ -7,12 +7,12 @@ import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
  
 const httpLink = createHttpLink({
-    uri: "http://10.110.69.204:3000/graphql"
+    uri: "http://192.168.43.185:3001/graphql"
     //uri: "http://127.0.0.1:3000/graphql"
 })
 
 const wsLink = new WebSocketLink({
-    uri: "ws://10.110.69.204:3000/graphql",
+    uri: "ws://192.168.43.185:3001/graphql",
     options: {
         reconnect: true
     }

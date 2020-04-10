@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Registrado correctamente! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Registrado correctamente! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-row justify="center">
             <v-dialog v-model="agregarFaseAct" max-width="900" persistent>
                 <v-form ref="formFaseAct" v-model="isValid">
@@ -8,7 +8,7 @@
                         <v-toolbar color="primary" dark>
                             <v-card-title>Fase y actividades</v-card-title>
                             <v-spacer></v-spacer>
-                            <v-btn @click="cerrarModalFA" icon><v-icon>fa fa-times</v-icon></v-btn>
+                            <v-btn style="outline:none;" @click="cerrarModalFA" icon><v-icon>fa fa-times</v-icon></v-btn>
                         </v-toolbar>
                         <v-card-text>
                             <v-row>
@@ -31,14 +31,14 @@
                                 </v-row>
                                 <v-row justify="center">
                                     <v-col cols="12" sm="2">
-                                        <v-btn :disabled="!isValid" @click="guardarFaseActividad" class="success px-7">Guardar</v-btn>
+                                        <v-btn style="outline:none;" :disabled="!isValid" @click="guardarFaseActividad" class="success px-7">Guardar</v-btn>
                                     </v-col>
                                 </v-row>
                             </div>
                             <v-divider></v-divider>
                             <v-row >
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn block color="blue" dark @click="siguienteFase">Siguiente fase</v-btn>
+                                    <v-btn style="outline:none;" block color="blue" dark @click="siguienteFase">Siguiente fase</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-text>

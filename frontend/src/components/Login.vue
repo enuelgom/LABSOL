@@ -6,7 +6,7 @@
                     <v-toolbar color="primary" dark>
                         <v-card-title>Iniciar sesión</v-card-title> 
                         <v-spacer />
-                        <v-btn icon @click="closeModalLogin()"><v-icon>fa fa-times</v-icon></v-btn>
+                        <v-btn style="outline:none;" icon @click="closeModalLogin()"><v-icon>fa fa-times</v-icon></v-btn>
                     </v-toolbar>
                     <v-card-text>
                         <v-container fluid>
@@ -24,7 +24,7 @@
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-btn block :disabled="!isValid" color="success" type="submit" @click="login(user)" rounded>Ingresar</v-btn>
+                                <v-btn style="outline:none;" block :disabled="!isValid" color="success" type="submit" @click="login(user)" rounded>Ingresar</v-btn>
                             </v-row>
                         </v-container>
                         <div class="text-center my-2">
@@ -72,6 +72,7 @@ export default {
         EventBus.$emit("closeLoginTachita");
             try {
                 this.$refs.formLogin.reset();
+                this.show = false;
             } catch (error) {
             }
         },      

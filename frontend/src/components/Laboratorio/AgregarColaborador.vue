@@ -1,14 +1,14 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Colaborador registrado! <v-btn color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
-        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Colaborador registrado! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
         <v-dialog v-model="agregarUsuario" max-width="800" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
                     <v-card-title>Agregar nuevo colaborador</v-card-title>
                     <v-spacer />
-                    <v-btn icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
+                    <v-btn style="outline:none;" icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-container>
@@ -44,7 +44,7 @@
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-btn :disabled="!esValido" block color="success" @click="guardarUsuario" rounded>Agregar colaborador</v-btn>
+                                <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="guardarUsuario" rounded>Agregar colaborador</v-btn>
                             </v-row>
                         </v-form>
                     </v-container>
@@ -58,7 +58,7 @@
 import { EventBus } from '@/EventBus'
 import gql from 'graphql-tag'
 import { mask } from "vue-the-mask"
-import { apolloClient } from '@//graphql/apollo'
+import { apolloClient } from '@/graphql/apollo'
 
 export default {
     name: "AgregarColaborador",
@@ -131,6 +131,8 @@ export default {
             EventBus.$emit("cerrarModalRegUsuario");
             try {
                 this.$refs.formAgregarUsuario.reset();
+                this.show = false;
+                this.show1 = false;
             } catch (error) {
             }
         },

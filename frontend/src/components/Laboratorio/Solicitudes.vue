@@ -5,7 +5,7 @@
                 <v-toolbar color="primary" dark>
                   <v-card-title>Solicitudes del proyecto</v-card-title>
                       <v-spacer />
-                      <v-btn icon @click="closeModalSolicitudes()"><v-icon>fa fa-times</v-icon></v-btn>
+                      <v-btn style="outline:none;" icon @click="closeModalSolicitudes()"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-row v-if="usuarioLogeado.tipUsuario === '1' && usuarioLogeado.siglas ===this.$route.params.nameLab">
@@ -13,14 +13,13 @@
                             <v-data-table 
                                 :headers="headers"   
                                 class="elevation-1"
-                                no-data-text="Aún no existen solicitudes" 
-                                hide-default-footer
+                                no-data-text="No existen solicitudes" 
                                 :footer-props="{itemsPerPageText:'Paginación'}" 
                                 :items="alumnos">
                                 <template v-slot:item.solicitudes="{item}" >
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
-                                            <v-btn text icon color="green"  :disabled="NoHayCupo" v-on="on" @click="respuestaSolicitud(item['_id'],'Aceptado')">
+                                            <v-btn style="outline:none;" text icon color="green"  :disabled="NoHayCupo" v-on="on" @click="respuestaSolicitud(item['_id'],'Aceptado')">
                                             <v-icon>fa fa-check</v-icon>
                                             </v-btn>
                                         </template>
@@ -28,7 +27,7 @@
                                     </v-tooltip>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
-                                            <v-btn text icon color="red" v-on="on" @click="respuestaSolicitud(item['_id'],'Rechazado')">
+                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="respuestaSolicitud(item['_id'],'Rechazado')">
                                             <v-icon>fa fa-times</v-icon>
                                             </v-btn>
                                         </template>
@@ -60,12 +59,12 @@ export default {
         Infoproyecto: "",
         headers: [
             {text: "Número", value: "numero"},
-            {text: "Nombre", value: "nombre"},
-            {text: "Institución", value: "institucion"},
-            {text: "Carrera", value: "carrera"},
-            {text: "Correo", value: "correo"},
-            {text: "Teléfono", value: "telefono"},
-            {text: "Solicitudes", value: "solicitudes"},
+            {text: "Nombre", value: "nombre", sortable: false},
+            {text: "Institución", value: "institucion", sortable: false},
+            {text: "Carrera", value: "carrera", sortable: false},
+            {text: "Correo", value: "correo", sortable: false},
+            {text: "Teléfono", value: "telefono", sortable: false},
+            {text: "Solicitudes", value: "solicitudes", sortable: false},
         ],
         datosProyecto:{
             alumnosRequeridos: "",

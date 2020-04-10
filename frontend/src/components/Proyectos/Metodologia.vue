@@ -6,7 +6,7 @@
                 <v-spacer></v-spacer>
                  <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
                     <template v-slot:activator="{on}">
-                        <v-btn text icon color="success" v-on="on" @click="abrirModalFaseAct">
+                        <v-btn style="outline:none;" text icon color="success" v-on="on" @click="abrirModalFaseAct">
                         <v-icon>fa fa-pencil-alt</v-icon>
                         </v-btn>
                     </template>
@@ -14,7 +14,7 @@
                 </v-tooltip>
                 <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
                     <template v-slot:activator="{on}">
-                        <v-btn text icon color="red" v-on="on" @click="AlertaBorrarCronograma">
+                        <v-btn style="outline:none;" text icon color="red" v-on="on" @click="AlertaBorrarCronograma">
                         <v-icon>fa fa-trash</v-icon>
                         </v-btn>
                     </template>
@@ -25,6 +25,18 @@
             <v-card-text>
                 <b-table  small :fields="fields" :items="DatosFaseAct" responsive="sm">
                     <template v-slot:thead-top>
+                        <b-tr>
+                            <b-th colspan="18">Repositorio: <a style="color:blue;" target="_blank" href="https://www.google.com">https://www.google.com  </a>
+                                <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
+                                    <template v-slot:activator="{on}">
+                                        <v-btn style="outline:none;" text icon color="success" v-on="on" @click="editarRepositorio" x-small>
+                                        <v-icon small>fa fa-edit</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Cambiar repositorio</span>
+                                </v-tooltip>
+                            </b-th>
+                        </b-tr>
                         <b-tr >
                         <b-th colspan="6">Laboratorio: {{Nombre}}</b-th>
                         <b-th colspan="12">Nombre del proyecto: {{Proyecto}}</b-th>    
@@ -33,7 +45,7 @@
                         <b-th colspan="3">Metodologia: {{nomMetod}}
                             <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn text icon color="success" v-on="on" @click="editarMetodologia" x-small>
+                                    <v-btn style="outline:none;" text icon color="success" v-on="on" @click="editarMetodologia" x-small>
                                     <v-icon small>fa fa-edit</v-icon>
                                     </v-btn>
                                 </template>
@@ -146,8 +158,9 @@
             </v-progress-linear>
         </v-card>
         <FaseActividad :agregarFaseAct="modalFaseAct" />
-        <AgregarMetodologia :modalAlertaMetodologia="editarMetod" />
+        <AgregarMetodologia :modalAlertaMetodologia="editarMetod" :editarMetodologia="abrirEditarMetod" />
         <BorrarCronograma :alertaBorrarCronograma="abrirBorrarCronograma" />
+        <Repositorio :agregarRepositorio="abrirModalActRepo" />
     </div>
 </template>
 
@@ -159,13 +172,16 @@ import FaseActividad from '@/components/Proyectos/FaseActividad'
 import gql from 'graphql-tag'
 import AgregarMetodologia from '@/components/Alertas/AgregarMetodologia'
 import BorrarCronograma from '@/components/Alertas/BorrarCronograma'
+import Repositorio from '@/components/Proyectos/Repositorio'
 
 export default {
     name: 'Metodologia',
-    components: { FaseActividad, AgregarMetodologia, BorrarCronograma },
+    components: { FaseActividad, AgregarMetodologia, BorrarCronograma, Repositorio },
   
     data: () => ({
         abrirBorrarCronograma: false,
+        abrirEditarMetod: false,
+        abrirModalActRepo: false,
         tipEvaluacion: [
             {value:  "", text: 'Seleccione'},
             {value: '4', text:'Exelente'},
@@ -215,7 +231,11 @@ export default {
         AlertaBorrarCronograma(){
             this.abrirBorrarCronograma = true;
         },
-
+        
+        editarRepositorio(){
+            EventBus.$emit('cambiarVariableRepositorio2');
+            this.abrirModalActRepo = true;
+        },
         // Calificar las actividades del cronograma de actividades
         async calificar(act, cali){
             if(cali===null)cali='';
@@ -265,7 +285,7 @@ export default {
 
         // Editar metodologia 
         editarMetodologia(){
-            this.editarMetod = true;
+            this.abrirEditarMetod = true;
             EventBus.$emit("datosMetodologia",this.Nombre, this.Proyecto);
         },
         
@@ -374,11 +394,19 @@ export default {
 
         EventBus.$on("actualizarCronogramaAct", ()=>{
             this.obtenerFaseAct();
-        })
+        });
 
         EventBus.$on("vaciarTablaActividades", ()=>{
             this.DatosFaseAct=[]
-        })
+        });
+
+        EventBus.$on("cerrarModalEditarMetodologia", ()=>{
+            this.abrirEditarMetod = false;
+        });
+
+        EventBus.$on("cerrarModalActRepositorio", ()=>{
+            this.abrirModalActRepo = false;
+        });
         
     }
 }
