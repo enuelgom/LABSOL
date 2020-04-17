@@ -6,7 +6,7 @@ import { router } from "../routes";
 import cors from "cors"
 import bodyParser from "body-parser"
 
-const HOST = "127.0.0.1";
+const HOST = "localhost";
 const PORT = "3000";
 const app = express();
 
