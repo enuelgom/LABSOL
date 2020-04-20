@@ -125,7 +125,7 @@ export default new Vuex.Store({
           `
         })
         localStorage.removeItem("token")
-        window.location.replace("/");
+        window.location.replace("/proyectos-labsol");
       } catch (error) {
         
       }

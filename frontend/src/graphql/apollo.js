@@ -8,12 +8,12 @@ import { getMainDefinition } from "apollo-utilities";
  
 const httpLink = createHttpLink({
     //uri: "http://192.168.43.185:3001/graphql"
-    uri: "http://labsol.zacatecas.gob.mx/graphql"
+    uri: "http://187.237.158.13/graphql"
 })
 
 const wsLink = new WebSocketLink({
     //uri: "ws://127.0.0.1:3000/graphql",
-    uri: "ws:http://labsol.zacatecas.gob.mx/graphql ",
+    uri: "ws://187.237.158.13/graphql",
     options: {
         reconnect: true
     }

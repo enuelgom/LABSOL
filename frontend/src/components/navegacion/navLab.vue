@@ -6,18 +6,18 @@
          <v-toolbar color="white" class="mostrarNavbar">
             <v-row justify="center">
                 <v-toolbar-items>
-                    <v-img aspect-ratio="2" contain class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="@/assets/labsol.png" />
-                    <v-img aspect-ratio="2" contain class="mt-2" src="@/assets/cozyt.png"  style="height: 45px; width: 220px;" />
-                    <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
+                    <v-img aspect-ratio="2" contain class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="../../assets/labsol.png" />
+                    <v-img aspect-ratio="2" contain class="mt-2" src="../../assets/cozyt.png"  style="height: 45px; width: 220px;" />
+                    <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="../../assets/ILN.png" />
                 </v-toolbar-items>
             </v-row>
         </v-toolbar>
 
         <v-toolbar color="secondary">
             <v-toolbar-items class="ocultarDiv">
-                <v-img class="my-4" src="@/assets/cozyt.png"  style="height: 35px; width: 180px;" />
-                <v-img class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="@/assets/labsol.png" />
-                <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="@/assets/ILN.png" />
+                <v-img class="my-4" src="../../assets/cozyt.png"  style="height: 35px; width: 180px;" />
+                <v-img class="mt-1 mb-1 mx-3" style="position: relative; height: 52px; width: 42px;" src="../../assets/labsol.png" />
+                <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="../../assets/ILN.png" />
             </v-toolbar-items>
             <v-spacer />
             <v-toolbar-title v-if="usuarioLogeado.tipUsuario==='1'">{{ usuarioLogeado.siglas.toUpperCase() }}</v-toolbar-title>
