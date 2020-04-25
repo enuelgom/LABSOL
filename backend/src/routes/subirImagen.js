@@ -3,15 +3,20 @@ import { Router } from "express";
 import labs from "../models/labs";
 
 const filesRoutes = Router();
-filesRoutes.post('/upload', subirImagen.single("imagen"), async (req, res) =>{
-    const imagenRuta = req.file.path;
-    console.log(imagenRuta.path);
-    const lab = await labs.where({nombre: req.headers.labname}).findOneAndUpdate();
-    console.log(lab);
-    lab.logo=imagenRuta;
-    await lab.save();
-    res.send({'message': 'Aquita'});
-})
+try {
+    filesRoutes.post('/upload', subirImagen.single("imagen"), async (req, res) =>{
+        const imagenRuta = req.file.path;
+        console.log(req.headers);
+        const lab = await labs.where({nombre: req.headers.labname}).findOneAndUpdate();
+        console.log(lab);
+        lab.logo=imagenRuta;
+        await lab.save();
+        res.send({'message': 'Aquita'});  
+
+    })
+} catch (error) {
+    console.log(error);   
+}
 
 filesRoutes.get('/sendImg/:lab',async(req, res) => {
     try {
