@@ -31,15 +31,15 @@ function () {
         switch (_context.prev = _context.next) {
           case 0:
             imagenRuta = req.file.path;
-            console.log(req.file);
-            _context.next = 4;
+            console.log(req.headers);
+            console.log(req.headers.labname);
+            _context.next = 5;
             return _labs["default"].where({
               nombre: req.headers.labname
             }).findOneAndUpdate();
 
-          case 4:
+          case 5:
             lab = _context.sent;
-            console.log(lab);
             lab.logo = imagenRuta;
             _context.next = 9;
             return lab.save();
