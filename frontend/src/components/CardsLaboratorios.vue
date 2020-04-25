@@ -153,7 +153,7 @@ export default {
                 // Obtener las imagenes de cada laboratorio labsol
                 for(let i of data.allLabs){
                     if(i.tipoLaboratorio==="Labsol"){
-                        const dataImage = await axios.get(`/api/logos/sendImg/${i.nombre}`,{
+                        const dataImage = await axios.get(`api/logos/sendImg/${i.nombre}`,{
                              responseType: "arraybuffer",
                              headers: {
                                  Autorization: localStorage.getItem("token")
@@ -171,7 +171,7 @@ export default {
                 // Obtener las imagenes de cada laboratorio intel
                 for(let i of data.allLabs){
                     if(i.tipoLaboratorio==="Intel"){
-                        const dataImage1 = await axios.get(`/api/logos/sendImg/${i.nombre}`,{
+                        const dataImage1 = await axios.get(`api/logos/sendImg/${i.nombre}`,{
                                     responseType: "arraybuffer",
                                     headers: {
                                         Autorization: localStorage.getItem("token")

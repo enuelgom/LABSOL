@@ -152,7 +152,7 @@ export default {
                 let formData = new FormData();
                 formData.append("imagen",this.logo, `${this.datosRegistro.nombre}.jpg`);
 
-                await axios.post("/api/logos/upload", formData, {
+                await axios.post("api/logos/upload", formData, {
                     headers: {
                         "Content-Type":"multipart/form-data",
                         "labname":`${this.datosRegistro.nombre}`,
