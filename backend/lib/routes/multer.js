@@ -19,7 +19,7 @@ var storage = _multer["default"].diskStorage({
 });
 
 var subirImagen = (0, _multer["default"])({
-  dest: 'logos/',
+  dest: './logos/',
   storage: storage
 });
 exports.subirImagen = subirImagen;

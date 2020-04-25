@@ -31,7 +31,7 @@ function () {
         switch (_context.prev = _context.next) {
           case 0:
             imagenRuta = req.file.path;
-            console.log(imagenRuta.path);
+            console.log(req.file);
             _context.next = 4;
             return _labs["default"].where({
               nombre: req.headers.labname
