@@ -19,48 +19,54 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var filesRoutes = (0, _express.Router)();
 exports.filesRoutes = filesRoutes;
-filesRoutes.post('/upload', _multer.subirImagen.single("imagen"),
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
+
+try {
+  filesRoutes.post('/upload', _multer.subirImagen.single("imagen"),
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(req, res) {
-    var imagenRuta, lab;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            imagenRuta = req.file.path;
-            console.log(req.headers);
-            console.log(req.headers.labname);
-            _context.next = 5;
-            return _labs["default"].where({
-              nombre: req.headers.labname
-            }).findOneAndUpdate();
+  function () {
+    var _ref = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee(req, res) {
+      var imagenRuta, lab;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              imagenRuta = req.file.path;
+              console.log(req.headers);
+              _context.next = 4;
+              return _labs["default"].where({
+                nombre: req.headers.labname
+              }).findOneAndUpdate();
 
-          case 5:
-            lab = _context.sent;
-            lab.logo = imagenRuta;
-            _context.next = 9;
-            return lab.save();
+            case 4:
+              lab = _context.sent;
+              console.log(lab);
+              lab.logo = imagenRuta;
+              _context.next = 9;
+              return lab.save();
 
-          case 9:
-            res.send({
-              'message': 'Aquita'
-            });
+            case 9:
+              res.send({
+                'message': 'Aquita'
+              });
 
-          case 10:
-          case "end":
-            return _context.stop();
+            case 10:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, _callee);
-  }));
+      }, _callee);
+    }));
 
-  return function (_x, _x2) {
-    return _ref.apply(this, arguments);
-  };
-}());
+    return function (_x, _x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+} catch (error) {
+  console.log(error);
+}
+
 filesRoutes.get('/sendImg/:lab',
 /*#__PURE__*/
 function () {
