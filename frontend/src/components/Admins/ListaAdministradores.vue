@@ -18,13 +18,29 @@
                                 :footer-props="{itemsPerPageText:'Paginación'}" 
                                 :items="administradores">
                                 <template v-slot:item.acciones="{item}" >
+                                     <v-tooltip bottom>
+                                        <template v-slot:activator="{on}">
+                                            <v-btn style="outline:none;" text icon color="orange" @click="editDataAdmin" v-on="on">
+                                            <v-icon>fa fa-edit</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Editar datos</span>
+                                    </v-tooltip>
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
-                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="eliminarAdmin(item._id)">
+                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="modalEliminarAdmin(item._id)">
                                             <v-icon>fa fa-trash</v-icon>
                                             </v-btn>
                                         </template>
                                         <span>Eliminar</span>
+                                    </v-tooltip>
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{on}">
+                                            <v-btn style="outline:none;" text icon color="green" v-on="on" @click="cambiarPriv">
+                                            <v-icon>fa fa-users</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Cambiar privilegios</span>
                                     </v-tooltip>
                                 </template> 
                             </v-data-table>
@@ -33,6 +49,9 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <CambiarPrivilegios :cambiarPrivilegios="abrirCambiarPriv"/>
+        <EliminarAdministrador :eliminarAdmin="abrirEliminarAdmin"/>
+        <EditarAdministrador :editarAdministrador="abrirEditarAdmin"/>
     </div>
 </template>
 
@@ -41,14 +60,22 @@ import { EventBus } from '@/EventBus'
 import { mapState } from "vuex"
 import { apolloClient } from '@/graphql/apollo'
 import gql from 'graphql-tag'
+import CambiarPrivilegios from '@/components/Admins/CambiarPrivilegios'
+import EliminarAdministrador from '@/components/Alertas/EliminarAdministrador'
+import EditarAdministrador from '@/components/Admins/EditarAdministrador'
 
 export default {
     name: 'ListaAdministradores',
     props: ['listaAdmins'],
+    components: {CambiarPrivilegios, EliminarAdministrador, EditarAdministrador},
 
     data: ()=>({
         administradores: [],
         msjsuccess: false,
+        abrirCambiarPriv: false,
+        abrirEliminarAdmin: false,
+        abrirEditarAdmin: false,
+        idAdmin: "",
         headers: [
             {text: "Número", value: "numero"},
             {text: "Nombre", value: "nombre", sortable: false},
@@ -64,23 +91,21 @@ export default {
             EventBus.$emit("cerrarListaAdministradores");
         },
 
-        // Boton para eliminar el administrador
-        async eliminarAdmin(idAdmin){
-            try {
-                const {data} = await apolloClient.mutate({
-                    mutation: gql`
-                        mutation($id: String!){
-                            deleteAdmin(_id: $id)
-                        }
-                    `,
-                    variables:{
-                        id: idAdmin
-                    }
-                })
-                this.obtenerAdministradores()
-            } catch (error) {
-                
-            }
+        //Abrir modal editar datos del administrador
+        editDataAdmin(){
+            this.abrirEditarAdmin = true;
+        },
+
+        //Abrir modal para cambiar privilegios
+        cambiarPriv(){
+            this.abrirCambiarPriv = true;
+        },
+
+        //Abrir modal para eliminar Administrador
+        modalEliminarAdmin(_id){
+            this.idAdmin = _id;
+            EventBus.$emit("enviarIDAdministrador", this.idAdmin);
+            this.abrirEliminarAdmin = true;
         },
 
         // Mutacion para obtener todos los administradores creados
@@ -118,6 +143,22 @@ export default {
             if(keypressed === "Escape"){
                 this.cerrarModal();
             }    
+        });
+
+        EventBus.$on("cerrarModalCambPriv",()=>{
+            this.abrirCambiarPriv = false;
+        });
+        
+        EventBus.$on("cerrarAlertaBorrarAdministrador", ()=>{
+            this.abrirEliminarAdmin = false;
+        });
+
+        EventBus.$on("ActualizarTablaDeAdministradores", ()=>{
+            this.obtenerAdministradores();
+        });
+
+        EventBus.$on("cerrarModalEditarAdmin", ()=>{
+            this.abrirEditarAdmin = false;
         });
     }
 }

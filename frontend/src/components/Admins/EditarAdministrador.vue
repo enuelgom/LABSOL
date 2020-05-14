@@ -1,48 +1,18 @@
 <template>
     <div>
-        <v-snackbar color="green" v-model="msjsuccess" top>¡Administrador registrado! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="green" v-model="msjsuccess" top>¡Datos actualizados! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
-        <v-dialog v-model="agregarAdministrador" max-width="800" persistent>
+        <v-dialog v-model="editarAdministrador" max-width="800" persistent>
             <v-card color="grey lighten-3">
                 <v-toolbar color="primary" dark>
-                    <v-card-title>Agregar nuevo administrador</v-card-title>
+                    <v-card-title>Editar datos</v-card-title>
                     <v-spacer />
                     <v-btn style="outline:none;" icon @click="cerrarModal"><v-icon>fa fa-times</v-icon></v-btn>
                 </v-toolbar>
                 <v-card-text>
                     <v-container>
-                        <v-form ref="formAgregarAdmin" v-model="esValido">
-                            <v-row>
-                                <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-combobox
-                                    prepend-icon="fa fa-users"
-                                    :rules="[privileges]"
-                                    v-model="privilegios"
-                                    :items="items"
-                                    label="Seleccione los privilegios"
-                                    multiple
-                                    chips
-                                    >
-                                    <template v-slot:selection="data">
-                                        <v-chip
-                                        :key="JSON.stringify(data.item)"
-                                        v-bind="data.attrs"
-                                        :input-value="data.selected"
-                                        :disabled="data.disabled"
-                                        @click:close="data.parent.selectItem(data.item)"
-                                        >
-                                        <v-avatar
-                                            class="accent white--text"
-                                            left
-                                            v-text="data.item.slice(0, 1).toUpperCase()"
-                                        ></v-avatar>
-                                        {{ data.item }}
-                                        </v-chip>
-                                    </template>
-                                    </v-combobox>
-                                </v-col>
-                            </v-row>
+                        <v-form ref="formEditarAdmin" v-model="esValido">
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
                                     <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre completo" v-model="datosAdmin.nombre" />
@@ -75,12 +45,12 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="addAdmin" rounded>Agregar administrador</v-btn>
+                                    <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="editarDatosAdmin" rounded>Actualizar datos</v-btn>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn style="outline:none;" block color="primary" @click="abrirListaAdministradores" dark rounded>Ver administradores</v-btn>
+                                    <v-btn style="outline:none;" block color="primary" @click="cancelarActualizacion" dark rounded>Cancelar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-form>
@@ -88,7 +58,6 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
-        <ListaAdministradores :listaAdmins="abrirListAdminis"/>
     </div>
 </template>
 
@@ -97,12 +66,10 @@ import { EventBus } from '@/EventBus'
 import gql from 'graphql-tag'
 import { mask } from "vue-the-mask"
 import { apolloClient } from '@/graphql/apollo'
-import ListaAdministradores from '@/components/Admins/ListaAdministradores'
 
 export default {
-    name: "AgregarAdministrador",
-    props:["agregarAdministrador"],
-    components: {ListaAdministradores},
+    name: "EditarAdministrador",
+    props:["editarAdministrador"],
 
     directives:{
         mask
@@ -114,16 +81,9 @@ export default {
         esValido: false,
         show: false,
         show1: false,
-        abrirListAdminis: false,
         msjErrorRegistro: '',
         pswConfirm: '',
         mask: '(###)-###-####',
-        privilegios: ['Agregar laboratorios'],
-        items: [
-            'Agregar laboratorios',
-            'Borrar laboratorios',
-            'Aceptar proyectos'
-        ],
         datosAdmin: {
             nombre: '',
             telefono: '',
@@ -173,60 +133,20 @@ export default {
     },
 
     methods: {
-         privileges(value){
-            if (value instanceof Array && value.length == 0) {
-                return 'Los privilegios son requeridos';
+        cerrarModal(){
+            EventBus.$emit("cerrarModalEditarAdmin");
+            try {
+                this.$refs.formEditarAdmin.reset();
+            } catch (error) {
             }
-            return !!value || 'Los privilegios son requeridos';
         },
 
-        abrirListaAdministradores(){
-            this.abrirListAdminis = true;
+        cancelarActualizacion(){
             this.cerrarModal();
         },
 
-        cerrarModal(){
-            EventBus.$emit("cerrarModalAddAdmin");
-            try {
-                this.$refs.formAgregarAdmin.reset();
-                this.privilegios = ['Agregar laboratorios'];
-                this.show = false;
-                this.show1 = false;
-            } catch (error) {
-            }
-        },
-
-        async addAdmin(){
-            let priv="";
-            for (let i = 0; i < this.privilegios.length; i++) {
-                priv = priv+this.privilegios[i]+", ";
-            }
-            console.log(priv)
-            try {
-                const {data} = await this.$apollo.mutate({
-                    mutation: gql`
-                        mutation($privilegios: String!, $nombre: String!, $telefono: String!, $correo: String!, $usuario: String!, $clave: String!)
-                        {
-                            addSubAdmin(nombre: $nombre, usuario: $usuario, clave: $clave, privilegios: $privilegios, telefono: $telefono, correo: $correo)
-                        }
-                    `,
-                    variables: {
-                        privilegios: priv,
-                        nombre: this.datosAdmin.nombre,
-                        telefono: this.datosAdmin.telefono,
-                        correo: this.datosAdmin.correo,
-                        usuario: this.datosAdmin.usuario,
-                        clave: this.datosAdmin.psw
-                    }
-                })
-                this.msjsuccess = true;
-                setTimeout(() => {
-                    this.msjsuccess = false;
-                    this.cerrarModal();
-                }, 1500);
-            } catch (error) {
-                
-            }
+        async editarDatosAdmin(){
+            
         }
     },
      
