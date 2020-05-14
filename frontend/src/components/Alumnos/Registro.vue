@@ -3,7 +3,7 @@
         <v-snackbar color="green" v-model="msjsuccess" top>¡Registrado! <v-btn style="outline:none;" color="white" text @click="msjsuccess=false">Cerrar</v-btn></v-snackbar>
         <v-snackbar color="red" v-model="msjerror" top>¡{{ msjErrorRegistro }}! <v-btn style="outline:none;" color="white" text @click="msjerror=false">Cerrar</v-btn></v-snackbar>
 
-        <v-dialog v-model="openModelStudent" max-width="800" persistent>
+        <v-dialog v-model="openModelStudent" max-width="1180" persistent>
             <v-form ref="formStudent" v-model="esValido">
                 <v-card color="grey lighten-3">
                     <v-toolbar color="primary" dark>
@@ -39,10 +39,10 @@
                             <v-card-subtitle class="subtitle-2 font-weight-black" style="padding: 5px;"><strong>Información escolar</strong></v-card-subtitle>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="escuelaAlumno" prepend-icon="fa fa-university" label="Institución" v-model="datosAlumno.institucion" dense/>
+                                    <v-text-field :rules="escuelaAlumno" prepend-icon="fa fa-university" label="Institución" placeholder="(ej.): Instituto Tecológico de Ciudad Valles" v-model="datosAlumno.institucion" dense/>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="carreraAlumno" prepend-icon="fa fa-graduation-cap" label="Carrera" v-model="datosAlumno.carrera" dense/>
+                                    <v-text-field :rules="carreraAlumno" prepend-icon="fa fa-graduation-cap" label="Carrera" placeholder="(ej.): Ingeniería en sistemas computacionales" v-model="datosAlumno.carrera" dense/>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
                                     <v-text-field v-mask="mask1" dense :rules="semestreAlumno" required v-model="datosAlumno.semestre"  prepend-icon="fa fa-sort" type="text" label="Semestre" min="1" max="13"></v-text-field>

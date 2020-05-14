@@ -17,7 +17,7 @@
                 <v-img class="pb-3" style="position: relative; height: 60px; width: 90px;" src="../../assets/ILN.png" />
             </v-toolbar-items>
             <v-spacer />
-            <v-toolbar-title>{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
+            <v-toolbar-title id="letraResp">{{ usuarioLogeado.nombre.toUpperCase() }}</v-toolbar-title>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
                     <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalEditar">
@@ -165,5 +165,16 @@ export default {
     .mostrarNavbar{
      display: none;
     }
-  } 
+  }
+
+  @media screen and (max-width: 550px) {
+    #letraResp {
+        font-size: 0.7rem;
+    }
+  }
+  @media screen and (max-width: 360px) {
+    #letraResp {
+        font-size: 0.6rem;
+    }
+  }
 </style>

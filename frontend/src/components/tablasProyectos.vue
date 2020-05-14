@@ -305,7 +305,7 @@ export default {
             this.nomProyecto2 = item.proyecto;
             EventBus.$emit("eviarNomProyectoColaborador", this.nomProyecto2, item.colaboradores);
             this.abrirListaColab = true;
-        },
+        }, 
 
         // Abrir alerta de borrar proyecto
         borrarProyecto(item){
