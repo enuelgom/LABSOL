@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row justify="center">
-            <v-dialog v-model="cuentaExpirada" max-width="350" persistent>
+            <v-dialog v-model="sesionExpirada" max-width="350" persistent>
                 <v-card>
                     <v-toolbar color="red" dark>
                         <v-row justify="center">
@@ -31,8 +31,8 @@ import { apolloClient } from '../../graphql/apollo'
 import gql from 'graphql-tag'
 
 export default {
-    name: "CuentaExpirada",
-    props: ["cuentaExpirada"],
+    name: "SesionExpirada",
+    props: ["sesionExpirada"],
 
     methods: {
         expiracion(){
