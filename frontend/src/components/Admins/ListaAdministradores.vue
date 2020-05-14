@@ -20,7 +20,7 @@
                                 <template v-slot:item.acciones="{item}" >
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
-                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="eliminarAdmin(item)">
+                                            <v-btn style="outline:none;" text icon color="red" v-on="on" @click="eliminarAdmin(item._id)">
                                             <v-icon>fa fa-trash</v-icon>
                                             </v-btn>
                                         </template>
@@ -65,15 +65,19 @@ export default {
         },
 
         // Boton para eliminar el administrador
-        async eliminarAdmin(){
+        async eliminarAdmin(idAdmin){
             try {
                 const {data} = await apolloClient.mutate({
                     mutation: gql`
-                        mutation(){
-
+                        mutation($id: String!){
+                            deleteAdmin(_id: $id)
                         }
-                    `
+                    `,
+                    variables:{
+                        id: idAdmin
+                    }
                 })
+                this.obtenerAdministradores()
             } catch (error) {
                 
             }
@@ -84,18 +88,31 @@ export default {
             try {
                 const {data} = await this.$apollo.query({
                     query: gql`
-                        query(){
-
+                        query{
+                            allAdmins{
+                                _id,
+                                nombre,
+                                correo,
+                                telefono,
+                                privilegios
+                            }
                         }
                     `
                 })
+                let i=0;
+                for(let val of data.allAdmins){
+                    i++
+                    val["numero"]=i;
+                }
+                this.administradores=data.allAdmins;
             } catch (error) {
-                
+                console.log(error)
             }
         }
     },
 
     mounted() {
+        this.obtenerAdministradores();
         document.addEventListener("keydown", event => {
             const keypressed = event.key; 
             if(keypressed === "Escape"){

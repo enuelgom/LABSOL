@@ -28,7 +28,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalAgregarAdmin">
+                    <v-btn style="outline:none;" :disabled="!privilegios.addAdmin" text icon v-on="on" @click="abrirModalAgregarAdmin">
                         <v-icon>fa fa-user-plus</v-icon>
                     </v-btn>
                 </template>
@@ -36,7 +36,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn style="outline:none;" text icon v-on="on" @click="abrirModalRegLab">
+                    <v-btn style="outline:none;" :disabled="!privilegios.b" text icon v-on="on" @click="abrirModalRegLab">
                         <v-icon>fa fa-plus</v-icon>
                     </v-btn>
                 </template>
@@ -74,7 +74,14 @@ export default {
         abrirRegistroLab: false,
         abrirLogout: false,
         editarDatos: false,
-        agregarNuevosAdmins: false
+        agregarNuevosAdmins: false,
+        privilegios: {
+            addAdmin: false,
+            b: false,
+            c: false,
+            d: false
+        }
+
     }),
 
     methods: {
@@ -100,6 +107,24 @@ export default {
     },
 
     mounted(){
+
+        if (this.usuarioLogeado.p.includes("A")) {
+            this.privilegios.b=true;
+            this.privilegios.c=true;
+            this.privilegios.d=true;
+            this.privilegios.addAdmin=true;
+        }else{
+            if (this.usuarioLogeado.p.includes("B")) {
+                this.privilegios.b=true;
+            }
+            if (this.usuarioLogeado.p.includes("C")) {
+                this.privilegios.c=true;
+            }
+            if (this.usuarioLogeado.p.includes("D")) {
+                this.privilegios.d=true;
+            }
+        }
+
         EventBus.$on("cerrarRegistroLab", () => {
             this.abrirRegistroLab = false;
         });

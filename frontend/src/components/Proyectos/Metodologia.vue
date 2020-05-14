@@ -26,7 +26,7 @@
                 <b-table  small :fields="fields" :items="DatosFaseAct" responsive="sm">
                     <template v-slot:thead-top>
                         <b-tr>
-                            <b-th colspan="18">Repositorio: <a style="color:blue;" target="_blank" href="https://www.google.com">https://www.google.com  </a>
+                            <b-th colspan="18">Repositorio: <a style="color:blue;" target="_blank" :href="'//'+repo">{{repo}}  </a>
                                 <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
                                     <template v-slot:activator="{on}">
                                         <v-btn style="outline:none;" text icon color="success" v-on="on" @click="editarRepositorio" x-small>
@@ -165,6 +165,7 @@
 </template>
 
 <script>
+import { apolloClient } from '../../graphql/apollo'
 import bootstrap from "@/plugins/Bootstrap-vue"
 import { mapState } from "vuex"
 import { EventBus } from '@/EventBus'
@@ -199,6 +200,7 @@ export default {
         nomMetod: '',
         Nombre: '',
         Proyecto: '',
+        repo: "",
         DatosFaseAct: [],
         fields: [
             { key:'fase', label: 'Fase'},
@@ -227,6 +229,27 @@ export default {
     },
 
     methods: {
+
+        async getRepo(){
+            try {
+                const {data} = await this.$apollo.query({
+                    query: gql`
+                        query($nombre: String!, $proyecto: String!)
+                        {
+                            existeRepo(nombre:$nombre, proyecto:$proyecto)
+                        }
+                    `,
+                    variables: {
+                        nombre: this.Nombre,
+                        proyecto: this.Proyecto
+                    }
+                })
+                this.repo = data.existeRepo;
+            } catch (error) {
+                
+            }
+        }
+        ,
         // Abrir alerta para borrar el cronograma
         AlertaBorrarCronograma(){
             this.abrirBorrarCronograma = true;
@@ -389,11 +412,13 @@ export default {
             this.colaborador = colaborador;
             setTimeout(() => {
                 this.obtenerFaseAct();
+                this.getRepo();
             }, 100);
         });
 
         EventBus.$on("actualizarCronogramaAct", ()=>{
             this.obtenerFaseAct();
+            this.getRepo();
         });
 
         EventBus.$on("vaciarTablaActividades", ()=>{

@@ -104,11 +104,41 @@ const resolvers = {
             }
         },
 
+        async existeRepo(root, args, context){
+            try{
+                const {nombre, proyecto} = args;
+                const _lab = await labs.where({nombre}).findOne();
+                for(let val of _lab.proyectos){
+                    if (val.proyecto===proyecto) {
+                        if(val.avances.repositorio===""){
+                            return false
+                        }else{
+                            return val.avances.repositorio  
+                        }
+                    }
+                }
+            }
+            catch(e){
+                return e
+            }
+        },
+
+
         async getLabName(root, args, context){
             const {siglas}=args;
             const nameLab = await labs.where({siglas}).findOne();
             let nombre = nameLab.nombre;
             return nombre;
+        },
+
+        async allAdmins(root, args, context){
+            const _allAdmins = await admin.find()
+            let _admins = []
+            for (let val of _allAdmins){
+                if(val.rol==="subAdmin")
+                _admins.push({_id: val._id, nombre: val.nombre, correo: val.correo, telefono: val.telefono, privilegios: val.privilegios})
+            }
+            return _admins;
         },
 
         async allLabs(root, args, context){
@@ -286,19 +316,38 @@ const resolvers = {
 
                 if(adm) {
                     if (await bcrypt.compare(clave,adm.clave)) {
-                        const typeUser = "0";
-                        const nombre = adm.nombre
-                        return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '5h' })
+                        if (adm.rol=="subAdmin") {
+                            const typeUser = "0";
+                            const nombre = adm.nombre
+                            let privilegios="";
+                            if (adm.privilegios.includes('Agregar laboratorios')) {
+                                privilegios = privilegios+"B"
+                            }
+                            if (adm.privilegios.includes('Borrar laboratorios')) {
+                                privilegios = privilegios+"C"
+                            }
+                            if (adm.privilegios.includes('Aceptar proyectos')) {
+                                privilegios = privilegios+"D"
+                            }
+                            return jwt.sign({ usuario, nombre, typeUser,privilegios}, SECRET, { expiresIn: '5h' })
+                        }else{
+                            const typeUser = "0";
+                            const nombre = adm.nombre
+                            const privilegios = "A";
+                            return jwt.sign({ usuario, nombre, typeUser, privilegios}, SECRET, { expiresIn: '5h' })
+                        }
                     }else{
                         return "Contraseña incorrecta";
                     }
                 }
                 if(lab){
+
                     if (await bcrypt.compare(clave,lab.clave)) {
                         const typeUser = "1";
                         const nombre = lab.nombre;
                         const siglas = lab.siglas;
                         return jwt.sign({ usuario, nombre, typeUser, siglas }, SECRET, { expiresIn: '5h' })
+
                     }else{
                         return "Contraseña incorrecta"
                     }
@@ -622,9 +671,6 @@ const resolvers = {
 
         async nuevoAdmin(root, args, context){
             try {
-                const  token  = context.token;
-                const _blacklist = await blackList.find({token}).findOne();
-                //if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
                 const { nombre, usuario}=args;
                 let {clave} = args;
                 const passHashed= await bcrypt.hash(clave,10);
@@ -933,7 +979,48 @@ const resolvers = {
             } catch (error) {
                 return error
             }
-        }
+        },
+
+        async agregarRepositorio(root,args,context){
+            try {
+                const {nombre, proyecto,repositorio} = args;
+
+                const lab = await labs.where({nombre}).findOneAndUpdate();
+                for(let val of lab.proyectos){
+                    if(val.proyecto===proyecto){
+                        val.avances.repositorio=repositorio;
+                        await lab.save();
+                    }
+
+                }
+                return "hecho";
+            } catch (error) {
+                return error;
+            }
+        },
+
+        async addSubAdmin(root, args, context){
+            try {
+                const { nombre, usuario, privilegios ,telefono ,correo } = args;
+                let {clave} = args;
+                const passHashed= await bcrypt.hash(clave,10);
+                clave = passHashed;
+                await new admin ({ rol:"subAdmin", nombre, usuario, clave, privilegios, telefono, correo }).save();
+                return "guardado";
+            } catch (error) {
+                
+            }
+        },
+
+        async deleteAdmin(root, args, context){
+            try {
+                const {_id} = args;
+                const _admins = await admin.where({_id}).findOneAndRemove();
+                return "hecho";
+            } catch (error) {
+                return error;
+            }
+        },
     }
 }
 

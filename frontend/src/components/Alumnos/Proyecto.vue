@@ -33,7 +33,7 @@
                 </v-tooltip>
                 <v-tooltip bottom v-if="item.status === 'Aceptado'">
                   <template v-slot:activator="{on}">
-                      <v-btn style="outline:none;" text icon color="blue" v-on="on" @click="abrirMsjRepositorio">
+                      <v-btn style="outline:none;" text icon color="blue" v-on="on" @click="abrirMsjRepositorio(item.nombre,item.proyecto)">
                         <v-icon>fa fa-code-branch</v-icon>
                       </v-btn>
                   </template>
@@ -91,7 +91,8 @@ export default {
 
   methods: {
     // Abrir mensaje para agregar el repositorio
-    abrirMsjRepositorio(){
+    abrirMsjRepositorio(nombre, proyecto){
+      EventBus.$emit("datamsjrepo", nombre, proyecto);
       this.abrirMsjAddRepo = true;
     },
 

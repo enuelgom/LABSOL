@@ -17,7 +17,8 @@ export default new Vuex.Store({
       nom_usuario: "",
       nombre: "",
       siglas: "",
-      _id: ""
+      _id: "",
+      p: ""
     }
   },
 
@@ -30,7 +31,8 @@ export default new Vuex.Store({
         state.usuarioLogeado.nom_usuario = tokenDec.usuario
         state.usuarioLogeado.nombre = tokenDec.nombre
         state.usuarioLogeado.siglas = tokenDec.siglas
-        state.usuarioLogeado._id = tokenDec._id   
+        state.usuarioLogeado._id = tokenDec._id
+        state.usuarioLogeado.p = tokenDec.privilegios
       }
     }
   },

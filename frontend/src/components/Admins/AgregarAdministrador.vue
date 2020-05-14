@@ -75,6 +75,7 @@
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
                                     <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="addAdmin" rounded>Agregar administrador</v-btn>
+                                    
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -189,16 +190,21 @@ export default {
         },
 
         async addAdmin(){
+            let priv="";
+            for (let i = 0; i < this.privilegios.length; i++) {
+                priv = priv+this.privilegios[i]+", ";
+            }
+            console.log(priv)
             try {
                 const {data} = await this.$apollo.mutate({
                     mutation: gql`
                         mutation($privilegios: String!, $nombre: String!, $telefono: String!, $correo: String!, $usuario: String!, $clave: String!)
                         {
-                            
+                            addSubAdmin(nombre: $nombre, usuario: $usuario, clave: $clave, privilegios: $privilegios, telefono: $telefono, correo: $correo)
                         }
                     `,
                     variables: {
-                        privilegios: this.privilegios,
+                        privilegios: priv,
                         nombre: this.datosAdmin.nombre,
                         telefono: this.datosAdmin.telefono,
                         correo: this.datosAdmin.correo,
@@ -206,6 +212,11 @@ export default {
                         clave: this.datosAdmin.psw
                     }
                 })
+                this.msjsuccess = true;
+                setTimeout(() => {
+                    this.msjsuccess = false;
+                    this.cerrarModal();
+                }, 1500);
             } catch (error) {
                 
             }

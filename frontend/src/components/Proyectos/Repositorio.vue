@@ -46,6 +46,8 @@ export default {
         esValido: false,
         msjsuccess: false,
         actualizar: false,
+        nombre: "",
+        proyecto: "",
         dato:{
             repositorio: ''
         },
@@ -56,19 +58,29 @@ export default {
 
     methods: {
         async addRepositorio(){
-            try {
-                const {data} = await apolloClient.mutate({
+            if (!this.dato.repositorio.includes("//")) {
+                this.dato.repositorio = "//"+this.dato.repositorio;
+            }
+            try{
+            const {data} = await apolloClient.mutate({
                     mutation: gql`
-                        mutation(){
-
+                        mutation($nombre: String!, $proyecto: String!, $repositorio: String!){
+                            agregarRepositorio(nombre: $nombre, proyecto: $proyecto,repositorio: $repositorio)
                         }
                     `,
                     variables: {
-
+                        nombre: this.nombre,
+                        proyecto: this.proyecto,
+                        repositorio: this.dato.repositorio
                     }    
                 })
+                this.msjsuccess = true;
+                setTimeout(() => {
+                    this.msjsuccess = false;
+                    this.cerrarModal(); 
+                }, 1500);
             } catch (error) {
-                
+                console.log(error);
             }
         },
 
@@ -80,6 +92,11 @@ export default {
     },
 
     mounted(){
+        EventBus.$on("datamsjrepo", (nombre, proyecto)=>{
+            console.log(nombre+" "+proyecto);
+            this.nombre = nombre;
+            this.proyecto = proyecto; 
+        });
         EventBus.$on("cambiarVariableRepositorio2", ()=>{
             this.actualizar = true;
         });

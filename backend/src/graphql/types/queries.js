@@ -1,5 +1,7 @@
 export const queries = `
     type Query {
+        allAdmins: [AllAdmins]
+
         allLabs: [allLabsCount]
 
         oneLab(
@@ -37,6 +39,11 @@ export const queries = `
         ): String
 
         existeMetod(
+            nombre: String,
+            proyecto: String
+        ): String
+
+        existeRepo(
             nombre: String,
             proyecto: String
         ): String

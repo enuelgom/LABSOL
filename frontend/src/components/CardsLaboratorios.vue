@@ -20,7 +20,7 @@
                                             <v-toolbar color="white" elevation="1">
                                             <v-card-title class="text-center">{{ item.siglas.toUpperCase()}}</v-card-title>
                                                 <v-spacer />
-                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
+                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0' && privilegios.c " icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
                                                 <v-badge v-if="item['notificaciones'] != '' && usuarioLogeado.tipUsuario === '0'" :content="item['notificaciones']" :value="item['notificaciones']" color="red" overlap>
                                                     <v-icon color="blue">fa fa-bell</v-icon>
                                                 </v-badge>
@@ -59,7 +59,7 @@
                                             <v-toolbar color="white" elevation="1">
                                             <v-card-title class="text-center">{{ item.siglas.toUpperCase() }}</v-card-title>
                                                 <v-spacer />
-                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0'" icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
+                                                <v-btn style="outline:none;" @click="alertaBorrar(item.siglas)" v-if="usuarioLogeado.tipUsuario === '0' && privilegios.c " icon color="error"><v-icon>fa fa-trash</v-icon></v-btn>
                                                 <v-badge v-if="item['notificaciones'] != '' && usuarioLogeado.tipUsuario === '0'" :content="item['notificaciones']" :value="item['notificaciones']" color="red" overlap>
                                                     <v-icon color="blue">fa fa-bell</v-icon>
                                                 </v-badge>
@@ -115,7 +115,10 @@ export default {
         intel: null,
         DatosIntel:[],
         DatosLabsol: [],
-        ruta: ""
+        ruta: "",
+        privilegios: {
+            c: false,
+        }
       }
     },
 
@@ -204,6 +207,15 @@ export default {
     },
 
     mounted(){
+
+        if (this.usuarioLogeado.p.includes("A")) {
+            this.privilegios.c=true;
+        }else{
+            if (this.usuarioLogeado.p.includes("C")) {
+                this.privilegios.c=true;
+            }
+        }
+
         EventBus.$on("actualizar", ()=>{
             this.obtenerLaboratorios();
         });

@@ -26,6 +26,7 @@ let fase = {
 }
 
 let avance = {
+    repositorio: String,
     metodologia: String,
     fases: [fase]
 }

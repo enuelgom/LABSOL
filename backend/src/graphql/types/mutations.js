@@ -1,5 +1,9 @@
 export const mutations = `
 type Mutation{
+    deleteAdmin(
+        _id: String
+    ): String
+    
     nuevoLab(
         nombre: String,
         siglas: String,
@@ -39,6 +43,15 @@ type Mutation{
         nombre: String,
         usuario: String,
         clave: String
+    ): String
+
+    addSubAdmin(
+        nombre: String,
+        usuario: String,
+        clave: String,
+        privilegios: String,
+        correo: String,
+        telefono: String
     ): String
 
     solicitarProyecto(
@@ -171,6 +184,12 @@ type Mutation{
     asignarColaborador(
         proyecto: String,
         _id: String
+    ): String
+
+    agregarRepositorio(
+        nombre: String,
+        proyecto: String,
+        repositorio: String
     ): String
 }
 `

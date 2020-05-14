@@ -156,7 +156,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn style="outline:none;" text icon color="green" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Aceptado')">
+                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="green" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Aceptado')">
                                     <v-icon>fa fa-check</v-icon>
                                     </v-btn>
                                 </template>
@@ -164,7 +164,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn style="outline:none;" text icon color="red" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Rechazado')">
+                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="red" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Rechazado')">
                                     <v-icon>fa fa-times</v-icon>
                                     </v-btn>
                                 </template>
@@ -241,6 +241,9 @@ export default {
     components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada, ListaColaboradores},
     
     data: () => ({
+        privilegios: {
+            d: false
+        },
         abrirAlertaBorrar: false,
         abrirListaColab: false,
         msjAvisoSolicitudProyecto: false,
@@ -500,6 +503,14 @@ export default {
         }
     },
     mounted(){
+        if (this.usuarioLogeado.p.includes("A")) {
+            this.privilegios.d=true;
+        }else{
+            if (this.usuarioLogeado.p.includes("D")) {
+                this.privilegios.c=true;
+            }
+        }
+
         this.com = this.headers;
         this.headers = this.headers2;
         if((this.usuarioLogeado.tipUsuario === '2' || this.usuarioLogeado.tipUsuario === '' || this.usuarioLogeado.siglas != this.$route.params.nameLab || this.usuarioLogeado.tipUsuario === '1.1') && this.usuarioLogeado.tipUsuario != '0'){

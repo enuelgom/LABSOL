@@ -1,4 +1,13 @@
 export const custom = `
+
+    type AllAdmins {
+        _id: String,
+        nombre: String,
+        correo: String,
+        telefono: String,
+        privilegios: String
+    }
+
     type Laboratorio {
         nombre: String,
         logo: String,
