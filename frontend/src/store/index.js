@@ -25,14 +25,42 @@ export default new Vuex.Store({
   mutations: {
     // Guardar token de usuarios
     guardarUsuarioLog(state){
+      
       const tokenDec =  jwt.decodeToken(localStorage.getItem("token"))
       if (tokenDec) {
+        const dt = new Date();
+        let dtexp = new Date(0);
+        dtexp.setUTCSeconds(tokenDec.exp)
+        
+        const secNow = (dt.getHours()*60*60)+(dt.getMinutes()*60);
+
+        let secExp = (dtexp.getHours()*60*60)+(dtexp.getMinutes()*60);
+        if (secExp < secNow) secExp = secExp+(24*60*60);
+        let timer = (secExp-secNow)*1000;
+
         state.usuarioLogeado.tipUsuario = tokenDec.typeUser
         state.usuarioLogeado.nom_usuario = tokenDec.usuario
         state.usuarioLogeado.nombre = tokenDec.nombre
         state.usuarioLogeado.siglas = tokenDec.siglas
         state.usuarioLogeado._id = tokenDec._id
         state.usuarioLogeado.p = tokenDec.privilegios
+        if(dt.valueOf()>dtexp.valueOf()){
+          setTimeout(() => {
+            console.log("entre")
+            EventBus.$emit("sessionExpiredAlu");
+            EventBus.$emit("sessionExpiredAdm");
+            EventBus.$emit("sessionExpiredLab");
+          }, 2000);
+        }else{
+          setTimeout(() => {
+              EventBus.$emit("sessionExpiredAlu");
+              EventBus.$emit("sessionExpiredAdm");
+              EventBus.$emit("sessionExpiredLab");
+          }, timer);
+            //console.log(dt)
+            //console.log(dtexp)
+          }
+        
       }
     }
   },
@@ -69,8 +97,11 @@ export default new Vuex.Store({
             setTimeout(()=>{
               localStorage.setItem("token", data.login)
               commit("guardarUsuarioLog")
+              EventBus.$emit("actualizarCardsLabs");
             },1000)
             EventBus.$emit("cerrarLoginTabla");
+            
+            
             break;
         }
       

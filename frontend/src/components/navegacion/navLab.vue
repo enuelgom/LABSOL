@@ -68,10 +68,12 @@
         <EditarDatos :EditarDatosLab="ActulizarLab"/>
         <AgregarColaborador :agregarUsuario="AbrirAgregarUsuario" />
         <ActualizarDatos :modalActDatosColab="actDatosColaborador" />
+        <SesionExpirada :sesionExpirada="expSession"/>
     </div>
 </template>
 
 <script>
+import SesionExpirada from '../Alertas/SesionExpirada'
 import { mapState } from "vuex"
 import { EventBus } from "@/EventBus"
 import NuevoProyecto from "../Laboratorio/NuevoProyecto"
@@ -82,9 +84,10 @@ import ActualizarDatos from '@/components/Colaborador/ActualizarDatos'
 
 export default {
     name: "navLab",
-    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador, ActualizarDatos },
+    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador, ActualizarDatos, SesionExpirada },
 
     data: () => ({
+        expSession: false,
         actDatosColaborador: false,
         msjErrorActualizacion: "",
         msjsuccess: false,
@@ -119,6 +122,10 @@ export default {
 
         abrirModelAgregarUsuario(){
             this.AbrirAgregarUsuario = true;
+        },
+
+        sessexp(){
+            this.expSession = true;
         }
     },
 
@@ -172,6 +179,10 @@ export default {
 
         EventBus.$on("cerrarModalActDatosColab", ()=>{
             this.actDatosColaborador = false;
+        });
+
+        EventBus.$on("sessionExpiredAdm", ()=>{
+            this.expSession = true;
         });
     }
 }

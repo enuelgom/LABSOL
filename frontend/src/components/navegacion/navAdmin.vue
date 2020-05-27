@@ -55,6 +55,7 @@
     <Logout :confirmacionLogout="abrirLogout"/>
     <EditarCuenta :modalEditarDatos="editarDatos"/>
     <AgregarAdministrador :agregarAdministrador="agregarNuevosAdmins" />
+    <SesionExpirada :sesionExpirada="expSession"/>
     </div>
 </template>
 
@@ -65,16 +66,18 @@ import { mapState } from "vuex"
 import Logout from '../Logout'
 import EditarCuenta from '@/components/Admins/EditarCuenta'
 import AgregarAdministrador from '@/components/Admins/AgregarAdministrador'
+import SesionExpirada from '../Alertas/SesionExpirada'
 
 export default {
     name: 'navAdmin',
-    components: { NuevoLaboratorio, Logout, EditarCuenta, AgregarAdministrador },
+    components: { NuevoLaboratorio, Logout, EditarCuenta, AgregarAdministrador, SesionExpirada },
 
     data: () => ({
         abrirRegistroLab: false,
         abrirLogout: false,
         editarDatos: false,
         agregarNuevosAdmins: false,
+        expSession: false,
         privilegios: {
             addAdmin: false,
             b: false,
@@ -99,6 +102,10 @@ export default {
 
         abrirModalEditar(){
             this.editarDatos = true;
+        },
+
+        sessexp(){
+            this.expSession = true;
         }
     },
 
@@ -144,6 +151,10 @@ export default {
         EventBus.$on("cerrarModalAddAdmin", ()=>{
             this.agregarNuevosAdmins = false;
         });
+
+        EventBus.$on("sessionExpiredAdm", ()=>{
+            this.expSession = true;
+        })
     }
 }
 </script>

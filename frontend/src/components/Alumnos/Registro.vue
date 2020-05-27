@@ -67,7 +67,7 @@
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="agregarAlumno(datosAlumno)" rounded>Guardar registro</v-btn>
+                                <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="agregarAlumno(datosAlumno)" id="submit" rounded>Guardar registro</v-btn>
                             </v-row>
                              <div class="text-center my-2">
                                 <span>¿Ya tienes una cuenta?</span><a style="color: #0277BD" @click="abrirLogin"> Inicia ahora</a>
@@ -211,6 +211,15 @@ export default {
     },
 
     mounted() {
+        document.addEventListener("keydown", event => {
+            const keypressed = event.key;
+            if(keypressed === "Enter"){
+                try {
+                    this.$refs.formStudent.validate()
+                    document.getElementById("submit").click();
+                } catch (error){}                }
+        });
+
         document.addEventListener("keydown", event => {
             const keypressed = event.key;
             if(keypressed === "Escape"){

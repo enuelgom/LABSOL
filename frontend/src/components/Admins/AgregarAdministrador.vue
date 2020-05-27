@@ -182,7 +182,8 @@ export default {
 
         abrirListaAdministradores(){
             this.abrirListAdminis = true;
-            this.cerrarModal();
+            EventBus.$emit("reloadListAdmins")
+            //this.cerrarModal();
         },
 
         cerrarModal(){

@@ -203,6 +203,7 @@ export default {
   methods: {
     //Cancelar actualización
         cancelarActualizacion() {
+          console.log("acc")
             this.obtenerDatosAlumno();
             this.datoAlumno.psw = "";
             this.pswConfirm = "";
@@ -254,6 +255,7 @@ export default {
     },
 
     async actualizarDatos({commit, state}){
+      
       try {
         const { data } = await apolloClient.mutate({
           mutation: gql`

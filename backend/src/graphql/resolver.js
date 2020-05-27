@@ -272,15 +272,20 @@ const resolvers = {
             const alumno = await alumnos.findOne({usuario:decoded["usuario"]})
             let misSolicitudes = [];
             for(let val of alumno.solicitudes){
-                const laboratorio = await labs.findOne({siglas: val.nombre})
-                for(let val2 of laboratorio.proyectos){
-                    if(val2.proyecto === val.proyecto){
-                        if(alumno.status!="cancelado"){
-                            misSolicitudes.push({nombre: laboratorio.nombre, proyecto:val2.proyecto, status: val._status});
+                try {
+                    
+                    const laboratorio = await labs.findOne({siglas: val.nombre})
+                    for(let val2 of laboratorio.proyectos){
+                        if(val2.proyecto === val.proyecto){
+                            if(alumno.status!="cancelado"){
+                                misSolicitudes.push({nombre: laboratorio.nombre, proyecto:val2.proyecto, status: val._status});
+                            }
                         }
                     }
+                    
+                } catch (error) {
+                    console.log(error)
                 }
-                
             }
             return misSolicitudes;
         },
@@ -329,12 +334,12 @@ const resolvers = {
                             if (adm.privilegios.includes('Aceptar proyectos')) {
                                 privilegios = privilegios+"D"
                             }
-                            return jwt.sign({ usuario, nombre, typeUser,privilegios}, SECRET, { expiresIn: '5h' })
+                            return jwt.sign({ usuario, nombre, typeUser,privilegios}, SECRET, { expiresIn: '4h' })
                         }else{
                             const typeUser = "0";
                             const nombre = adm.nombre
                             const privilegios = "A";
-                            return jwt.sign({ usuario, nombre, typeUser, privilegios}, SECRET, { expiresIn: '5h' })
+                            return jwt.sign({ usuario, nombre, typeUser, privilegios}, SECRET, { expiresIn: '4h' })
                         }
                     }else{
                         return "Contraseña incorrecta";
@@ -346,7 +351,7 @@ const resolvers = {
                         const typeUser = "1";
                         const nombre = lab.nombre;
                         const siglas = lab.siglas;
-                        return jwt.sign({ usuario, nombre, typeUser, siglas }, SECRET, { expiresIn: '5h' })
+                        return jwt.sign({ usuario, nombre, typeUser, siglas }, SECRET, { expiresIn: '4h' })
 
                     }else{
                         return "Contraseña incorrecta"
@@ -358,7 +363,7 @@ const resolvers = {
                         const typeUser = "2";
                         const nombre = alumno.alumno;
                         const _id = alumno._id;
-                        return jwt.sign({usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '5h' })
+                        return jwt.sign({usuario, nombre, typeUser, _id}, SECRET, { expiresIn: '2H' })
                     }else{
                         return "Contraseña incorrecta"
                     }
@@ -371,7 +376,7 @@ const resolvers = {
                         const nombre = lab.nombre;
                         const siglas = lab.siglas;
                         const _id = colaboradores._id;
-                        return jwt.sign({nombre, siglas, typeUser, _id}, SECRET, { expiresIn: '5h' })
+                        return jwt.sign({nombre, siglas, typeUser, _id}, SECRET, { expiresIn: '4h' })
                     }else{
                         return "Contraseña incorrecta"
                     }

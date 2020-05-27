@@ -503,12 +503,16 @@ export default {
         }
     },
     mounted(){
-        if (this.usuarioLogeado.p.includes("A")) {
-            this.privilegios.d=true;
-        }else{
-            if (this.usuarioLogeado.p.includes("D")) {
-                this.privilegios.c=true;
+        try {
+            if (this.usuarioLogeado.p.includes("A")) {
+                this.privilegios.d=true;
+            }else{
+                if (this.usuarioLogeado.p.includes("D")) {
+                    this.privilegios.c=true;
+                }
             }
+        } catch (error) {
+            
         }
 
         this.com = this.headers;

@@ -160,6 +160,10 @@ export default {
         EventBus.$on("cerrarModalEditarAdmin", ()=>{
             this.abrirEditarAdmin = false;
         });
+
+        EventBus.$on("reloadListAdmins", ()=>{
+            this.obtenerAdministradores();
+        });
     }
 }
 </script>

@@ -153,7 +153,7 @@
                     </template>
                 </b-table>
             </v-card-text>
-            <v-progress-linear :value="avance" color="light-blue"  height="25" striped>
+            <v-progress-linear :value="avance" id="progBar" color="light-blue"  height="25" striped>
                  <strong>{{ Math.ceil(avance) }}%</strong>
             </v-progress-linear>
         </v-card>
@@ -338,15 +338,17 @@ export default {
                         proyecto: this.Proyecto
                     }
                 })
-                let i=0;
-                let j=0;
+                
+                
+                this.totalAvance= 0;
+                this.totalFinalizado= 0;
 
                 for(let val of data.getFaseAct){
                     if (val.actividades==='' || val.actividades===null){} else{
-                        i=i+1;
+                        this.totalAvance=this.totalAvance+1;
                     }
                     if (val.evaluacion===null || val.evaluacion==='') {}else{
-                        j=j+1;
+                        this.totalFinalizado=this.totalFinalizado+1;
                     }
 
                     if (this.usuarioLogeado.tipUsuario==="2" || (this.usuarioLogeado._id!=this.colaborador && this.usuarioLogeado.tipUsuario === '1.1')) {
@@ -371,11 +373,13 @@ export default {
                         }
                     }
                 }
-                this.totalAvance=i;
-                this.totalFinalizado=j;
+
                 setTimeout(() => {
-                    this.avance = (j/i)*100;
                     this.DatosFaseAct = data.getFaseAct;
+                    setTimeout(() => {
+                        let total=((this.totalFinalizado/this.totalAvance)*100);
+                        this.avance = total;
+                    }, 900);
                 }, 100);
 
             } catch (error) {
@@ -410,7 +414,9 @@ export default {
             this.Proyecto = proyecto;
             this.nomMetod = Metod;
             this.colaborador = colaborador;
+            
             setTimeout(() => {
+                console.log("hecho")
                 this.obtenerFaseAct();
                 this.getRepo();
             }, 100);

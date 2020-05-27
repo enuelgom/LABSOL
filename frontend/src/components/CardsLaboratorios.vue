@@ -6,8 +6,8 @@
         <v-card elevation="0" class="mt-1">
             <v-tabs v-model="lab" background-color="#CFD8DC" centered >
             <v-tabs-slider></v-tabs-slider>
-            <v-tab style="color: black; text-decoration:none;" class="font-weight-medium" href="#intel">INTEL</v-tab>
-            <v-tab style="color: black; text-decoration:none;" class="font-weight-medium" href="#labsol">LABSOL</v-tab>
+            <v-tab style="color: black; text-decoration:none;" id="INTEL" class="font-weight-medium" href="#intel">INTEL</v-tab>
+            <v-tab style="color: black; text-decoration:none;" id="LABSOL" class="font-weight-medium" href="#labsol">LABSOL</v-tab>
 
             <v-tabs-items v-model="lab">
                 <v-tab-item value="intel">
@@ -27,7 +27,8 @@
                                             </v-toolbar>
                                             <v-card-text style="height: 200px;">
                                                 <v-container style="width: 40%; margin: 0 auto 0 auto; padding: 1%;">
-                                                    <v-img id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
+                                                    <v-img v-if="item.imagenLogo" id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
+                                                    <i id="redimencionar" style="font-size: 100px; max-width: 100%;" v-else class="fa fa-exclamation-circle" aria-hidden="true"></i>
                                                 </v-container>
                                             </v-card-text>
                                             <v-card-text style="height: 90px;" class="font-weight-bold">
@@ -155,25 +156,32 @@ export default {
 
                 // Obtener las imagenes de cada laboratorio labsol
                 for(let i of data.allLabs){
-                    if(i.tipoLaboratorio==="Labsol"){
-                        const dataImage = await axios.get(`api/logos/sendImg/${i.nombre}`,{
-                             responseType: "arraybuffer",
-                             headers: {
-                                 Autorization: localStorage.getItem("token")
-                             }
-                         })
-
-                         const logo = window.URL.createObjectURL(
-                             new Blob([dataImage.data], {type: "image/png"})
-                         )
-
-                          Object.defineProperty(i, "imagenLogo", {value: logo})
-                  }
+                    try {
+                        
+                        if(i.tipoLaboratorio==="Labsol"){
+                            const dataImage = await axios.get(`api/logos/sendImg/${i.nombre}`,{
+                                responseType: "arraybuffer",
+                                headers: {
+                                    Autorization: localStorage.getItem("token")
+                                }
+                            })
+    
+                            const logo = window.URL.createObjectURL(
+                                new Blob([dataImage.data], {type: "image/png"})
+                            )
+    
+                            Object.defineProperty(i, "imagenLogo", {value: logo})
+                    }
+                    } catch (error) {
+                        
+                    }
                 }
                 
                 // Obtener las imagenes de cada laboratorio intel
                 for(let i of data.allLabs){
-                    if(i.tipoLaboratorio==="Intel"){
+                    try{
+
+                        if(i.tipoLaboratorio==="Intel"){
                         const dataImage1 = await axios.get(`api/logos/sendImg/${i.nombre}`,{
                                     responseType: "arraybuffer",
                                     headers: {
@@ -187,17 +195,40 @@ export default {
 
                                     Object.defineProperty(i, "imagenLogo", {value: logo})
                         }
+                    }catch(e){
+                        console.log("error: " +e);
+                    }
                 }
                 this.DatosIntel = [];
                 this.DatosLabsol = [];
                 for(let val of data.allLabs){
                     if(val.tipoLaboratorio === "Intel"){
-                        this.DatosIntel.push(val);
+                        if(this.usuarioLogeado.nombre===val.nombre){
+                            this.DatosIntel.push(val);
+                            document.getElementById("INTEL").click()
+                        }
                     }else{
-                        this.DatosLabsol.push(val)
+                        if(this.usuarioLogeado.nombre===val.nombre){
+                            this.DatosIntel.push(val);
+                            document.getElementById("LABSOL").click()
+                        }
                     }
                 }
-            } catch (error) {  }
+                setTimeout(() => {
+                for(let val of data.allLabs){
+                    if(val.tipoLaboratorio === "Intel"){
+                        if(this.usuarioLogeado.nombre!=val.nombre){
+                            this.DatosIntel.push(val);
+                        }
+                    }else{
+                        if(this.usuarioLogeado.nombre!=val.nombre){
+                            this.DatosIntel.push(val);
+                        }
+                    }
+                }   
+                }, 200);
+                console.log(data.allLabs)
+            } catch (error) { console.log(error) }
 
         },
     },
@@ -207,14 +238,15 @@ export default {
     },
 
     mounted(){
-
-        if (this.usuarioLogeado.p.includes("A")) {
-            this.privilegios.c=true;
-        }else{
-            if (this.usuarioLogeado.p.includes("C")) {
+        try {
+            if (this.usuarioLogeado.p.includes("A")) {
                 this.privilegios.c=true;
+            }else{
+                if (this.usuarioLogeado.p.includes("C")) {
+                    this.privilegios.c=true;
+                }
             }
-        }
+        } catch(e){}
 
         EventBus.$on("actualizar", ()=>{
             this.obtenerLaboratorios();
@@ -233,6 +265,7 @@ export default {
         });
 
         EventBus.$on("actualizarCardsLabs", ()=>{
+            console.log("logio")
             this.obtenerLaboratorios();
         });
     }

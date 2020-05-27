@@ -28,7 +28,7 @@
             </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
-                    <v-btn style="outline:none;" text icon color="" v-on="on" @click="logOut">
+                    <v-btn style="outline:none;" id="LG" text icon color="" v-on="on" @click="logOut">
                         <v-icon>fa fa-sign-out-alt</v-icon>
                     </v-btn>
                 </template>
@@ -36,20 +36,24 @@
             </v-tooltip>
         </v-toolbar>
         <Logout :confirmacionLogout="abrirLogout"/>
+        <SesionExpirada :sesionExpirada="expSession"/>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex"
+import { mapActions } from "vuex"
 import Logout from '../Logout'
 import { EventBus } from "@/EventBus"
+import SesionExpirada from '../Alertas/SesionExpirada'
 
 export default {
     name: "navAlumno",
-    components: { Logout },
+    components: { Logout, SesionExpirada},
 
     data: ()=>({
-        abrirLogout: false
+        abrirLogout: false,
+        expSession: false
     }),
 
     computed:{
@@ -57,14 +61,26 @@ export default {
     },
     
     methods: {
+        ...mapActions(["Logout"]),
+
         logOut(){
             this.abrirLogout = true;
         },
+        sessexp(){
+            this.expSession = true;
+        }
     },
 
     mounted(){
         EventBus.$on("cerrarLogoutAlumno", ()=>{
             this.abrirLogout = false;
+        })
+
+        EventBus.$on("sessionExpiredAlu", ()=>{
+            this.expSession = true;
+            setTimeout(() => {
+                this.Logout();
+            }, 5000);
         })
     }
 }

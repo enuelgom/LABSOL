@@ -5,23 +5,23 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/proyectos-labsol',
+    path: '/proyectos',
     name: 'ListaLaboratorios',
     component: () => import('../views/ListaLaboratorios.vue')
   },
   {
-    path: '/proyectos-labsol/Perfil',
+    path: '/proyectos/Perfil',
     name: 'Perfil',
     component: () => import('../views/Alumnos/Perfil.vue')
   },
   {
-    path: '/proyectos-labsol/laboratorio/:nameLab',
+    path: '/proyectos/laboratorio/:nameLab',
     name: 'ProyectosLaboratorios',
     component: () => import('../views/ProyectosLaboratorios.vue')
   },
   {
     path: '*',
-    redirect: '/proyectos-labsol'
+    redirect: '/proyectos'
   },
 ]
 

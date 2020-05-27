@@ -15,7 +15,7 @@
                         <v-divider></v-divider>
                         <v-row justify="center">
                             <v-col cols="5" sm="5">
-                                <v-btn class="mx-2" style="width:100px; height:35px; outline:none;" color="success" @click="expiracion" outlined>Aceptar</v-btn>
+                                <v-btn class="mx-2" style="width:100px; height:35px; outline:none;" id="submit" color="success" @click="Logout" outlined>Aceptar</v-btn>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -27,6 +27,7 @@
 
 <script>
 import { EventBus } from "@/EventBus"
+import { mapActions } from "vuex"
 import { apolloClient } from '../../graphql/apollo'
 import gql from 'graphql-tag'
 
@@ -35,9 +36,16 @@ export default {
     props: ["sesionExpirada"],
 
     methods: {
-        expiracion(){
+        ...mapActions(["Logout"]),
+    },
 
-        }
+    mounted() {
+        document.addEventListener("keydown", event => {
+            const keypressed = event.key;
+            if(keypressed === "Enter"){
+                document.getElementById("submit").click();
+            }
+        });
     }
 }
 </script>

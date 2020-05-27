@@ -30,6 +30,7 @@ var fase = {
   actividades: [Actividad]
 };
 var avance = {
+  repositorio: String,
   metodologia: String,
   fases: [fase]
 };

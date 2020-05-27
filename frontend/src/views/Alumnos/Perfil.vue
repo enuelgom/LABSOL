@@ -10,7 +10,8 @@
                     <br>
                     <Metodologia v-if="visible"/>
                     <br>
-                    <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" :to="{ name: 'ListaLaboratorios'}" style="outline:none; text-decoration: none;">
+                    <v-btn v-scroll="onScroll" fab dark fixed bottom small left color="blue" @click="toIndex" style="outline:none; text-decoration: none;">
+                        <!-- :to="{ name: 'ListaLaboratorios'}" -->
                         <v-icon>fa fa-arrow-left</v-icon>
                     </v-btn>
                 </v-flex>
@@ -70,6 +71,10 @@ export default {
             } catch (error) {
                      
             }
+        },
+
+        toIndex(){
+            window.location.replace("/proyectos");
         }
     },
 
