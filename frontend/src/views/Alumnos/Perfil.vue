@@ -87,4 +87,15 @@ export default {
         })
     }
 }
+/*
+<ifModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /proyectos-labsol
+        RewriteRule ^index\.html$ - [L]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /proyectos-labsol/ [L]
+</ifModule>
+
+*/
 </script>
