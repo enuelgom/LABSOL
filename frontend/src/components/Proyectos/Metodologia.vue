@@ -26,7 +26,7 @@
                 <b-table  small :fields="fields" :items="DatosFaseAct" responsive="sm">
                     <template v-slot:thead-top>
                         <b-tr>
-                            <b-th colspan="18">Repositorio: <a style="color:blue;" target="_blank" :href="'//'+repo">{{repo}}  </a>
+                            <b-th colspan="18">Repositorio: <a style="color:blue;" target="_blank" :href="repo">{{repo}}  </a>
                                 <v-tooltip bottom  v-if="usuarioLogeado.tipUsuario==='2'">
                                     <template v-slot:activator="{on}">
                                         <v-btn style="outline:none;" text icon color="success" v-on="on" @click="editarRepositorio" x-small>
@@ -256,7 +256,7 @@ export default {
         },
         
         editarRepositorio(){
-            EventBus.$emit('cambiarVariableRepositorio2');
+            EventBus.$emit('cambiarVariableRepositorio2', this.Nombre,this.Proyecto);
             this.abrirModalActRepo = true;
         },
         // Calificar las actividades del cronograma de actividades

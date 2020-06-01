@@ -346,7 +346,9 @@ const resolvers = {
                     }
                 }
                 if(lab){
-
+                    if(lab._status=="Eliminado"){
+                        return "El usuario no existe";
+                    }else
                     if (await bcrypt.compare(clave,lab.clave)) {
                         const typeUser = "1";
                         const nombre = lab.nombre;

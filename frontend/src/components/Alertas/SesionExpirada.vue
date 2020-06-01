@@ -40,12 +40,12 @@ export default {
     },
 
     mounted() {
-        document.addEventListener("keydown", event => {
-            const keypressed = event.key;
-            if(keypressed === "Enter"){
-                document.getElementById("submit").click();
-            }
-        });
+        // document.addEventListener("keydown", event => {
+        //     const keypressed = event.key;
+        //     if(keypressed === "Enter"){
+        //         document.getElementById("submit").click();
+        //     }
+        // });
     }
 }
 </script>

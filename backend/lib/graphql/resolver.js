@@ -1723,16 +1723,24 @@ var resolvers = {
 
               case 35:
                 if (!lab) {
-                  _context16.next = 46;
+                  _context16.next = 50;
                   break;
                 }
 
-                _context16.next = 38;
+                if (!(lab._status == "Eliminado")) {
+                  _context16.next = 40;
+                  break;
+                }
+
+                return _context16.abrupt("return", "El usuario no existe");
+
+              case 40:
+                _context16.next = 42;
                 return _bcrypt["default"].compare(clave, lab.clave);
 
-              case 38:
+              case 42:
                 if (!_context16.sent) {
-                  _context16.next = 45;
+                  _context16.next = 49;
                   break;
                 }
 
@@ -1748,21 +1756,21 @@ var resolvers = {
                   expiresIn: '4h'
                 }));
 
-              case 45:
+              case 49:
                 return _context16.abrupt("return", "Contraseña incorrecta");
 
-              case 46:
+              case 50:
                 if (!alumno) {
-                  _context16.next = 57;
+                  _context16.next = 61;
                   break;
                 }
 
-                _context16.next = 49;
+                _context16.next = 53;
                 return _bcrypt["default"].compare(clave, alumno.clave);
 
-              case 49:
+              case 53:
                 if (!_context16.sent) {
-                  _context16.next = 56;
+                  _context16.next = 60;
                   break;
                 }
 
@@ -1778,31 +1786,31 @@ var resolvers = {
                   expiresIn: '2H'
                 }));
 
-              case 56:
+              case 60:
                 return _context16.abrupt("return", "Contraseña incorrecta");
 
-              case 57:
+              case 61:
                 if (!colaboradores) {
-                  _context16.next = 72;
+                  _context16.next = 76;
                   break;
                 }
 
-                _context16.next = 60;
+                _context16.next = 64;
                 return _bcrypt["default"].compare(clave, colaboradores.clave);
 
-              case 60:
+              case 64:
                 if (!_context16.sent) {
-                  _context16.next = 71;
+                  _context16.next = 75;
                   break;
                 }
 
                 _typeUser4 = "1.1";
-                _context16.next = 64;
+                _context16.next = 68;
                 return _labs["default"].where({
                   _id: colaboradores.id_lab
                 }).findOne();
 
-              case 64:
+              case 68:
                 _lab2 = _context16.sent;
                 _nombre5 = _lab2.nombre;
                 _siglas = _lab2.siglas;
@@ -1816,23 +1824,23 @@ var resolvers = {
                   expiresIn: '4h'
                 }));
 
-              case 71:
+              case 75:
                 return _context16.abrupt("return", "Contraseña incorrecta");
 
-              case 72:
+              case 76:
                 return _context16.abrupt("return", "El usuario no existe");
 
-              case 75:
-                _context16.prev = 75;
+              case 79:
+                _context16.prev = 79;
                 _context16.t0 = _context16["catch"](1);
                 return _context16.abrupt("return", _context16.t0);
 
-              case 78:
+              case 82:
               case "end":
                 return _context16.stop();
             }
           }
-        }, _callee16, null, [[1, 75]]);
+        }, _callee16, null, [[1, 79]]);
       }))();
     },
     logOut: function logOut(root, args, context) {

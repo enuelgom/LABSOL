@@ -24,7 +24,7 @@
 import navAlum from '@/components/navegacion/navAlum'
 import Info from '../../components/Alumnos/Info'
 import Proyecto from '@/components/Alumnos/Proyecto'
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import Metodologia from '@/components/Proyectos/Metodologia'
 import { EventBus } from '@/EventBus'
 import gql from 'graphql-tag'
@@ -39,6 +39,10 @@ export default {
 
     created(){
         this.guardarUsuarioLog()
+    },
+
+    computed: {
+        ...mapState(["usuarioLogeado"])
     },
 
     methods: {
@@ -72,13 +76,17 @@ export default {
                      
             }
         },
-
+        
         toIndex(){
             window.location.replace("/proyectos");
         }
     },
 
     mounted(){
+        if (!localStorage.token || this.usuarioLogeado.tipUsuario != '2') {
+            window.location.replace("/proyectos");
+        }
+
         EventBus.$on("tablaMetodologiaVisible", (nombre,proyecto, metod)=>{
             this.visible = true;
             setTimeout(() => {

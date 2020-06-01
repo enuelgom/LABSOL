@@ -211,14 +211,14 @@ export default {
     },
 
     mounted() {
-        document.addEventListener("keydown", event => {
-            const keypressed = event.key;
-            if(keypressed === "Enter"){
-                try {
-                    this.$refs.formStudent.validate()
-                    document.getElementById("submit").click();
-                } catch (error){}                }
-        });
+        // document.addEventListener("keydown", event => {
+        //     const keypressed = event.key;
+        //     if(keypressed === "Enter"){
+        //         try {
+        //             this.$refs.formStudent.validate()
+        //             document.getElementById("submit").click();
+        //         } catch (error){}                }
+        // });
 
         document.addEventListener("keydown", event => {
             const keypressed = event.key;

@@ -2,9 +2,10 @@
     <div>
         <v-container>
             <!-- Selector de categorias -->
-            <v-row justify="center" v-if="(usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1') && labExistente===1">
+            <v-row justify="center" v-if="labExistente===1">
+                <!-- v-if="(usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1') && labExistente===1" -->
                 <v-col cols="12" sm="4">
-                    <v-select v-if="usuarioLogeado.siglas != this.$route.params.nameLab && !usuarioLogeado.tipUsuario==='0'" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
+                    <v-select v-if="(usuarioLogeado.siglas != this.$route.params.nameLab && (usuarioLogeado.tipUsuario==='1.1' && usuarioLogeado.tipUsuario==='1.1')) || usuarioLogeado.tipUsuario==='2' || usuarioLogeado.tipUsuario===''" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
                     <v-select v-else v-model="proyectosNuevos" :items="options" @input="categorias" outlined label="Seleccione la categoria"/>
                 </v-col>
             </v-row>
@@ -24,7 +25,7 @@
                     no-results-text="Proyecto no encontrado"
                     :footer-props="{itemsPerPageText:'Paginación'}"
                     :items="proyectos">
-                        <template v-slot:item.acciones="{item}" v-if="usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2'">
+                        <!-- <template v-slot:item.acciones="{item}" v-if="usuarioLogeado.tipUsuario === '' || usuarioLogeado.tipUsuario === '2'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
                                     <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
@@ -41,9 +42,9 @@
                                 </template>
                                 <span>Solicitar proyecto</span>
                             </v-tooltip>
-                        </template>
+                        </template> -->
 
-                        <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '0'">
+                        <!-- <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '0'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
                                     <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
@@ -52,9 +53,9 @@
                                 </template>
                                 <span>Ver información</span>
                             </v-tooltip>
-                        </template>
+                        </template> -->
 
-                        <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1'">
+                        <template v-slot:item.acciones="{item}" v-if="usuarioLogeado.tipUsuario === '1'">
                             <v-tooltip bottom>
                                 <template v-slot:activator="{on}">
                                     <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)">
@@ -64,7 +65,7 @@
                                 <span>Ver información</span>
                             </v-tooltip>
                             <v-tooltip bottom>
-                                <template v-slot:activator="{on}">
+                                <template v-slot:activator="{on}" >
                                     <v-btn style="outline:none;" text icon color="success" v-on="on" @click="actualizarProyecto(item)">
                                     <v-icon>fa fa-edit</v-icon>
                                     </v-btn>
@@ -79,13 +80,29 @@
                                 </template>
                                 <span>Añadir colaborador</span>
                             </v-tooltip>
-                            <v-tooltip bottom>
+                            <v-tooltip bottom v-if="selected==='Proyectos en catalogo'">
                                 <template v-slot:activator="{on}">
                                     <v-btn style="outline:none;" text icon color="error" v-on="on" @click="borrarProyecto(item)">
                                     <v-icon>fa fa-trash</v-icon>
                                     </v-btn>
                                 </template>
                                 <span>Borrar proyecto</span>
+                            </v-tooltip>
+                            <v-tooltip bottom v-if="selected==='Proyectos en catalogo'">
+                                <template v-slot:activator="{on}">
+                                    <v-btn style="outline:none;" text icon color="teal darken-4" v-on="on" @click="iniciarDesarrollo(item['proyecto'], 'En desarrollo', '¿Desea iniciar el desarrollo de este proyecto?')">
+                                    <v-icon>fa fa-cogs</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Iniciar desarrollo</span>
+                            </v-tooltip>
+                            <v-tooltip bottom v-if="selected==='Proyectos en desarrollo'">
+                                <template v-slot:activator="{on}">
+                                    <v-btn style="outline:none;" text icon color="teal darken-4" v-on="on" @click="iniciarDesarrollo(item['proyecto'], 'Finalizado', '¿Desea finalizar el desarrollo de este proyecto?')">
+                                    <v-icon>fa fa-thumbs-up</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Finalizar proyecto</span>
                             </v-tooltip>
                         </template>
                         <template v-slot:item.notificaciones="{item}" v-if="usuarioLogeado.tipUsuario === '1'">
@@ -101,7 +118,7 @@
                             </v-tooltip>
                         </template>
                     </v-data-table>
-
+                    
                     <!-- Para cuando no es el propietaro Alumno y token vacio-->
                     <v-data-table :headers="headers2" v-else
                     :search="filtro" 
@@ -156,7 +173,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="green" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Aceptado')">
+                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="green" v-on="on" @click="iniciarDesarrollo(item['proyecto'], 'Aceptado', '¿Desea aceptar la solicitud de proyecto del laboratorio?')">
                                     <v-icon>fa fa-check</v-icon>
                                     </v-btn>
                                 </template>
@@ -164,7 +181,7 @@
                             </v-tooltip>
                             <v-tooltip bottom v-if="selected ==='Nuevos proyectos'">
                                 <template v-slot:activator="{on}">
-                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="red" v-on="on" @click="solicitudProyecto(item['proyecto'], 'Rechazado')">
+                                    <v-btn style="outline:none;" :disabled="!privilegios.d" text icon color="red" v-on="on" @click="iniciarDesarrollo(item['proyecto'], 'Rechazado', '¿Desea rechazar la solicitud de este proyecto')">
                                     <v-icon>fa fa-times</v-icon>
                                     </v-btn>
                                 </template>
@@ -173,21 +190,21 @@
                         </template>
 
                         <template v-slot:item.acciones="{item}" v-else-if="usuarioLogeado.tipUsuario === '1' || usuarioLogeado.tipUsuario === '1.1'">
-                            <v-tooltip bottom v-if="usuarioLogeado._id!=item['colaboradores']">
+                            <v-tooltip bottom v-if="usuarioLogeado._id===item['colaboradores']">
                                 <template v-slot:activator="{on}">
                                     <v-btn style="outline:none;" text icon color="primary" v-on="on" @click="verInfo(item)" >
-                                    <v-icon>fa fa-info</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>Ver información</span>
-                            </v-tooltip>
-                            <v-tooltip bottom v-else>
-                                <template v-slot:activator="{on}">
-                                    <v-btn style="outline:none;" text icon :color="obtenerColor(item['colaboradores'])" v-on="on" @click="verInfo(item)">
                                     <v-icon>fa fa-check-square</v-icon>
                                     </v-btn>
                                 </template>
                                 <span>Ver mi proyecto</span>
+                            </v-tooltip>
+                            <v-tooltip bottom v-else>
+                                <template v-slot:activator="{on}">
+                                    <v-btn style="outline:none;" text icon :color="obtenerColor(item['colaboradores'])" v-on="on" @click="verInfo(item)">
+                                    <v-icon>fa fa-info</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Ver información</span>
                             </v-tooltip>
                         </template>
                     </v-data-table>
@@ -218,6 +235,7 @@
         <Eliminar :confirmacionBorrar="abrirAlertaBorrar" />
         <SolicitudEnviada :msjAvisoSolicitud="msjAvisoSolicitudProyecto" />
         <ListaColaboradores :listaColaboradores="abrirListaColab" />
+        <IniciarDesarrollo :iniciarDesarrollo="msjIniciarDesarrollo" />
 
     </div>
 </template>
@@ -235,10 +253,11 @@ import Editar from '@/components/Proyectos/Editar'
 import Eliminar from '../components/Alertas/Eliminar'
 import SolicitudEnviada from '@/components/Alertas/SolicitudEnviada'
 import ListaColaboradores from '@/components/Laboratorio/ListaColaboradores'
+import IniciarDesarrollo from './Alertas/IniciarDesarrollo'
 
 export default {
     name: 'tablasProyectos',
-    components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada, ListaColaboradores},
+    components: {Login, Loading, informacion, Solicitudes, Editar, Eliminar, SolicitudEnviada, ListaColaboradores, IniciarDesarrollo},
     
     data: () => ({
         privilegios: {
@@ -248,6 +267,7 @@ export default {
         abrirListaColab: false,
         msjAvisoSolicitudProyecto: false,
         ActualizarInfoProyecto: false,
+        msjIniciarDesarrollo: false,
         labExistente: 0,
         proyectosNuevos: "Nuevos proyectos",
         nombreRuta: "",
@@ -292,6 +312,12 @@ export default {
     },
 
     methods: {
+        iniciarDesarrollo(proyecto, estatus, mensaje){
+            EventBus.$emit("iniciarDesarrollo", proyecto, estatus, mensaje)
+            this.msjIniciarDesarrollo = true;
+            //solicitudProyecto(item['proyecto'], 'En desarrollo')
+        },
+
         obtenerColor(colaboradores){
             if(this.usuarioLogeado._id === colaboradores){
                 return "green"
@@ -589,6 +615,17 @@ export default {
         EventBus.$on("VerificarAlumRequeridos",()=>{
             this.obtenerProyectos();
         });
+
+        EventBus.$on("iniciarDesarrolloConfirm",(proyecto, estatus)=>{
+            this.solicitudProyecto(proyecto, estatus);
+            this.msjIniciarDesarrollo =false;
+        });
+        EventBus.$on("cerrarConfirmacionMsjIniciarDesarrollo",()=>{
+            this.msjIniciarDesarrollo = false;
+        });
+
+        
+        
     },
     created(){
         this.obtenerProyectos();

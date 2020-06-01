@@ -10,23 +10,23 @@
                     </v-row>
                 </v-toolbar>
                 <v-card-text>
-                    <v-form ref="formRepositorio" v-model="esValido">
+                    <v-form ref="formRepositorio" v-model="esValido" v-on:submit.prevent>
                         <v-row class="mt-4" justify="center">
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <v-text-field :rules="repo"  v-model="dato.repositorio" prepend-icon="fa fa-edit" label="Link del repositorio" />
                             </v-col>
                         </v-row>
-                    </v-form>
                     <v-divider></v-divider>
                     <v-row>
                         <v-col cols="12" sm="6" md="6" lg="6">
-                            <v-btn v-if="!actualizar" style="outline:none;" color="success" block outlined :disabled="!esValido" @click="addRepositorio()">Guardar</v-btn>
-                            <v-btn v-else style="outline:none;" color="success" block outlined :disabled="!esValido" @click="addRepositorio()">Actualizar</v-btn>
+                            <v-btn v-if="!actualizar" style="outline:none;" color="success" block outlined type="submit" :disabled="!esValido" @click="addRepositorio()">Guardar</v-btn>
+                            <v-btn v-else style="outline:none;" color="success" block outlined type="submit" :disabled="!esValido" @click="addRepositorio()">Actualizar</v-btn>
                         </v-col>
                         <v-col cols="12" sm="6" md="6" lg="6">
                             <v-btn style="outline:none;" color="error" block outlined @click="cerrarModal">Cancelar</v-btn>
                         </v-col>
                     </v-row>
+                    </v-form>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -80,7 +80,6 @@ export default {
                     this.cerrarModal(); 
                 }, 1500);
             } catch (error) {
-                console.log(error);
             }
         },
 
@@ -93,12 +92,13 @@ export default {
 
     mounted(){
         EventBus.$on("datamsjrepo", (nombre, proyecto)=>{
-            console.log(nombre+" "+proyecto);
             this.nombre = nombre;
             this.proyecto = proyecto; 
         });
-        EventBus.$on("cambiarVariableRepositorio2", ()=>{
+        EventBus.$on("cambiarVariableRepositorio2", (nombre, proyecto)=>{
             this.actualizar = true;
+            this.nombre = nombre;
+            this.proyecto = proyecto;
         });
 
         EventBus.$on("cambiarVariableRepositorio1", ()=>{

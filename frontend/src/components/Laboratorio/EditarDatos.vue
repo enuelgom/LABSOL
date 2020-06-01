@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div>
         <v-dialog v-model="EditarDatosLab" max-width="950" persistent>
             <v-form ref="vaciar" v-model="esValido">
@@ -201,6 +201,20 @@ export default {
                     }
                 })
 
+
+                 // Mandar el logo
+                if(this.logo.name){
+                    let formData = new FormData();
+                    formData.append("imagen",this.logo, `${this.datosLab.nombre}.jpg`);
+                    await axios.post("/api/logos/upload", formData, {
+                        headers: {
+                            "Content-Type":"multipart/form-data",
+                            "labname":`${this.datosLab.nombre}`,
+                            Autorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
+                }
+
                 // Mensaje de satisfactorio o erroneo
                 const msj = data.updateLab;
                 if (msj === "Usuario existente") {
@@ -222,20 +236,7 @@ export default {
                     EventBus.$emit("updateNameLab");
                 }   
 
-                 // Mandar el logo
-                if(this.logo.name){
-                    let formData = new FormData();
-                    formData.append("imagen",this.logo, `${this.datosLab.nombre}.jpg`);
-                    await axios.post("/api/logos/upload", formData, {
-                        headers: {
-                            "Content-Type":"multipart/form-data",
-                            "labname":`${this.datosLab.nombre}`,
-                            Autorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    }) 
-                }
                 this.$refs.fileInput.reset();
-                EventBus.$emit("actualizarCardsLab");
             } catch (error) {
                                 
             }

@@ -14,6 +14,7 @@ Vue.use(VueApollo)
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = "http://127.0.0.1:3000/"
+//axios.defaults.baseURL = "http://192.168.1.228:3000/"
 axios.defaults.baseURL = "http://187.237.158.13/"
 
 

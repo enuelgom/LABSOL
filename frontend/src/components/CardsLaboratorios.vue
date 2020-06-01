@@ -26,9 +26,9 @@
                                                 </v-badge>
                                             </v-toolbar>
                                             <v-card-text style="height: 200px;">
-                                                <v-container style="width: 40%; margin: 0 auto 0 auto; padding: 1%;">
-                                                    <v-img v-if="item.imagenLogo" id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
-                                                    <i id="redimencionar" style="font-size: 100px; max-width: 100%;" v-else class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                <v-container style="width: 100%; margin: 0 auto 0 auto; padding: 1%;">
+                                                    <v-img v-if="item.imagenLogo" id="redimencionar" style="max-height: 200px; max-width: 200px; margin: auto auto auto auto; " :src="item.imagenLogo" />
+                                                    <v-img v-else style="max-height: 200px; max-width: 150px;  margin-left: auto; margin-right: auto; align: middle; filter: grayscale(1); opacity: 0.2;" src="../assets/labsol.png" />
                                                 </v-container>
                                             </v-card-text>
                                             <v-card-text style="height: 90px;" class="font-weight-bold">
@@ -182,21 +182,18 @@ export default {
                     try{
 
                         if(i.tipoLaboratorio==="Intel"){
-                        const dataImage1 = await axios.get(`api/logos/sendImg/${i.nombre}`,{
-                                    responseType: "arraybuffer",
-                                    headers: {
-                                        Autorization: localStorage.getItem("token")
-                                    }
-                                })
-
-                                const logo = window.URL.createObjectURL(
-                                    new Blob([dataImage1.data], {type: "image/png"})
-                                )
-
-                                    Object.defineProperty(i, "imagenLogo", {value: logo})
+                            const dataImage1 = await axios.get(`api/logos/sendImg/${i.nombre}`,{
+                                responseType: "arraybuffer",
+                                headers: {
+                                    Autorization: localStorage.getItem("token")
+                                }
+                            })
+                            const logo = window.URL.createObjectURL(
+                                new Blob([dataImage1.data], {type: "image/png"})
+                            )
+                            Object.defineProperty(i, "imagenLogo", {value: logo})
                         }
                     }catch(e){
-                        console.log("error: " +e);
                     }
                 }
                 this.DatosIntel = [];
@@ -205,12 +202,16 @@ export default {
                     if(val.tipoLaboratorio === "Intel"){
                         if(this.usuarioLogeado.nombre===val.nombre){
                             this.DatosIntel.push(val);
-                            document.getElementById("INTEL").click()
+                            try {
+                                document.getElementById("INTEL").click()
+                            } catch (error) {}
                         }
                     }else{
                         if(this.usuarioLogeado.nombre===val.nombre){
                             this.DatosIntel.push(val);
-                            document.getElementById("LABSOL").click()
+                            try {
+                                document.getElementById("LABSOL").click()
+                            } catch (error) {}
                         }
                     }
                 }
@@ -227,8 +228,8 @@ export default {
                     }
                 }   
                 }, 200);
-                console.log(data.allLabs)
-            } catch (error) { console.log(error) }
+                
+            } catch (error) {  }
 
         },
     },
@@ -265,7 +266,7 @@ export default {
         });
 
         EventBus.$on("actualizarCardsLabs", ()=>{
-            console.log("logio")
+            
             this.obtenerLaboratorios();
         });
     }
