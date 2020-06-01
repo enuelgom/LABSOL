@@ -66,8 +66,10 @@
                                                 </v-badge>
                                             </v-toolbar>
                                             <v-card-text style="height: 200px;">
-                                                <v-container style="width: 40%; margin: 0 auto 0 auto; padding: 1%;">
-                                                    <v-img id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" />
+                                                <v-container style="width: 100%; margin: 0 auto 0 auto; padding: 1%;">
+                                                    <v-img v-if="item.imagenLogo" id="redimencionar" style="max-height: 200px; max-width: 200px; margin: auto auto auto auto;" :src="item.imagenLogo" />
+                                                    <v-img v-else style="max-height: 200px; max-width: 150px;  margin-left: auto; margin-right: auto; align: middle; filter: grayscale(1); opacity: 0.2;" src="../assets/labsol.png" />
+                                                    <!-- <v-img id="redimencionar" style="max-width: 100%;" :src="item.imagenLogo" /> -->
                                                 </v-container>
                                             </v-card-text>
                                             <v-card-text style="height: 90px;" class="font-weight-bold">
@@ -208,7 +210,7 @@ export default {
                         }
                     }else{
                         if(this.usuarioLogeado.nombre===val.nombre){
-                            this.DatosIntel.push(val);
+                            this.DatosLabsol.push(val);
                             try {
                                 document.getElementById("LABSOL").click()
                             } catch (error) {}
@@ -223,7 +225,7 @@ export default {
                         }
                     }else{
                         if(this.usuarioLogeado.nombre!=val.nombre){
-                            this.DatosIntel.push(val);
+                            this.DatosLabsol.push(val);
                         }
                     }
                 }   
