@@ -13,7 +13,7 @@
                         <v-row>
                             <v-col cols="12" sm="12" md="12" lg="12">
                                 <v-combobox
-                                prepend-icon="fa fa-users"
+                                prepend-icon="fa fa-list-ul"
                                 :rules="[privileges]"
                                 v-model="privilegios"
                                 :items="items"

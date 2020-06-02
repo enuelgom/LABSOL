@@ -218,10 +218,10 @@
                         </v-row>
                     </v-toolbar>
                     <v-card-text>
-                        <h1 class="text-center">El laboratorio no existe</h1>
+                        <h3 class="text-center">El laboratorio no existe</h3>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn style="outline:none;" block color="red" outlined to="/">Regresar al inicio</v-btn>
+                        <v-btn style="outline:none; text-decoration: none;" block color="red" outlined to="/">Regresar al inicio</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-container>

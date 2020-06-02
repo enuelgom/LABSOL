@@ -15,42 +15,45 @@
                         <v-form ref="formEditarAdmin" v-model="esValido">
                             <v-row>
                                 <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-text-field :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre completo" v-model="datosAdmin.nombre" />
+                                    <v-text-field :disabled="actualizar" :rules="nombre" prepend-icon="fa fa-id-card" label="Nombre completo" v-model="datosAdmin.nombre" />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :rules="telefono" v-mask="mask" type="text" prepend-icon="fa fa-phone" label="Número teléfono" v-model="datosAdmin.telefono" dense />
+                                    <v-text-field :disabled="actualizar" :rules="telefono" v-mask="mask" type="text" prepend-icon="fa fa-phone" label="Número teléfono" v-model="datosAdmin.telefono" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6">
-                                    <v-text-field :rules="correo" prepend-icon="fa fa-envelope" label="Correo" v-model="datosAdmin.correo" dense />
+                                    <v-text-field :disabled="actualizar" :rules="correo" prepend-icon="fa fa-envelope" label="Correo" v-model="datosAdmin.correo" dense />
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="usuario" prepend-icon="fa fa-user" label="Usuario" v-model="datosAdmin.usuario" dense />
+                                    <v-text-field :disabled="actualizar" :rules="usuario" prepend-icon="fa fa-user" label="Usuario" v-model="datosAdmin.usuario" dense />
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4" lg="4">
-                                    <v-text-field :rules="psw" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAdmin.psw" dense
+                                    <v-text-field :disabled="actualizar" :rules="psw" prepend-icon="fa fa-lock" label="Contraseña" v-model="datosAdmin.psw" dense
                                     :append-icon="show ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show ? 'text' : 'password'"
                                     @click:append="show = !show"/>
                                 </v-col>
                                 <v-col cols="12" sm=" 6" md="4" lg="4">
-                                    <v-text-field :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmar" v-model="pswConfirm" dense 
+                                    <v-text-field :disabled="actualizar" :rules="confirmacionPsw" prepend-icon="fa fa-lock" label="Confirmar" v-model="pswConfirm" dense 
                                     :append-icon="show1 ? 'fa fa-eye' : 'fa fa-eye-slash'"
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"/>
                                 </v-col>
                             </v-row>
-                            <v-row>
-                                <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn style="outline:none;" :disabled="!esValido" block color="success" @click="editarDatosAdmin" rounded>Actualizar datos</v-btn>
+                            <v-row justify="center" v-if="actualizar">
+                                <v-col cols="12" sm="4" md="4" lg="4">
+                                    <v-btn style="outline:none;" block outlined color="orange darken-2" @click="cancelarActualizacion">Modificar</v-btn>
                                 </v-col>
                             </v-row>
-                            <v-row>
-                                <v-col cols="12" sm="12" md="12" lg="12">
-                                    <v-btn style="outline:none;" block color="primary" @click="cancelarActualizacion" dark rounded>Cancelar</v-btn>
+                            <v-row v-else>
+                                <v-col cols="12" sm="6" md="6" lg="6">
+                                    <v-btn style="outline:none;" block outlined color="red" @click="cancelarActualizacion">Cancelar</v-btn>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="6" lg="6">
+                                    <v-btn style="outline:none;" block outlined color="success" :disabled="!esValido" @click="actualizarDatos">Actualizar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-form>
@@ -76,9 +79,10 @@ export default {
     },
 
     data: ()=>({
+        actualizar: true,
         msjsuccess: false,
         msjerror: false,
-        esValido: false,
+        esValido: true,
         show: false,
         show1: false,
         msjErrorRegistro: '',
@@ -120,7 +124,7 @@ export default {
         
         psw: [
             value => !!value || "La contraseña es requerida",
-            value => (value || "").length > 7 || "Minimo 8 caracteres"
+            value => (value || "").length > 7 || (value || "").length == 0 || "Minimo 8 caracteres"
         ]
     }),
     
@@ -134,20 +138,43 @@ export default {
 
     methods: {
         cerrarModal(){
-            EventBus.$emit("cerrarModalEditarAdmin");
+            this.actualizar = true;
+            this.show = false;
+            this.show1 = false;
+            EventBus.$emit("cerrarModalEditAdmins");
+            this.datosAdmin.psw = "";
+            this.pswConfirm = "";
+            //LLamar los datos del administrador
+        },
+
+         cancelarActualizacion(){
+            this.actualizar = !this.actualizar;
+            this.datosAdmin.psw = "";
+            this.pswConfirm = "";
+            this.show = false;
+            this.show1 = false;
+            //LLamar los datos del Administrador
+        },
+
+       async actualizarDatos(){
+            this.actualizar = true;
             try {
-                this.$refs.formEditarAdmin.reset();
+               const {data} = await apolloClient.mutate({
+                   mutation: gql`
+                    mutation()
+                    {
+                        
+                    }
+                   `,
+                   variables: {
+                      
+                   }
+               })
+                
             } catch (error) {
+               
             }
         },
-
-        cancelarActualizacion(){
-            this.cerrarModal();
-        },
-
-        async editarDatosAdmin(){
-            
-        }
     },
      
     mounted(){
@@ -161,6 +188,8 @@ export default {
         EventBus.$on("cerrarListaAdministradores", ()=>{
             this.abrirListAdminis = false;
         });
+
+        //Jalar los datos del administrador para que al principio se muestre en la tabla.
     }
 }
 </script>

@@ -8,10 +8,13 @@
             <v-tabs-slider></v-tabs-slider>
             <v-tab style="color: black; text-decoration:none;" id="INTEL" class="font-weight-medium" href="#intel">INTEL</v-tab>
             <v-tab style="color: black; text-decoration:none;" id="LABSOL" class="font-weight-medium" href="#labsol">LABSOL</v-tab>
-
+            
             <v-tabs-items v-model="lab">
                 <v-tab-item value="intel">
                     <v-card flat>
+                        <v-row v-if="DatosIntel==''" style="aling-items: center; justify-content: center" justify="center">
+                            <div class="loader">Loading...</div>
+                        </v-row>
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12" md="4" lg="3" sm="6"  class="my-2" v-for="item of DatosIntel" :key="item.nombre">
@@ -52,6 +55,9 @@
 
                 <v-tab-item value="labsol">
                     <v-card flat>
+                        <v-row v-if="DatosLabsol==''" style="aling-items: center; justify-content: center" justify="center">
+                            <div class="loader">Loading...</div>
+                        </v-row>
                         <v-card-text>
                             <v-row>
                                 <v-col cols="12" md="4" lg="3" sm="6"  v-for="item of DatosLabsol" :key="item.nombre" class="my-2">
@@ -111,6 +117,7 @@ export default {
 
    data () {
       return {
+        cargando: true,
         abrirAlertaBorrarLab: false,
         siglasLab: "",
         lab:null,
@@ -174,6 +181,7 @@ export default {
     
                             Object.defineProperty(i, "imagenLogo", {value: logo})
                     }
+                    
                     } catch (error) {
                         
                     }
@@ -274,3 +282,65 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.loader,
+.loader:before,
+.loader:after {
+  background: #96a3a9;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+.loader {
+  color: #96a3a9;
+  text-indent: -9999em;
+  margin: 88px auto;
+  position: relative;
+  font-size: 11px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+.loader:before {
+  left: -1.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 1.5em;
+}
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
+</style>

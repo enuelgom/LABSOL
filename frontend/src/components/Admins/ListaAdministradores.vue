@@ -37,7 +37,7 @@
                                     <v-tooltip bottom>
                                         <template v-slot:activator="{on}">
                                             <v-btn style="outline:none;" text icon color="green" v-on="on" @click="cambiarPriv">
-                                            <v-icon>fa fa-users</v-icon>
+                                            <v-icon>fa fa-list-ul</v-icon>
                                             </v-btn>
                                         </template>
                                         <span>Cambiar privilegios</span>
@@ -157,7 +157,7 @@ export default {
             this.obtenerAdministradores();
         });
 
-        EventBus.$on("cerrarModalEditarAdmin", ()=>{
+        EventBus.$on("cerrarModalEditAdmins", ()=>{
             this.abrirEditarAdmin = false;
         });
 

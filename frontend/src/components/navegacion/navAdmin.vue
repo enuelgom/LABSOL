@@ -185,7 +185,7 @@ export default {
   }
   @media screen and (max-width: 360px) {
     #letraResp {
-        font-size: 0.6rem;
+        font-size: 0.8rem;
     }
   }
 </style>
