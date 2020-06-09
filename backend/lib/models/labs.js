@@ -12,6 +12,10 @@ var _proyectos = _interopRequireDefault(require("./proyectos"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var Schema = _connections["default"].Schema;
+var fechas = {
+  fI: String,
+  fT: String
+};
 var labsSchema = new Schema({
   nombre: {
     type: String,
@@ -36,7 +40,8 @@ var labsSchema = new Schema({
     type: String
   },
   tipoLaboratorio: String,
-  _status: String
+  _status: String,
+  fechas: fechas
 });
 
 var labs = _connections["default"].model('labs', labsSchema);

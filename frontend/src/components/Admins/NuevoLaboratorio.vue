@@ -171,7 +171,7 @@ export default {
                             this.$refs.formLaboratorio.reset();
                         } catch (error) {
                         }
-                    }, 3000);
+                    }, 1500);
                     EventBus.$emit("actualizar");
                 } else {
                     this.msjErrorRegistro = msj;

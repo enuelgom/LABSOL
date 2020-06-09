@@ -46,6 +46,7 @@ const  proyectos = new Schema({
         // validate: [limit, 'exediste el limite']
      },
     colaboradores: String,
+    fecha: String,
 });
 // function limit(val){
     // return val.length <= 6;

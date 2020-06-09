@@ -120,7 +120,7 @@ export default {
                     this.msjsuccess = false;
                     EventBus.$emit("cerrarModalAlertaMetodologia");
                     this.cerrarModalEditarMetod();
-                }, 3000);
+                }, 1500);
 
                 this.$refs.metodologia.reset();
             } catch (error) {

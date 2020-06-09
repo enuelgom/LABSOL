@@ -54,6 +54,14 @@
                 </template>
                 <span>Nuevo proyecto</span>
             </v-tooltip>
+            <v-tooltip bottom v-if="usuarioLogeado.tipUsuario === '1'">
+                <template v-slot:activator="{on}">
+                    <v-btn style="outline:none;" text icon @click="abrirCalendario" v-on="on">
+                        <span><v-icon size="28">mdi-calendar-blank</v-icon></span>
+                    </v-btn>
+                </template>
+                <span>Fecha de solicitudes</span>
+            </v-tooltip>
             <v-tooltip bottom>
                 <template v-slot:activator="{on}">
                   <v-btn style="outline:none;" text icon color="" v-on="on" @click="logOut">
@@ -69,6 +77,7 @@
         <AgregarColaborador :agregarUsuario="AbrirAgregarUsuario" />
         <ActualizarDatos :modalActDatosColab="actDatosColaborador" />
         <SesionExpirada :sesionExpirada="expSession"/>
+        <FechaSolicitudes :fechaSolicitudes="seleccionarFecha" />
     </div>
 </template>
 
@@ -81,10 +90,11 @@ import Logout from '../Logout'
 import EditarDatos from '../Laboratorio/EditarDatos'
 import AgregarColaborador from '@/components/Laboratorio/AgregarColaborador'
 import ActualizarDatos from '@/components/Colaborador/ActualizarDatos'
+import FechaSolicitudes from '@/components/Laboratorio/FechaSolicitudes'
 
 export default {
     name: "navLab",
-    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador, ActualizarDatos, SesionExpirada },
+    components: { NuevoProyecto, Logout, EditarDatos, AgregarColaborador, ActualizarDatos, SesionExpirada, FechaSolicitudes },
 
     data: () => ({
         expSession: false,
@@ -96,7 +106,8 @@ export default {
         abrirLogout: false,
         ActulizarLab: false,
         AbrirAgregarUsuario: false,
-        desabilitar: false
+        desabilitar: false,
+        seleccionarFecha: false
     }),
     
     computed:{
@@ -126,10 +137,18 @@ export default {
 
         sessexp(){
             this.expSession = true;
+        },
+
+        abrirCalendario(){
+            this.seleccionarFecha = true;
         }
     },
 
     mounted(){
+        EventBus.$on('cerrarFechaSolicitudes', () =>{
+            this.seleccionarFecha = false;
+        });
+        
         EventBus.$on('cerrarRegistroProyecto', () =>{
             this.añadirProyecto = false;
         });
@@ -164,7 +183,7 @@ export default {
         EventBus.$on("cerrarModalActualizacion", ()=>{
             setTimeout(() => {
                 this.ActulizarLab = false;
-            }, 3000);
+            }, 1500);
         });
 
         EventBus.$on("cerrarModalRegUsuario", ()=>{
@@ -174,7 +193,7 @@ export default {
         EventBus.$on("cerrarModalAgregarColab", ()=>{
             setTimeout(() => {
                 this.AbrirAgregarUsuario = false;
-            }, 3000);
+            }, 1500);
         });
 
         EventBus.$on("cerrarModalActDatosColab", ()=>{

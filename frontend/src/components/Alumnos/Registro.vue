@@ -236,7 +236,7 @@ export default {
                     this.$refs.formStudent.reset();
                 } catch (error) {
             }
-            },3000)
+            },1500)
         });
 
         EventBus.$on('errorRegistro', (msj)=>{

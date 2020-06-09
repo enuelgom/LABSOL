@@ -20,7 +20,7 @@
                                     <v-text-field v-model="datosLab.siglas" :disabled="actualizar" :rules="siglas" prepend-icon="fa fa-id-card" label="Siglas de la institución" />
                                 </v-col>
                                  <v-col cols="12" sm="4" md="4" lg="4">
-                                    <v-select v-model="datosLab.tipoLaboratorio" :disabled="actualizar" @input="categoria" :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Tipo de laboratorio" />
+                                    <v-select v-model="datosLab.tipoLaboratorio" :disabled="true" @input="categoria" :rules="tipLabs" :items="tipLab" prepend-icon="fa fa-university" label="Tipo de laboratorio" />
                                 </v-col>
                                  <v-col cols="12" sm="4" md="4" lg="4">
                                     <v-file-input :disabled="actualizar" :rules="ruleslogo" @change="obtenerlogo($event)" accept="image/*" label="Logo de la institución" prepend-icon="fa fa-file-image" ref="fileInput" show-size chips></v-file-input>
@@ -227,7 +227,7 @@ export default {
                     // Obtener el token y guardarlo
                     setTimeout(() => {
                         this.cerrarModalEditar();
-                    }, 3000);
+                    }, 1500);
                     EventBus.$emit("updateNombre");
                     localStorage.setItem("token", data.updateLab);
                     this.guardarUsuarioLog();

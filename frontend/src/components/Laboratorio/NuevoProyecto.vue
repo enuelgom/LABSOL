@@ -147,7 +147,7 @@ export default {
                     this.$refs.formRegProyecto.reset()
                 } catch (error) {
             }
-            }, 3000)
+            }, 1500)
         });
 
         EventBus.$on("errorRegProyecto", (msj)=>{

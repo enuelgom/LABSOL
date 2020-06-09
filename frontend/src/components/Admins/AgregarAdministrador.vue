@@ -220,11 +220,34 @@ export default {
                         clave: this.datosAdmin.psw
                     }
                 })
-                this.msjsuccess = true;
-                setTimeout(() => {
-                    this.msjsuccess = false;
-                    this.cerrarModal();
-                }, 1500);
+                switch (data.addSubAdmin) {
+                    case 'guardado':
+                        this.msjsuccess = true;
+                        setTimeout(() => {
+                            this.msjsuccess = false;
+                            this.cerrarModal();
+                        }, 1500);
+                        break;
+                    case 'Usuario existente':
+                        this.msjErrorRegistro = data.addSubAdmin;
+                        this.msjerror = true;
+                        setTimeout(() => {
+                            this.msjerror = false;
+                        }, 3000);
+                        break;
+                    case 'Correo existente':
+                        this.msjErrorRegistro = data.addSubAdmin;
+                        this.msjerror = true;
+                        setTimeout(() => {
+                            this.msjerror = false;
+                        }, 3000);
+                        break;
+                }
+                // this.msjsuccess = true;
+                // setTimeout(() => {
+                //     this.msjsuccess = false;
+                //     this.cerrarModal();
+                // }, 1500);
             } catch (error) {
                 
             }

@@ -49,7 +49,8 @@ var proyectos = new Schema({
     type: [id_alu] // validate: [limit, 'exediste el limite']
 
   },
-  colaboradores: String
+  colaboradores: String,
+  fecha: String
 }); // function limit(val){
 // return val.length <= 6;
 // }

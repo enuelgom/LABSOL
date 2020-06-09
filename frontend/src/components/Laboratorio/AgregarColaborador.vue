@@ -162,7 +162,8 @@ export default {
                         this.msjsuccess = true;
                         setTimeout(() => {
                             this.msjsuccess = false;
-                        }, 3000);
+                            EventBus.$emit("cerrarModalAgregarColab");
+                        }, 1500);
                         break;
                     case 'Usuario existente':
                         this.msjErrorRegistro = msj;
@@ -179,7 +180,7 @@ export default {
                         }, 3000);
                         break;
                 }
-                EventBus.$emit("cerrarModalAgregarColab");
+                
             } catch (error) {
                 console.log(error)
             }

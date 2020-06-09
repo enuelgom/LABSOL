@@ -70,7 +70,8 @@ export default {
                         siglas: this.name
                     }
                 })
-                this.nombreLab = data.getLabName
+                this.nombreLab = data.getLabName[0];
+                EventBus.$emit("verificarFecha",data.getLabName[1],data.getLabName[2]);
             } catch (error) {
             
             }

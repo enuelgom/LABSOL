@@ -25,6 +25,21 @@ const resolvers = {
         }
     },
     Query: {
+        async datosSubAdmin(root, args, context){
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+            
+            try {
+                const decoded = jwt.decode(token, SECRET);
+                const usuario = decoded.usuario;
+                const subAdmin = await admin.where({usuario}).findOne();
+                return subAdmin;    
+            } catch (error) {
+            }
+        },
+
         async Colaborador(root, args, context){
             const  token  = context.token;
             const _blacklist = await blackList.find({token}).findOne();
@@ -127,8 +142,12 @@ const resolvers = {
         async getLabName(root, args, context){
             const {siglas}=args;
             const nameLab = await labs.where({siglas}).findOne();
-            let nombre = nameLab.nombre;
-            return nombre;
+            let datos = [];
+
+            datos.push(nameLab.nombre);
+            datos.push(nameLab.fechas.fI);
+            datos.push(nameLab.fechas.fT);
+            return datos;
         },
 
         async allAdmins(root, args, context){
@@ -321,9 +340,9 @@ const resolvers = {
 
                 if(adm) {
                     if (await bcrypt.compare(clave,adm.clave)) {
+                        const typeUser = "0";
+                        const nombre = adm.nombre
                         if (adm.rol=="subAdmin") {
-                            const typeUser = "0";
-                            const nombre = adm.nombre
                             let privilegios="";
                             if (adm.privilegios.includes('Agregar laboratorios')) {
                                 privilegios = privilegios+"B"
@@ -336,8 +355,6 @@ const resolvers = {
                             }
                             return jwt.sign({ usuario, nombre, typeUser,privilegios}, SECRET, { expiresIn: '4h' })
                         }else{
-                            const typeUser = "0";
-                            const nombre = adm.nombre
                             const privilegios = "A";
                             return jwt.sign({ usuario, nombre, typeUser, privilegios}, SECRET, { expiresIn: '4h' })
                         }
@@ -458,7 +475,8 @@ const resolvers = {
                 const updateLab = await labs.where({usuario:user}).findOneAndUpdate();
                 const chAdmins = await admin.where({usuario:_usuario}).findOne();
                 const chAlumnos = await alumnos.where({usuario:_usuario}).findOne();
-                if(!chAlumnos==""||!chAdmins==""){
+                const chcolaborador = await colaborador.where({usuario:_usuario}).findOne();
+                if(!chAlumnos==""||!chAdmins==""||!chcolaborador==""){
                     return "Usuario existente"
                 }
                 const Datos= ["nombre", "siglas", "usuario", "tipoLaboratorio"];
@@ -475,7 +493,7 @@ const resolvers = {
                 const usuario= updateLab.usuario;
                 const siglas = updateLab.siglas;
                 await updateLab.save();
-                return jwt.sign({ usuario, siglas, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+                return jwt.sign({ usuario, siglas, nombre, typeUser}, SECRET, { expiresIn: '5h' })
             } catch (error) {
                 const msjerror = error.message;
                 if(msjerror.includes('usuario')){
@@ -499,18 +517,20 @@ const resolvers = {
                 const status = "Nuevo"
                 const usuario = decoded["usuario"];
                 const laboratorio = await labs.where({usuario: usuario}).findOneAndUpdate()
+                const date = new Date();
+                const fecha = date.valueOf();
                 for (let val of laboratorio.proyectos){
                     if(val.proyecto == proyecto){
                         return "Nombre del priyecto existente";
 
                     }else{
-                        laboratorio.proyectos.unshift({ proyecto, objetivo, requerimientos, perfiles, habilidades,  status, numAlu });
+                        laboratorio.proyectos.unshift({ proyecto, objetivo, requerimientos, perfiles, habilidades,  status, numAlu, fecha });
                         laboratorio.save();
                         return "Proyecto registrado";
                     }
                 }
                 if (laboratorio.proyectos=="") {
-                    laboratorio.proyectos.unshift({ proyecto, objetivo, requerimientos, perfiles, habilidades, status, numAlu });
+                    laboratorio.proyectos.unshift({ proyecto, objetivo, requerimientos, perfiles, habilidades, status, numAlu, fecha });
                     laboratorio.save();
                     return "Proyecto registrado";
                 }
@@ -647,6 +667,13 @@ const resolvers = {
             }
         },
         async updateAdmin(root, args, context){
+            const Alumno = await alumnos.where({usuario:args["usuario"]}).findOne();
+            const chcolaborador = await colaborador.where({usuario:args["usuario"]}).findOne();
+            const chLabs = await labs.where({usuario:args["usuario"]}).findOne();
+            if(!chLabs==""||!chcolaborador==""||!Alumno==""){
+                return "Usuario existente"
+            }
+
             try{
                 const token = context.token;
                 const decoded = jwt.decode(token, SECRET);
@@ -663,16 +690,34 @@ const resolvers = {
                         _admin[val]=args[val];
                     }
                 }
+                
                 if (clave!="") {
                     _admin["clave"] = Clave;
                 }
+
+                if (args['telefono']!="") {
+                    _admin["telefono"] = args['telefono'];
+                }
+
+                if (args['correo']!="") {
+                    _admin["correo"] = args['correo'];
+                }
+
                 await _admin.save();
                 const typeUser = "0"
                 const usuario = _admin["usuario"];
                 const nombre = _admin["nombre"];
-                return jwt.sign({ usuario, nombre, typeUser}, SECRET, { expiresIn: '2h' })
+                const privilegios = decoded.privilegios
+                console.log(privilegios);
+                return jwt.sign({ usuario, nombre, typeUser, privilegios}, SECRET, { expiresIn: '2h' })
             }catch(e){
-                return e
+                console.log(error)
+                const msjerror = e.message;
+                if(msjerror.includes('usuario')){ 
+                    return "Usuario existente";
+                }else if(msjerror.includes('correo')){
+                    return "Correo existente";
+                }
             }
         },
 
@@ -1008,6 +1053,13 @@ const resolvers = {
 
         async addSubAdmin(root, args, context){
             try {
+                const Alumno = await alumnos.where({usuario:args["usuario"]}).findOne();
+                  const chcolaborador = await colaborador.where({usuario:args["usuario"]}).findOne();
+                  const chLabs = await labs.where({usuario:args["usuario"]}).findOne();
+                  if(!chLabs==""||!chcolaborador==""||!Alumno==""){
+                      return "Usuario existente"
+                  }
+
                 const { nombre, usuario, privilegios ,telefono ,correo } = args;
                 let {clave} = args;
                 const passHashed= await bcrypt.hash(clave,10);
@@ -1015,7 +1067,13 @@ const resolvers = {
                 await new admin ({ rol:"subAdmin", nombre, usuario, clave, privilegios, telefono, correo }).save();
                 return "guardado";
             } catch (error) {
-                
+                const msjerror = error.message;
+                if(msjerror.includes('usuario')){ 
+                    return "Usuario existente";
+                }else if(msjerror.includes('correo')){
+                    return "Correo existente";
+                }
+                return error;
             }
         },
 
@@ -1028,6 +1086,30 @@ const resolvers = {
                 return error;
             }
         },
+
+
+        async asignarFechas(root, args, context){
+            const {fI, fT} = args
+            const  token  = context.token;
+            const _blacklist = await blackList.find({token}).findOne();
+
+            if (!context.token || verifyExp(token) || !_blacklist=="") return "Tu sesion ha expirado";
+
+            const decoded = jwt.decode(token, SECRET);
+            const nombre = decoded["nombre"];
+            try {
+                const _lab = await labs.where({nombre}).findOneAndUpdate();
+                _lab.fechas=({fI,fT});
+                _lab.save();    
+                return "hecho";
+            } catch (error) {
+                console.log(error);
+            }
+            
+
+
+
+        }
     }
 }
 

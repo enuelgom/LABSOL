@@ -1,11 +1,13 @@
 <template>
     <div>
+        <v-snackbar color="green" v-model="fechaDisponible" top>¡{{fechaLimite}}!<v-btn style="outline:none;" color="white" text @click="fechaDisponible=false">Cerrar</v-btn></v-snackbar>
+        <v-snackbar color="red" v-model="fechaExpirada" top>¡{{fechaLimite}}!<v-btn style="outline:none;" color="white" text @click="fechaExpirada=false">Cerrar</v-btn></v-snackbar>
         <v-container>
             <!-- Selector de categorias -->
             <v-row justify="center" v-if="labExistente===1">
                 <!-- v-if="(usuarioLogeado.tipUsuario === '0' || usuarioLogeado.tipUsuario === '1') && labExistente===1" -->
                 <v-col cols="12" sm="4">
-                    <v-select v-if="(usuarioLogeado.siglas != this.$route.params.nameLab && (usuarioLogeado.tipUsuario==='1.1' && usuarioLogeado.tipUsuario==='1.1')) || usuarioLogeado.tipUsuario==='2' || usuarioLogeado.tipUsuario===''" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
+                    <v-select v-if="(usuarioLogeado.siglas != this.$route.params.nameLab && (usuarioLogeado.tipUsuario==='1.1')) || usuarioLogeado.tipUsuario==='2' || usuarioLogeado.tipUsuario===''" v-model="proyectosNuevos" :items="options2" @input="categorias" outlined label="Seleccione la categoria"/>
                     <v-select v-else v-model="proyectosNuevos" :items="options" @input="categorias" outlined label="Seleccione la categoria"/>
                 </v-col>
             </v-row>
@@ -263,6 +265,14 @@ export default {
         privilegios: {
             d: false
         },
+        fechas: {
+            fI: "",
+            fT: ""
+        },
+        dateNow: "",
+        fechaLimite: "",
+        fechaDisponible: false,
+        fechaExpirada: false,
         abrirAlertaBorrar: false,
         abrirListaColab: false,
         msjAvisoSolicitudProyecto: false,
@@ -382,6 +392,10 @@ export default {
         },
 
         comprobarSolicitud(proyecto, numAlumnos, alumnosExist){
+            if (!this.fechas.fI <= this.dateNow && !this.dateNow <=this.fechas.fT) {
+                return true;
+            }
+
             if (numAlumnos <= alumnosExist) {
                 return true;
             }
@@ -389,6 +403,7 @@ export default {
                 if(val.proyecto===proyecto){
                     for(let val2 of val.alumnos){
                         if(val2._id===this.usuarioLogeado._id){
+                            
                             return true;    
                         }
                     }
@@ -551,7 +566,7 @@ export default {
         EventBus.$on("cerrarLoginTabla",() => {
            setTimeout(()=>{
             this.abrirLogin = false;
-            },3000)
+            },1500)
         });
 
         this.obtenerColor();
@@ -584,7 +599,7 @@ export default {
         EventBus.$on("actualizarInfoDeProyecto", ()=>{
             setTimeout(() => {
                 this.ActualizarInfoProyecto = false
-            }, 3000);
+            }, 1500);
             this.obtenerProyectos();
         });
 
@@ -614,6 +629,53 @@ export default {
 
         EventBus.$on("VerificarAlumRequeridos",()=>{
             this.obtenerProyectos();
+        });
+
+        EventBus.$on("verificarFecha",(fI,fT)=>{
+            this.fechas.fI = fI;
+            this.fechas.fT = fT;
+
+            let date = new Date();
+            let day="";
+            let month= "";
+            if (date.getMonth()<=8) {
+                month="0"+(date.getMonth()+1)
+            }else{
+                month=date.getMonth()+1;
+            }
+            if (date.getDate()<=9) {
+                day = "0"+date.getDate();
+            }else{
+                day=date.getDate();
+            }           
+            this.dateNow = date.getFullYear()+"-"+month+"-"+day
+                let dt = new Date(fT)
+                 let di = new Date(fI)
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                try {
+                    
+                    if (!this.fechas.fI <= this.dateNow && !this.dateNow <=this.fechas.fT) {
+                        this.fechaLimite = "Solicitudes abiertas hasta el "+dt.toLocaleDateString('es-MX', options)
+                    this.fechaDisponible = true;
+                    setTimeout(() => {
+                        this.fechaDisponible = false;
+                    }, 5000);
+
+                    }else{
+                        if (this.dateNow<=fI) {
+                            this.fechaLimite = "Las solicitudes comienzan el "+di.toLocaleDateString('es-MX', options)
+                        }else{
+                            this.fechaLimite = "Solicitudes cerradas"
+                        }
+                        this.fechaExpirada = true;
+                        setTimeout(() => {
+                            this.fechaExpirada = false;
+                        }, 5000);
+                    }
+                } catch (error) {
+
+                }
+
         });
 
         EventBus.$on("iniciarDesarrolloConfirm",(proyecto, estatus)=>{

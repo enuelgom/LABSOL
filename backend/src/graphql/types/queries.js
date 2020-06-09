@@ -36,7 +36,7 @@ export const queries = `
 
         getLabName(
             siglas: String
-        ): String
+        ): [String]
 
         existeMetod(
             nombre: String,
@@ -56,5 +56,7 @@ export const queries = `
         Colaboradores: [_colaboradores]
 
         Colaborador: _colaboradores
+
+        datosSubAdmin: SubAdmin
     }
 `

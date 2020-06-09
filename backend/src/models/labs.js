@@ -3,6 +3,12 @@ import proyectos from './proyectos';
 
 const Schema = mongoose.Schema;
 
+let fechas = {
+    fI: String,
+    fT: String
+}
+
+
 const  labsSchema = new Schema({
     nombre: {
         type: String,
@@ -27,7 +33,8 @@ const  labsSchema = new Schema({
         type: String
     },
     tipoLaboratorio: String,
-    _status: String
+    _status: String,
+    fechas: fechas,
 });
 
 const labs = mongoose.model('labs', labsSchema);

@@ -3,7 +3,12 @@ type Mutation{
     deleteAdmin(
         _id: String
     ): String
-    
+   
+    asignarFechas(
+        fI: String,
+        fT: String
+    ): String
+
     nuevoLab(
         nombre: String,
         siglas: String,
@@ -123,7 +128,9 @@ type Mutation{
     updateAdmin(
         nombre: String,
         usuario: String,
-        clave: String
+        clave: String,
+        correo: String,
+        telefono: String
     ): String
 
     updateLab(

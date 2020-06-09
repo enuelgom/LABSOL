@@ -68,6 +68,7 @@
 import { EventBus } from '@/EventBus'
 import gql from 'graphql-tag'
 import { mask } from "vue-the-mask"
+import { mapState, mapMutations } from "vuex"
 import { apolloClient } from '@/graphql/apollo'
 
 export default {
@@ -129,6 +130,8 @@ export default {
     }),
 
     computed: {
+        ...mapState(["usuarioLogeado"]),
+
         confirmacionPsw(){
             return [
                 this.datosUsuarios.psw === this.pswConfirm || "La contraseña no coincide"
@@ -137,6 +140,8 @@ export default {
     },
 
     methods: {
+        ...mapMutations(['guardarUsuarioLog']), 
+
         cerrarModal(){
             EventBus.$emit("cerrarModalActDatosColab");
             this.datosUsuarios.psw = "";
@@ -198,10 +203,11 @@ export default {
                 const msj = data.updateColaborador;
                 switch (msj) {
                     case 'hecho':
+                        this.guardarUsuarioLog();
                         this.msjsuccess = true;
                         setTimeout(() => {
                             this.msjsuccess = false;
-                        }, 3000);
+                        }, 1500);
                         break;
                     
                     case 'Usuario existente':

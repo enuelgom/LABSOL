@@ -8,6 +8,13 @@ export const custom = `
         privilegios: String
     }
 
+    type SubAdmin {
+        usuario: String,
+        nombre: String,
+        correo: String,
+        telefono: String,
+    }
+
     type Laboratorio {
         nombre: String,
         logo: String,
