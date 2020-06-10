@@ -644,9 +644,9 @@ export default {
                 month=date.getMonth()+1;
             }
             if (date.getDate()<=9) {
-                day = "0"+date.getDate();
+                day = "0"+(date.getDate()+1);
             }else{
-                day=date.getDate();
+                day=date.getDate()+1;
             }           
             this.dateNow = date.getFullYear()+"-"+month+"-"+day
                 let dt = new Date(fT)
@@ -654,7 +654,7 @@ export default {
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 try {
                     
-                    if (!this.fechas.fI <= this.dateNow && !this.dateNow <=this.fechas.fT) {
+                    if (this.fechas.fI <= this.dateNow && this.dateNow <=this.fechas.fT) {
                         this.fechaLimite = "Solicitudes abiertas hasta el "+dt.toLocaleDateString('es-MX', options)
                     this.fechaDisponible = true;
                     setTimeout(() => {
