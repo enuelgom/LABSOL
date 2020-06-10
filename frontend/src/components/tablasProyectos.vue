@@ -644,13 +644,15 @@ export default {
                 month=date.getMonth()+1;
             }
             if (date.getDate()<=9) {
-                day = "0"+(date.getDate()+1);
+                day = "0"+(date.getDate());
             }else{
-                day=date.getDate()+1;
+                day=date.getDate();
             }           
             this.dateNow = date.getFullYear()+"-"+month+"-"+day
                 let dt = new Date(fT)
                  let di = new Date(fI)
+                 dt.setDate(dt.getDate()+1)
+                 di.setDate(di.getDate()+1)
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 try {
                     
